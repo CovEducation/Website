@@ -23,6 +23,7 @@ const appBundleDirectory = path.resolve(
   "client",
   "build"
 );
+
 const createHttpServer = async (): Promise<http.Server> => {
   validateEnv();
   const app = express();
