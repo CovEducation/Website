@@ -1,0 +1,57 @@
+{
+  "name": "@johanc/server",
+  "version": "1.0.0",
+  "author": "Johan Cervantes <johanc@mit.edu>",
+  "description": "Server template using Express + TypeScript + Typegoose + Mocha",
+  "main": "build/index.js",
+  "files": [
+    "build"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/johancc/Apollo",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "run-s clean build:tsc",
+    "build:tsc": "tsc -b",
+    "lint": "prettier --write 'src/**/*.ts'",
+    "clean": "rimraf build coverage tsconfig.tsbuildinfo .nyc_output",
+    "dev": "nodemon --config nodemon.json src/index.ts",
+    "test": "cross-env NODE_ENV=test nyc mocha -r ts-node/register 'tests/**/*.ts' --colors --exit"
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "prettier --write --single-quote",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/compression": "^1.7.0",
+    "@types/mocha": "^8.2.0",
+    "@types/mongoose": "^5.10.3",
+    "@types/morgan": "^1.9.2",
+    "@types/supertest": "^2.0.10",
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.3",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.1",
+    "ts-node": "^8.6.2"
+  },
+  "dependencies": {
+    "@typegoose/typegoose": "^7.4.8",
+    "compression": "^1.7.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2",
+    "find-up": "^4.1.0",
+    "mongoose": "5.10.18",
+    "morgan": "^1.10.0"
+  }
+}

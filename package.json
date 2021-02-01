@@ -1,0 +1,45 @@
+{
+  "name": "@johanc/apollo",
+  "version": "1.0.0",
+  "author": "Johan Cervantes <johanc@mit.edu>",
+  "license": "MIT",
+  "private": true,
+  "repository": "https://github.com/johancc/Apollo",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "start": "node packages/server/build/index.js",
+    "postinstall": "husky install",
+    "build": "run-p clean run-s tsc -b ./packages/tsconfig.base.json",
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna run --parallel clean",
+    "lint": "yarn run workspaces lint",
+    "release": "lerna publish"
+  },
+  "lint-staged": {
+    "**/*.+{ts|tsx}": [
+      "prettier --write --single-quote",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "dependencies": {
+    "lint-staged": "^10.5.3",
+    "rimraf": "^3.0.1"
+  },
+  "devDependencies": {
+    "husky": "^5.0.6",
+    "lerna": "^3.20.2",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^15.1.0",
+    "typescript": "^4.1.3"
+  }
+}
