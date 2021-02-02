@@ -1,6 +1,14 @@
 import { Router } from "express";
-import { getMentorValidation, postMentorValidation } from "./validation";
-import { getMentorHandler, postMentorHandler } from "./handlers";
+import {
+  getMentorValidation,
+  postMentorValidation,
+  deleteMentorValidation,
+} from "./validation";
+import {
+  getMentorHandler,
+  postMentorHandler,
+  deleteMentorHandler,
+} from "./handlers";
 import validate from "../../middleware/validation";
 
 class UserRouter {
@@ -29,6 +37,13 @@ class UserRouter {
     );
 
     this.router.get("/mentor", getMentorValidation, validate, getMentorHandler);
+
+    this.router.delete(
+      "/mentor",
+      deleteMentorValidation,
+      validate,
+      deleteMentorHandler
+    );
   }
 }
 

@@ -15,6 +15,9 @@ const validateEnv = () => {
   if (process.env.MONGO_URI === undefined) {
     throw new Error(`Missing environment key: MONGO_URI`);
   }
+  if (process.env.DB_NAME === undefined) {
+    throw new Error(`Missing enviroment key: DB_NAME`);
+  }
 };
 
 const appBundleDirectory = path.resolve(
@@ -34,11 +37,12 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.use(compression());
   app.use("/", MainRouter);
   app.use(express.static(appBundleDirectory));
-  const { MONGO_URI = "" } = process.env;
+  const { MONGO_URI = "", DB_NAME = "" } = process.env;
   return mongoose
     .connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      dbName: DB_NAME,
     })
     .then(() => {
       return new http.Server(app);

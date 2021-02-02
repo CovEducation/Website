@@ -1,5 +1,5 @@
 import { mongoose } from "@typegoose/typegoose";
-import { checkSchema, query } from "express-validator";
+import { checkSchema, query, body } from "express-validator";
 import NotificationPreference from "../../models/NotificationPreference";
 
 // Requirements shared between endpoints.
@@ -51,14 +51,28 @@ const mentorRequirement = checkSchema({
     },
   },
 });
-const idRequirement = query("_id")
+const idParamRequirement = query("_id")
   .exists({ checkFalsy: true, checkNull: true })
+  .isString()
+  .custom((value) => mongoose.Types.ObjectId.isValid(value));
+
+const idBodyRequirement = body("_id")
+  .exists({
+    checkFalsy: true,
+    checkNull: true,
+  })
   .isString()
   .custom((value) => mongoose.Types.ObjectId.isValid(value));
 
 // Endpoint specific validation.
 export const postMentorValidation = mentorRequirement; // checkSchema is already a ValidationChain[]
 
-export const getMentorValidation = [idRequirement];
+export const getMentorValidation = [idParamRequirement];
 
-export default { postMentorValidation, getMentorValidation };
+export const deleteMentorValidation = [idBodyRequirement];
+
+export default {
+  postMentorValidation,
+  getMentorValidation,
+  deleteMentorValidation,
+};

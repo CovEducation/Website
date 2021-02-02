@@ -12,3 +12,9 @@ export interface GetMentorRequest extends Request {
 }
 
 export interface GetMentorResponse extends Response<IMentor> {}
+
+export interface DeleteMentorRequest extends Request {
+  body: { _id: string };
+}
+
+export interface DeleteMentorResponse extends Response {}

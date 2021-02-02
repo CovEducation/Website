@@ -6,6 +6,8 @@ import {
   PostMentorHandler,
   PostMentorResponse,
   GetMentorResponse,
+  DeleteMentorRequest,
+  DeleteMentorResponse,
 } from "./interfaces";
 
 export const postMentorHandler = (
@@ -35,4 +37,19 @@ export const getMentorHandler = (
     .catch(() => {
       res.status(500).end();
     });
+};
+
+export const deleteMentorHandler = (
+  req: DeleteMentorRequest,
+  res: DeleteMentorResponse
+) => {
+  UserService.deleteMentor(new mongoose.Types.ObjectId(req.body._id)).then(
+    (ok) => {
+      if (ok) {
+        res.status(200).end();
+      } else {
+        res.status(400).end();
+      }
+    }
+  );
 };
