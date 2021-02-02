@@ -6,7 +6,8 @@ import http from "http";
 import path from "path";
 import express from "express";
 import mongoose from "mongoose";
-import MainRouter from "./routes/main/MainRouter";
+import MainRouter from "./routes/MainRouter";
+
 const envPath = find.sync(".env");
 dotenv.config({ path: envPath });
 
@@ -30,9 +31,9 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.use(logger("dev", { skip: () => process.env.NODE_ENV === "test" }));
   app.use(express.json({}));
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(appBundleDirectory));
   app.use(compression());
   app.use("/", MainRouter);
+  app.use(express.static(appBundleDirectory));
   const { MONGO_URI = "" } = process.env;
   return mongoose
     .connect(MONGO_URI, {

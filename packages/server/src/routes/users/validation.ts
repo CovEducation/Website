@@ -1,5 +1,5 @@
-import { checkSchema } from "express-validator";
-import NotificationPreference from "src/models/NotificationPreference";
+import { checkSchema, query } from "express-validator";
+import NotificationPreference from "../../models/NotificationPreference";
 
 // Requirements shared between endpoints.
 const mentorRequirement = checkSchema({
@@ -50,8 +50,11 @@ const mentorRequirement = checkSchema({
     },
   },
 });
+const idRequirement = query("_id");
 
 // Endpoint specific validation.
 export const postMentorValidation = mentorRequirement; // checkSchema is already a ValidationChain[]
+
+export const getMentorValidation = idRequirement;
 
 export default { postMentorValidation };

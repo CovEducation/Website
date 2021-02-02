@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { postUserHandler } from "./handlers";
-import validation from "./validation";
-import validator from "../../middleware/validation";
+import { getMentorValidation, postMentorValidation } from "./validation";
+import { getMentorHandler, postMentorHandler } from "./handlers";
+import validate from "../../middleware/validation";
 
 class UserRouter {
   private _router = Router();
-
-  contructor() {
+  constructor() {
     this.configure();
   }
 
@@ -19,16 +18,18 @@ class UserRouter {
     this.configurePublicRoutes();
   }
 
-  private configurePublicRoutes() {
-    this._router.post(
-      "/",
-      validation.postMentorValidation,
-      validator,
-      postUserHandler
-    );
-  }
-
   private configureAuthRoutes() {}
+
+  private configurePublicRoutes() {
+    this.router.post(
+      "/mentor",
+      postMentorValidation,
+      validate,
+      postMentorHandler
+    );
+
+    this.router.get("/mentor", getMentorValidation, validate, getMentorHandler);
+  }
 }
 
-export default UserRouter;
+export default new UserRouter().router;
