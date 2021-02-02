@@ -1,17 +1,35 @@
 import { expect } from "chai";
 import { agent, SuperAgentTest } from "supertest";
+import { connect, clearDatabase, closeDatabase } from "../utils";
+
 import http from "http";
 import createHttpServer from "../../src/server";
 import { testMentor } from "../data";
 import { IMentor } from "../../src/models/Mentors";
-import { mongoose } from "@typegoose/typegoose";
+import mongoose from "mongoose";
 
 let app: SuperAgentTest;
 let server: http.Server;
-before(async () => {
+
+/**
+ * Start a new server & connect to a new in-memory database before running any tests.
+ */
+before(async function () {
+  this.timeout(120000); // 2 mins to download a local MongoDB installation.
   server = await createHttpServer();
+  await connect();
   app = agent(server);
 });
+
+/**
+ * Clear all test data after every test.
+ */
+afterEach(async () => await clearDatabase());
+
+/**
+ * Remove and close the db and server.
+ */
+after(async () => await closeDatabase());
 
 describe("💻 Server", () => {
   it("is alive", async () => {

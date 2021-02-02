@@ -5,7 +5,7 @@ import compression from "compression";
 import http from "http";
 import path from "path";
 import express from "express";
-import mongoose from "mongoose";
+import { mongoose } from "@typegoose/typegoose";
 import MainRouter from "./routes/MainRouter";
 
 const envPath = find.sync(".env");

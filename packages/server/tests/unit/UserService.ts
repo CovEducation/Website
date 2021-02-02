@@ -1,9 +1,32 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiAsPromised from "chai-as-promised";
+import { mongoose } from "@typegoose/typegoose";
+import { connect, clearDatabase, closeDatabase } from "../utils";
+
 import UserService from "../../src/services/UserService";
 import { testMentor, testParent } from "../data";
 import { IMentor } from "../../src/models/Mentors";
 import { IParent } from "../../src/models/Parents";
-import { mongoose } from "@typegoose/typegoose";
+
+chai.use(chaiAsPromised); // Allows us to handle promise rejections.
+
+/**
+ * Start a new server & connect to a new in-memory database before running any tests.
+ */
+before(async function () {
+  this.timeout(120000); // 2 mins to download a local MongoDB installation.
+  await connect();
+});
+
+/**
+ * Clear all test data after every test.
+ */
+afterEach(async () => await clearDatabase());
+
+/**
+ * Remove and close the db and server.
+ */
+after(async () => await closeDatabase());
 
 describe("🙋‍ User Service", () => {
   describe("::createMentor()", () => {
@@ -18,6 +41,14 @@ describe("🙋‍ User Service", () => {
         await UserService.deleteMentor(mentor._id);
       }
     });
+
+    it("prevents duplicates", async () => {
+      const mentor = await UserService.createMentor(testMentor);
+      expect(UserService.createMentor(testMentor)).to.be.rejected;
+      if (mentor._id) {
+        await UserService.deleteMentor(mentor._id);
+      }
+    });
   });
 
   describe("::deleteMentor()", () => {
@@ -28,6 +59,11 @@ describe("🙋‍ User Service", () => {
         const ok = await UserService.deleteMentor(mentor._id);
         expect(ok).to.be.true;
       }
+    });
+
+    it("handles non-existent mentors", async () => {
+      const ok = await UserService.deleteMentor(mongoose.Types.ObjectId());
+      expect(ok).to.be.false;
     });
   });
 
@@ -60,6 +96,14 @@ describe("🙋‍ User Service", () => {
         UserService.deleteParent(parent._id);
       }
     });
+
+    it("prevents duplicates", async () => {
+      const parent = await UserService.createParent(testParent);
+      expect(UserService.createParent(testParent)).to.be.rejected;
+      if (parent._id) {
+        await UserService.deleteParent(parent._id);
+      }
+    });
   });
 
   describe("::deleteParent()", () => {
@@ -70,6 +114,11 @@ describe("🙋‍ User Service", () => {
         const ok = await UserService.deleteParent(parent._id);
         expect(ok).to.be.true;
       }
+    });
+
+    it("handles non-existent parents", async () => {
+      const ok = await UserService.deleteParent(mongoose.Types.ObjectId());
+      expect(ok).to.be.false;
     });
   });
 
