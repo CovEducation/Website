@@ -2,8 +2,9 @@ import { expect } from "chai";
 import UserService from "../../src/services/UserService";
 import { testMentor } from "../data";
 import { IMentor } from "../../src/models/Mentors";
+import { mongoose } from "@typegoose/typegoose";
 
-describe("User Service", () => {
+describe("🙋‍ User Service", () => {
   describe("::createMentor()", () => {
     it("creates a mentor", async () => {
       const mentor: IMentor = await UserService.createMentor(testMentor);
@@ -34,6 +35,12 @@ describe("User Service", () => {
           expect(resp?._id).to.deep.equal(mentor._id);
         });
       }
+    });
+
+    it("fails nicely", async () => {
+      UserService.findMentor(mongoose.Types.ObjectId()).then((resp) => {
+        expect(resp).to.be.equal(null);
+      });
     });
   });
 });
