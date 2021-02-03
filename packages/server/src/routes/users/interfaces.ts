@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { IMentor } from "src/models/Mentors";
+import { IParent } from "src/models/Parents";
 
-export interface PostMentorHandler extends Request {
+export interface PostMentorRequest extends Request {
   body: IMentor;
 }
 
@@ -18,3 +19,21 @@ export interface DeleteMentorRequest extends Request {
 }
 
 export interface DeleteMentorResponse extends Response {}
+
+export interface PostParentRequest extends Request {
+  body: IParent;
+}
+
+export interface PostParentResponse extends Response<IParent> {}
+
+export interface GetParentRequest extends Request {
+  query: { _id: string };
+}
+
+export interface GetParentResponse extends Response<IParent> {}
+
+export interface DeleteParentRequest extends Request {
+  body: { _id: string };
+}
+
+export interface DeleteParentResponse extends Response {}

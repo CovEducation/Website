@@ -3,11 +3,17 @@ import {
   getMentorValidation,
   postMentorValidation,
   deleteMentorValidation,
+  getParentValidation,
+  postParentValidation,
+  deleteParentValidation,
 } from "./validation";
 import {
   getMentorHandler,
   postMentorHandler,
   deleteMentorHandler,
+  getParentHandler,
+  postParentHandler,
+  deleteParentHandler,
 } from "./handlers";
 import validate from "../../middleware/validation";
 
@@ -29,6 +35,11 @@ class UserRouter {
   private configureAuthRoutes() {}
 
   private configurePublicRoutes() {
+    this.setupMentorRoutes();
+    this.setupParentRoutes();
+  }
+
+  private setupMentorRoutes() {
     this.router.post(
       "/mentor",
       postMentorValidation,
@@ -43,6 +54,22 @@ class UserRouter {
       deleteMentorValidation,
       validate,
       deleteMentorHandler
+    );
+  }
+
+  private setupParentRoutes() {
+    this.router.get("/parent", getParentValidation, validate, getParentHandler);
+    this.router.post(
+      "/parent",
+      postParentValidation,
+      validate,
+      postParentHandler
+    );
+    this.router.delete(
+      "/parent",
+      deleteParentValidation,
+      validate,
+      deleteParentHandler
     );
   }
 }

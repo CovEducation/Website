@@ -1,17 +1,24 @@
 import mongoose from "mongoose";
 import { IMentor } from "../../models/Mentors";
+import { IParent } from "../../models/Parents";
 import UserService from "../../services/UserService";
 import {
   GetMentorRequest,
-  PostMentorHandler,
+  PostMentorRequest,
   PostMentorResponse,
   GetMentorResponse,
   DeleteMentorRequest,
   DeleteMentorResponse,
+  PostParentResponse,
+  PostParentRequest,
+  GetParentRequest,
+  GetParentResponse,
+  DeleteParentRequest,
+  DeleteParentResponse,
 } from "./interfaces";
 
 export const postMentorHandler = (
-  req: PostMentorHandler,
+  req: PostMentorRequest,
   res: PostMentorResponse
 ) => {
   const mentor: IMentor = req.body;
@@ -29,7 +36,7 @@ export const getMentorHandler = (
   UserService.findMentor(new mongoose.Types.ObjectId(req.query._id))
     .then((mentor) => {
       if (mentor === null) {
-        res.status(400).end();
+        res.status(404).end();
       } else {
         res.send(mentor as IMentor);
       }
@@ -48,7 +55,51 @@ export const deleteMentorHandler = (
       if (ok) {
         res.status(200).end();
       } else {
-        res.status(400).end();
+        res.status(404).end();
+      }
+    }
+  );
+};
+
+export const postParentHandler = (
+  req: PostParentRequest,
+  res: PostParentResponse
+) => {
+  const parent: IParent = req.body;
+  UserService.createParent(parent)
+    .then((newParent) => res.send(newParent))
+    .catch(() => {
+      res.status(500).end();
+    });
+};
+
+export const getParentHandler = (
+  req: GetParentRequest,
+  res: GetParentResponse
+) => {
+  UserService.findParent(new mongoose.Types.ObjectId(req.query._id))
+    .then((parent) => {
+      if (parent === null) {
+        res.status(404).end();
+      } else {
+        res.send(parent as IParent);
+      }
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
+};
+
+export const deleteParentHandler = (
+  req: DeleteParentRequest,
+  res: DeleteParentResponse
+) => {
+  UserService.deleteParent(new mongoose.Types.ObjectId(req.body._id)).then(
+    (ok) => {
+      if (ok) {
+        res.status(200).end();
+      } else {
+        res.status(404).end();
       }
     }
   );

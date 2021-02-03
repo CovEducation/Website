@@ -16,7 +16,7 @@
     "lint": "prettier --write 'src/**/*.ts'",
     "clean": "rimraf build coverage tsconfig.tsbuildinfo .nyc_output",
     "dev": "nodemon --config nodemon.json src/index.ts",
-    "test": "cross-env NODE_ENV=test nyc mocha -r ts-node/register 'tests/**/*.ts' --colors --exit"
+    "test": "echo 'Testing...' && cross-env NODE_ENV=test nyc mocha -r ts-node/register 'tests/**/*.ts' --colors --exit"
   },
   "lint-staged": {
     "*.{ts}": [
