@@ -1,7 +1,7 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import NotificationPreference from "./NotificationPreference";
-import { IStudent } from "./Students";
+import { IStudent, Student } from "./Students";
 
 export interface IParent {
   _id?: mongoose.Types.ObjectId;
@@ -50,7 +50,7 @@ export class Parent implements IParent {
       message: "Parent must specific at least one student.",
     },
   })
-  public students: IStudent[];
+  public students: Student[];
 }
 
 const ParentModel = getModelForClass(Parent);

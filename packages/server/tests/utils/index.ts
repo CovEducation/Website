@@ -13,13 +13,11 @@ export const connect = async () => {
   // The server uses MONGO_URI by default, use the in-memory db instead.
   await mongoose.disconnect();
 
-  const uri = await mongod.getConnectionString();
+  const uri = await mongod.getUri();
 
   const mongooseOpts = {
     useNewUrlParser: true,
-    autoReconnect: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 1000,
+    useUnifiedTopology: true,
   };
 
   await mongoose.connect(uri, mongooseOpts);

@@ -50,6 +50,7 @@ export class Mentor implements IMentor {
       validator: (v) => v.length >= 1,
       message: "Mentor must select at least one grade level.",
     },
+    type: String,
   })
   public gradeLevels: string[];
 

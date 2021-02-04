@@ -10,7 +10,7 @@ export interface IStudent {
 }
 
 export class Student implements IStudent {
-  public _id: mongoose.Types.ObjectId;
+  public _id?: mongoose.Types.ObjectId;
 
   @prop({ required: true })
   public name: string;
@@ -27,8 +27,8 @@ export class Student implements IStudent {
       validator: (v) => v.length >= 1,
       message: "Student must select one subject.",
     },
+    type: String,
   })
-  @prop({ required: true })
   public subjects: string[];
 }
 

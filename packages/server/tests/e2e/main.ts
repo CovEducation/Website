@@ -1,4 +1,5 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiSubset from "chai-subset";
 import { agent, SuperAgentTest } from "supertest";
 import { connect, clearDatabase, closeDatabase } from "../utils";
 
@@ -7,11 +8,11 @@ import createHttpServer from "../../src/server";
 import { testMentor, testParent } from "../data";
 import { IMentor } from "../../src/models/Mentors";
 import mongoose from "mongoose";
-import { IParent } from "../../src/models/Parents";
 
 let app: SuperAgentTest;
 let server: http.Server;
 
+chai.use(chaiSubset);
 /**
  * Start a new server & connect to a new in-memory database before running any tests.
  */
@@ -144,7 +145,7 @@ describe("💻 Server", () => {
         const res = await app.post("/users/parent").send(testParent);
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
-        expect(res.body as IParent).to.deep.contain(testParent);
+        expect(res.body).to.containSubset(testParent);
 
         if (res.body._id) {
           const cleanup = await app
@@ -188,7 +189,8 @@ describe("💻 Server", () => {
           .get("/users/parent")
           .query({ _id: setup.body._id });
         expect(res.status).to.be.equal(200);
-
+        expect(res.body).to.containSubset(testParent);
+        expect(res.body).to.containSubset(setup.body);
         if (setup.body._id) {
           const cleanup = await app
             .delete("/users/parent")

@@ -1,5 +1,6 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
+import chaiSubset from "chai-subset";
 import { mongoose } from "@typegoose/typegoose";
 import { connect, clearDatabase, closeDatabase } from "../utils";
 
@@ -9,7 +10,7 @@ import { IMentor } from "../../src/models/Mentors";
 import { IParent } from "../../src/models/Parents";
 
 chai.use(chaiAsPromised); // Allows us to handle promise rejections.
-
+chai.use(chaiSubset);
 /**
  * Start a new server & connect to a new in-memory database before running any tests.
  */
@@ -89,9 +90,7 @@ describe("🙋‍ User Service", () => {
     it("creates a parent", async () => {
       const parent: IParent = await UserService.createParent(testParent);
       expect(parent._id).to.exist;
-      Object.keys(testParent).forEach((key) => {
-        expect(parent[key]).to.be.deep.equal(testParent[key]);
-      });
+      expect(parent).to.containSubset(testParent);
       if (parent._id) {
         UserService.deleteParent(parent._id);
       }
@@ -99,8 +98,8 @@ describe("🙋‍ User Service", () => {
 
     it("prevents duplicates", async () => {
       const parent = await UserService.createParent(testParent);
-      expect(UserService.createParent(testParent)).to.be.rejected;
       if (parent._id) {
+        expect(UserService.createParent(testParent)).to.be.rejected;
         await UserService.deleteParent(parent._id);
       }
     });
@@ -129,6 +128,7 @@ describe("🙋‍ User Service", () => {
       if (parent._id) {
         const resp = await UserService.findParent(parent._id);
         expect(resp?._id).to.deep.equal(parent._id);
+        expect(resp).to.containSubset(testParent);
         await UserService.deleteParent(parent._id);
       }
     });
