@@ -21,6 +21,9 @@ export const connect = async () => {
   };
 
   await mongoose.connect(uri, mongooseOpts);
+  // Useful for CI, avoids server crash when MONGO_URI is not defined.
+  process.env.MONGO_URI = uri;
+  process.env.DB_NAME = mongoose.connection.db.databaseName;
 };
 
 /**
