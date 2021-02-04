@@ -103,6 +103,14 @@ describe("🙋‍ User Service", () => {
         await UserService.deleteParent(parent._id);
       }
     });
+
+    it("Uses the correct enums", async () => {
+      const parent = await UserService.createParent(testParent);
+      expect(parent.notificationPreference).to.be.a("string");
+      if (parent._id) {
+        await UserService.deleteParent(parent._id);
+      }
+    });
   });
 
   describe("::deleteParent()", () => {
