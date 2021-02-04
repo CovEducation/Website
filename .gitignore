@@ -10,6 +10,8 @@ junit.xml
 coverage
 /deploy.yaml
 .nyc_output
+tailwind.scss
+
 # Other files
 *.log
 
