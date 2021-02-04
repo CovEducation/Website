@@ -109,7 +109,7 @@
     "eslint-webpack-plugin": "2.4.3",
     "file-loader": "6.2.0",
     "find-up": "^5.0.0",
-    "html-webpack-plugin": "4.5.1",
+    "html-webpack-plugin": "5.0.0",
     "identity-obj-proxy": "3.0.0",
     "koa-connect": "2.1.0",
     "lint-staged": "10.5.3",
