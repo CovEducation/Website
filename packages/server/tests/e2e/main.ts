@@ -18,8 +18,8 @@ chai.use(chaiSubset);
  */
 before(async function () {
   this.timeout(120000); // 2 mins to download a local MongoDB installation.
-  server = await createHttpServer();
   await connect();
+  server = await createHttpServer();
   app = agent(server);
 });
 
