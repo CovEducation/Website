@@ -1,6 +1,7 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import mongoose from "mongoose";
-import NotificationPreference from "./NotificationPreference";
+import { Mentorship } from "./Mentorships";
+import CommunicationPreference from "./CommunicationPreference";
 
 export interface IMentor {
   _id?: mongoose.Types.ObjectId;
@@ -13,8 +14,9 @@ export interface IMentor {
   avatar: string; // Assumed to be a URL
   bio: string;
   major: string;
-  notificationPreference: NotificationPreference;
+  communicationPreference: CommunicationPreference;
   gradeLevels: string[];
+  mentorships?: Ref<Mentorship>;
 }
 
 export class Mentor implements IMentor {
@@ -42,7 +44,7 @@ export class Mentor implements IMentor {
   public major: string;
 
   @prop({ required: true })
-  public notificationPreference: NotificationPreference;
+  public communicationPreference: CommunicationPreference;
 
   @prop({
     required: true,

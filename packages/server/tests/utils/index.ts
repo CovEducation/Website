@@ -1,5 +1,3 @@
-// tests/db-handler.js
-
 import { mongoose } from "@typegoose/typegoose";
 
 import { MongoMemoryServer } from "mongodb-memory-server";
@@ -11,6 +9,7 @@ const mongod = new MongoMemoryServer();
  */
 export const connect = async () => {
   // The server uses MONGO_URI by default, use the in-memory db instead.
+
   await mongoose.disconnect();
 
   const uri = await mongod.getUri();
@@ -19,7 +18,6 @@ export const connect = async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   };
-
   await mongoose.connect(uri, mongooseOpts);
   // Useful for CI, avoids server crash when MONGO_URI is not defined.
   process.env.MONGO_URI = uri;

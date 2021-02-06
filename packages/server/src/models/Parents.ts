@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import mongoose from "mongoose";
-import NotificationPreference from "./NotificationPreference";
+import CommunicationPreference from "./CommunicationPreference";
 import { IStudent, Student } from "./Students";
 
 export interface IParent {
@@ -12,7 +12,7 @@ export interface IParent {
   phone: string;
   pronouns: string;
   avatar: string; // Assumed to be a URL
-  notificationPreference: NotificationPreference;
+  communicationPreference: CommunicationPreference;
   students: IStudent[];
 }
 
@@ -38,7 +38,7 @@ export class Parent implements IParent {
   public pronouns: string;
 
   @prop({ required: true })
-  public notificationPreference: NotificationPreference;
+  public communicationPreference: CommunicationPreference;
 
   @prop({ required: true })
   public avatar: string;

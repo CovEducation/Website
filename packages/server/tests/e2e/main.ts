@@ -39,7 +39,7 @@ describe("💻 Server", () => {
     expect(res.status).to.equal(200);
   });
 
-  describe("/users 👨‍💻", () => {
+  describe("/users 😷", () => {
     describe("/mentor", () => {
       it("POST - creates new user", async () => {
         const res = await app.post("/users/mentor").send(testMentor);

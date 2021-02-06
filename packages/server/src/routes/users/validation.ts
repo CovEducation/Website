@@ -1,7 +1,7 @@
 import { mongoose } from "@typegoose/typegoose";
 import { checkSchema, query, body } from "express-validator";
 import StudentModel from "../../models/Students";
-import NotificationPreference from "../../models/NotificationPreference";
+import CommunicationPreference from "../../models/CommunicationPreference";
 
 // Requirements shared between endpoints.
 const mentorRequirement = checkSchema({
@@ -45,10 +45,10 @@ const mentorRequirement = checkSchema({
     in: "body",
     isArray: true,
   },
-  notificationPreference: {
+  communicationPreference: {
     in: ["body"],
     isIn: {
-      options: [NotificationPreference.EMAIL, NotificationPreference.SMS],
+      options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
     },
   },
 });
@@ -86,10 +86,10 @@ const parentRequirement = checkSchema({
     in: "body",
     isArray: true,
   },
-  notificationPreference: {
+  communicationPreference: {
     in: ["body"],
     isIn: {
-      options: [NotificationPreference.EMAIL, NotificationPreference.SMS],
+      options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
     },
   },
 });

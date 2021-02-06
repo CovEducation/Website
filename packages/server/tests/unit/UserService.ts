@@ -37,18 +37,11 @@ describe("🙋‍ User Service", () => {
       Object.keys(testMentor).forEach((key) => {
         expect(mentor[key]).to.be.deep.equal(testMentor[key]);
       });
-      // Cleanup
-      if (mentor._id) {
-        await UserService.deleteMentor(mentor._id);
-      }
     });
 
     it("prevents duplicates", async () => {
-      const mentor = await UserService.createMentor(testMentor);
+      await UserService.createMentor(testMentor);
       expect(UserService.createMentor(testMentor)).to.be.rejected;
-      if (mentor._id) {
-        await UserService.deleteMentor(mentor._id);
-      }
     });
   });
 
@@ -75,7 +68,6 @@ describe("🙋‍ User Service", () => {
       if (mentor._id) {
         const resp = await UserService.findMentor(mentor._id);
         expect(resp?._id).to.deep.equal(mentor._id);
-        await UserService.deleteMentor(mentor._id);
       }
     });
 
@@ -91,25 +83,30 @@ describe("🙋‍ User Service", () => {
       const parent: IParent = await UserService.createParent(testParent);
       expect(parent._id).to.exist;
       expect(parent).to.containSubset(testParent);
-      if (parent._id) {
-        UserService.deleteParent(parent._id);
-      }
     });
 
     it("prevents duplicates", async () => {
       const parent = await UserService.createParent(testParent);
       if (parent._id) {
         expect(UserService.createParent(testParent)).to.be.rejected;
-        await UserService.deleteParent(parent._id);
       }
     });
 
     it("Uses the correct enums", async () => {
       const parent = await UserService.createParent(testParent);
-      expect(parent.notificationPreference).to.be.a("string");
-      if (parent._id) {
-        await UserService.deleteParent(parent._id);
-      }
+      expect(parent.communicationPreference).to.be.a("string");
+    });
+
+    it("Creates a student subdocument", async () => {
+      const parent = await UserService.createParent(testParent);
+      expect(parent.students.length).to.be.gt(0);
+      expect(parent.students[0]._id).to.exist;
+    });
+
+    it("Have unique identifiers", async () => {
+      const parent = await UserService.createParent(testParent);
+      expect(parent.students.length).to.be.gt(0);
+      expect(parent.students[0]._id).to.not.be.equal(parent._id);
     });
   });
 
@@ -137,7 +134,6 @@ describe("🙋‍ User Service", () => {
         const resp = await UserService.findParent(parent._id);
         expect(resp?._id).to.deep.equal(parent._id);
         expect(resp).to.containSubset(testParent);
-        await UserService.deleteParent(parent._id);
       }
     });
 

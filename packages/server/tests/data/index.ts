@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import NotificationPreference from "../../src/models/NotificationPreference";
+import CommunicationPreference from "../../src/models/CommunicationPreference";
 import { IMentor } from "../../src/models/Mentors";
 import { IStudent } from "../../src/models/Students";
 import { IParent } from "../../src/models/Parents";
@@ -13,7 +13,7 @@ export const testMentor: IMentor = {
   avatar: "www.imgur.com/testImage.jpg",
   bio: "Hello I'm a test user",
   major: "Testing",
-  notificationPreference: NotificationPreference.EMAIL,
+  communicationPreference: CommunicationPreference.EMAIL,
   gradeLevels: ["8"],
   timezone: "EST",
 };
@@ -32,7 +32,7 @@ export const testParent: IParent = {
   phone: "1800839387",
   pronouns: "She/Her",
   avatar: "www.imgur.com/testImage.jpg",
-  notificationPreference: NotificationPreference.EMAIL,
+  communicationPreference: CommunicationPreference.EMAIL,
   timezone: "EST",
   students: [testStudent],
 };

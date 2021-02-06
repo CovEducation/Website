@@ -1,0 +1,211 @@
+import { mongoose } from "@typegoose/typegoose";
+import { ISession } from "../../models/Sessions";
+import MentorshipModel, {
+  IMentorship,
+  Mentorship,
+  MentorshipState,
+} from "../../models/Mentorships";
+import { IParent } from "../../models/Parents";
+import { IStudent } from "../../models/Students";
+import { IMentor } from "../../models/Mentors";
+
+export interface MentorshipRequest {
+  parent: IParent;
+  student: IStudent;
+  mentor: IMentor;
+  message: string;
+}
+
+/**
+ * Responsible for creating, updating, and archiving mentorship information. Not responsible
+ * for ensuring that the methods are called by the right type of user, or connecting to
+ * email / SMS services.
+ *
+ * A parent is the only type of user that can make mentorship requests in behalf of a student.
+ * A student can only have one mentorship at any point in time. However, a student
+ * can have multiple ongoing mentorship requests.
+ *
+ * A mentor can have multiple active mentorships at once. A mentor should be able to see / accept / reject any
+ * mentorship request, but not make a mentorship request. Once a mentor accepts a student's request,
+ * all the active requests made for the students will be automatically rejected.
+ *
+ * After a mentorship ends, it should be archived (not deleted!) so we can see mentorship patterns / engagement
+ * metrics in the future.
+ *
+ */
+class MentorshipService {
+  /**
+   * Sends a mentorship request to the chosen mentor, and a confirmation message to the parent. Takes into account the preferred communication method.
+   * @param request contains information about members of the mentorship
+   */
+  public async sendRequest(request: MentorshipRequest): Promise<Mentorship> {
+    return this.validateRequest(request).then(() => {
+      if (request.message.length === 0) {
+        return Promise.reject("Received empty mentorship request message.");
+      }
+      if (request.mentor._id === undefined) {
+        return Promise.reject("Invalid mentor");
+      }
+      if (request.parent._id === undefined) {
+        return Promise.reject("Invalid parent");
+      }
+      return MentorshipModel.create({
+        state: MentorshipState.PENDING,
+        student: request.student,
+        mentor: request.mentor._id,
+        parent: request.parent._id,
+        sessions: [],
+      });
+    });
+  }
+
+  private async validateRequest(request: MentorshipRequest): Promise<void> {
+    if (request.mentor._id === undefined) {
+      return Promise.reject(`Mentor: ${request.mentor.name} has no _id`);
+    }
+    if (request.parent._id === undefined) {
+      return Promise.reject(`Parent: ${request.parent.name} has no _id`);
+    }
+
+    if (await this.isStudentBeingMentored(request.student)) {
+      return Promise.reject(
+        `${request.student.name} is already being mentored.`
+      );
+    }
+    if (
+      await this.hasStudentBeenRejectedByMentor(request.student, request.mentor)
+    ) {
+      return Promise.reject(
+        `${request.student.name} has previous been rejected by ${request.mentor.name}`
+      );
+    }
+  }
+
+  private isStudentBeingMentored(student: IStudent) {
+    return this.getStudentMentorships(student).then((mentorships) => {
+      const activeReqs = mentorships.filter(
+        (request) => request.state === MentorshipState.ACTIVE
+      );
+      return activeReqs.length > 0;
+    });
+  }
+
+  private hasStudentBeenRejectedByMentor(student: IStudent, mentor: IMentor) {
+    return this.getStudentMentorships(student).then((mentorships) => {
+      const reqsToMentor = mentorships.filter((req) => {
+        req.mentor === mentor && req.state === MentorshipState.REJECTED;
+      });
+      return reqsToMentor.length > 0;
+    });
+  }
+
+  private getStudentMentorships(student: IStudent) {
+    return MentorshipModel.find({ student: student });
+  }
+
+  public getCurrentMentorships(userId: mongoose.Types.ObjectId) {
+    return MentorshipModel.find({
+      $or: [{ student: userId }, { parent: userId }, { mentor: userId }],
+    });
+  }
+  /**
+   * Assumes that the mentorship is being accepted by request of the mentor. A mentorship can only be accepted if it is in the PENDING state. A mentorship cannot be accepted more than once - a new mentorship request should be archived before being renewed.
+   * @param mentorship to be accepted.
+   */
+  public async acceptRequest(mentorship: IMentorship) {
+    if (mentorship.state !== MentorshipState.PENDING) {
+      Promise.reject(
+        `Cannot accept mentorship that is not pending: ${mentorship.state}`
+      );
+    }
+    return MentorshipModel.findOne(mentorship._id)
+      .then((doc) => {
+        if (doc === null) {
+          throw new Error(`Mentorship does not exist: ${mentorship._id}`);
+        }
+        doc.startDate = new Date();
+        doc.state = MentorshipState.ACTIVE;
+        return doc.save();
+      })
+      .then(() => this.rejectOtherRequestsMadeForStudent(mentorship));
+  }
+
+  private async rejectOtherRequestsMadeForStudent(mentorship: IMentorship) {
+    // mentorship.student is an ObjectId if mentorship has not been populated.
+    const otherMentorships = await MentorshipModel.find({
+      student: mentorship.student,
+    }).then((mentorships) =>
+      mentorships.filter((v) => v.id !== mentorship._id)
+    );
+
+    return Promise.all(
+      otherMentorships.map((m) => {
+        if (m.state === MentorshipState.PENDING && m.id !== mentorship._id) {
+          return this.rejectMentorship(m);
+        }
+        return Promise.resolve(m);
+      })
+    ).then(() => {});
+  }
+
+  /**
+   * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
+   * @param mentorship to be rejected.
+   */
+  public rejectMentorship(mentorship: IMentorship) {
+    if (mentorship._id === undefined) {
+      throw new Error(`Cannot reject non-existent mentorship`);
+    }
+    if (mentorship.state !== MentorshipState.PENDING) {
+      throw new Error(
+        `Cannot reject mentorship that is not pending: ${mentorship._id}`
+      );
+    }
+    return MentorshipModel.findById(mentorship._id).then((doc) => {
+      if (doc === null) {
+        throw new Error(`Failed to find mentorship: ${mentorship._id}`);
+      }
+      doc.state = MentorshipState.REJECTED;
+      return doc.save();
+    });
+  }
+
+  public archiveMentorship(mentorship: IMentorship) {
+    if (mentorship._id === undefined) {
+      return Promise.reject("Cannot archive non-existent mentorship");
+    }
+    return MentorshipModel.findById(mentorship._id).then((doc) => {
+      if (doc === null) {
+        throw new Error(`Failed to find mentorship: ${mentorship._id}`);
+      }
+      if (doc.state !== MentorshipState.ACTIVE) {
+        throw new Error(`Cannot archive inactive mentorship`);
+      }
+      doc.endDate = new Date();
+      doc.state = MentorshipState.ARCHIVED;
+      return doc.save();
+    });
+  }
+  /**
+   * A session can only be added to an ACTIVE mentorship.
+   */
+  public addSessionToMentorship(session: ISession, mentorship: Mentorship) {
+    if (mentorship._id === undefined) {
+      throw new Error("Missing mentorship._id");
+    }
+    return MentorshipModel.findById(mentorship._id).then((doc) => {
+      if (doc === null) {
+        throw new Error(`Failed to find mentorship ${mentorship._id}`);
+      }
+      if (doc.state !== MentorshipState.ACTIVE) {
+        throw new Error(
+          `Attempting to add a session to an inactive mentorship: ${doc._id}`
+        );
+      }
+      doc.sessions.push(session);
+      return doc.save();
+    });
+  }
+}
+
+export default MentorshipService;
