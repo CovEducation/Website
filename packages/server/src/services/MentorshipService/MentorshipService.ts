@@ -18,8 +18,7 @@ export interface MentorshipRequest {
 
 /**
  * Responsible for creating, updating, and archiving mentorship information. Not responsible
- * for ensuring that the methods are called by the right type of user, or connecting to
- * email / SMS services.
+ * for ensuring that the methods are called by the right type of user, or connecting to email / SMS services.
  *
  * A parent is the only type of user that can make mentorship requests in behalf of a student.
  * A student can only have one mentorship at any point in time. However, a student
@@ -112,7 +111,7 @@ class MentorshipService {
    * Assumes that the mentorship is being accepted by request of the mentor. A mentorship can only be accepted if it is in the PENDING state. A mentorship cannot be accepted more than once - a new mentorship request should be archived before being renewed.
    * @param mentorship to be accepted.
    */
-  public async acceptRequest(mentorship: IMentorship) {
+  public acceptRequest(mentorship: IMentorship) {
     if (mentorship.state !== MentorshipState.PENDING) {
       Promise.reject(
         `Cannot accept mentorship that is not pending: ${mentorship.state}`
@@ -130,6 +129,28 @@ class MentorshipService {
       .then(() => this.rejectOtherRequestsMadeForStudent(mentorship));
   }
 
+  /**
+   * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
+   * @param mentorship to be rejected.
+   */
+  public rejectRequest(mentorship: IMentorship) {
+    if (mentorship._id === undefined) {
+      throw new Error(`Cannot reject non-existent mentorship`);
+    }
+    return MentorshipModel.findById(mentorship._id).then((doc) => {
+      if (doc === null) {
+        throw new Error(`Failed to find mentorship: ${mentorship._id}`);
+      }
+      if (doc.state !== MentorshipState.PENDING) {
+        throw new Error(
+          `Cannot reject mentorship that is not pending: ${doc._id}`
+        );
+      }
+      doc.state = MentorshipState.REJECTED;
+      return doc.save();
+    });
+  }
+
   private async rejectOtherRequestsMadeForStudent(mentorship: IMentorship) {
     // mentorship.student is an ObjectId if mentorship has not been populated.
     const otherMentorships = await MentorshipModel.find({
@@ -141,35 +162,12 @@ class MentorshipService {
     return Promise.all(
       otherMentorships.map((m) => {
         if (m.state === MentorshipState.PENDING && m.id !== mentorship._id) {
-          return this.rejectMentorship(m);
+          return this.rejectRequest(m);
         }
         return Promise.resolve(m);
       })
     ).then(() => {});
   }
-
-  /**
-   * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
-   * @param mentorship to be rejected.
-   */
-  public rejectMentorship(mentorship: IMentorship) {
-    if (mentorship._id === undefined) {
-      throw new Error(`Cannot reject non-existent mentorship`);
-    }
-    if (mentorship.state !== MentorshipState.PENDING) {
-      throw new Error(
-        `Cannot reject mentorship that is not pending: ${mentorship._id}`
-      );
-    }
-    return MentorshipModel.findById(mentorship._id).then((doc) => {
-      if (doc === null) {
-        throw new Error(`Failed to find mentorship: ${mentorship._id}`);
-      }
-      doc.state = MentorshipState.REJECTED;
-      return doc.save();
-    });
-  }
-
   public archiveMentorship(mentorship: IMentorship) {
     if (mentorship._id === undefined) {
       return Promise.reject("Cannot archive non-existent mentorship");
@@ -192,6 +190,9 @@ class MentorshipService {
   public addSessionToMentorship(session: ISession, mentorship: Mentorship) {
     if (mentorship._id === undefined) {
       throw new Error("Missing mentorship._id");
+    }
+    if (session.rating > 1 || session.rating < 0) {
+      throw new Error(`Session rating out of range: ${session.rating}`);
     }
     return MentorshipModel.findById(mentorship._id).then((doc) => {
       if (doc === null) {

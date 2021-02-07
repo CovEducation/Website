@@ -33,7 +33,7 @@ afterEach(async () => await clearDatabase());
  */
 after(async () => await closeDatabase());
 
-describe("💻 Server", () => {
+describe("💾 Server", () => {
   it("is alive", async () => {
     const res = await app.get("/heartbeat");
     expect(res.status).to.equal(200);

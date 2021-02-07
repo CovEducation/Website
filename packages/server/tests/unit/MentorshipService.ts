@@ -254,9 +254,22 @@ describe("📚 Mentorship Service", () => {
         expect(acceptedMentorship.startDate).to.be.gte(prevTime);
       }
     });
+
+    it("blocks invalid calls", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      mentorship._id = undefined;
+      expect(() => MentorshipService.acceptRequest(mentorship)).to.throw;
+    });
   });
 
-  describe("::addSession", () => {
+  describe("::addSessionToMentorship())", () => {
     it("adds a session", async () => {
       const [parent, mentor, student] = await createUsers();
       if (student._id === undefined) {
@@ -332,6 +345,284 @@ describe("📚 Mentorship Service", () => {
       };
       expect(MentorshipService.addSessionToMentorship(session, mentorships[0]))
         .to.be.rejected;
+    });
+
+    it("ensures rating <= 1", async () => {
+      const [parent, mentor, student] = await createUsers();
+      if (student._id === undefined) {
+        throw new Error("Failed to create test data.");
+      }
+      const request: MentorshipRequest = {
+        message: "One mentorship please",
+        parent,
+        student,
+        mentor,
+      };
+      await MentorshipService.sendRequest(request);
+      const mentorships = await MentorshipService.getCurrentMentorships(
+        student._id
+      );
+      const session: ISession = {
+        durationMinutes: 60,
+        date: new Date(),
+        rating: 2,
+      };
+      expect(() =>
+        MentorshipService.addSessionToMentorship(session, mentorships[0])
+      ).to.throw;
+    });
+
+    it("ensures rating > 0", async () => {
+      const [parent, mentor, student] = await createUsers();
+      if (student._id === undefined) {
+        throw new Error("Failed to create test data.");
+      }
+      const request: MentorshipRequest = {
+        message: "One mentorship please",
+        parent,
+        student,
+        mentor,
+      };
+      await MentorshipService.sendRequest(request);
+      const mentorships = await MentorshipService.getCurrentMentorships(
+        student._id
+      );
+      const session: ISession = {
+        durationMinutes: 60,
+        date: new Date(),
+        rating: -0.1,
+      };
+      expect(() =>
+        MentorshipService.addSessionToMentorship(session, mentorships[0])
+      ).to.throw;
+    });
+
+    it("blocks invalid calls", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      mentorship._id = undefined;
+      const session: ISession = {
+        durationMinutes: 60,
+        date: new Date(),
+        rating: 0.1,
+      };
+      expect(() =>
+        MentorshipService.addSessionToMentorship(session, mentorship)
+      ).to.throw;
+    });
+  });
+
+  describe("::rejectRequest()", () => {
+    it("rejects a request", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      const updatedMentorship = await MentorshipService.rejectRequest(
+        mentorship
+      );
+      expect(updatedMentorship.state).to.be.equal(MentorshipState.REJECTED);
+    });
+    it("rejects only pending requests", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      MentorshipService.acceptRequest(mentorship);
+      const updatedMentorship = await MentorshipService.rejectRequest(
+        mentorship
+      );
+      expect(updatedMentorship.state).to.be.equal(MentorshipState.REJECTED);
+    });
+    it("does not affect other pending requests", async () => {
+      const [parent, mentor, student] = await createUsers();
+      if (student._id === undefined) {
+        throw new Error("Failed to create test data");
+      }
+      const otherMentor = await UserService.createMentor(testMentor);
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const otherRequest: MentorshipRequest = {
+        message: "Hi! Can you tutor my daughter?",
+        mentor: otherMentor,
+        parent,
+        student,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.sendRequest(otherRequest);
+      MentorshipService.acceptRequest(mentorship);
+      const updatedMentorship = await MentorshipService.rejectRequest(
+        mentorship
+      );
+      expect(updatedMentorship.state).to.be.equal(MentorshipState.REJECTED);
+      const mentorships = await MentorshipService.getCurrentMentorships(
+        student._id
+      );
+      expect(mentorships.length).to.be.equal(2);
+
+      const rejectedMentorships = mentorships.filter(
+        (v) => v.state === MentorshipState.REJECTED
+      );
+      const pendingMentorships = mentorships.filter(
+        (v) => v.state === MentorshipState.PENDING
+      );
+      expect(rejectedMentorships.length).to.equal(1);
+      expect(pendingMentorships.length).to.equal(1);
+    });
+    it("cannot reject accepted requests", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      MentorshipService.rejectRequest(mentorship);
+      await MentorshipService.acceptRequest(mentorship);
+      expect(MentorshipService.rejectRequest(mentorship)).to.be.rejected;
+    });
+    it("blocks double rejections", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      MentorshipService.rejectRequest(mentorship);
+      await MentorshipService.rejectRequest(mentorship);
+      expect(MentorshipService.rejectRequest(mentorship)).to.be.rejected;
+    });
+
+    it("blocks invalid calls", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      mentorship._id = undefined;
+      expect(() => MentorshipService.rejectRequest(mentorship)).to.throw;
+    });
+  });
+
+  describe("::archiveMentorship", () => {
+    it("archives a mentorship", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      const prevTime = new Date();
+      const updatedMentorship = await MentorshipService.archiveMentorship(
+        mentorship
+      );
+      expect(updatedMentorship.state).to.be.equal(MentorshipState.ARCHIVED);
+      expect(updatedMentorship.endDate).to.not.be.undefined;
+      if (updatedMentorship.startDate) {
+        const delta = Math.abs(
+          new Date().getTime() - updatedMentorship.startDate.getTime()
+        );
+        expect(delta).to.be.lte(5 * 1000); // 5 seconds.
+        expect(updatedMentorship.endDate).to.be.gte(prevTime);
+      }
+    });
+
+    it("archives only active mentorships", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      expect(MentorshipService.archiveMentorship(mentorship)).to.be.rejected;
+    });
+
+    it("allows student to make new requests", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      await MentorshipService.archiveMentorship(mentorship);
+      expect(MentorshipService.sendRequest(request)).to.not.be.rejected;
+    });
+
+    it("only archives a mentorship once", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      await MentorshipService.archiveMentorship(mentorship);
+      expect(MentorshipService.archiveMentorship(mentorship)).to.be.rejected;
+    });
+
+    it("has database consistency", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      await MentorshipService.archiveMentorship(mentorship);
+      mentorship.state = MentorshipState.ACTIVE;
+      expect(MentorshipService.archiveMentorship(mentorship)).to.be.rejected;
+    });
+
+    it("blocks invalid calls", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
+      mentorship._id = undefined;
+      expect(() => MentorshipService.archiveMentorship(mentorship)).to.throw;
     });
   });
 });
