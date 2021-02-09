@@ -8,6 +8,10 @@ import MentorshipModel, {
 import { IParent } from "../../models/Parents";
 import { IStudent } from "../../models/Students";
 import { IMentor } from "../../models/Mentors";
+import CommunicationService, {
+  CommunicationTemplates,
+} from "../CommunicationService";
+import UserService from "../UserService";
 
 export interface MentorshipRequest {
   parent: IParent;
@@ -54,8 +58,17 @@ class MentorshipService {
         mentor: request.mentor._id,
         parent: request.parent._id,
         sessions: [],
-      }).then((mentorship) => {
+      }).then(async (mentorship) => {
         // TODO: Send welcome message.
+        if (request.mentor._id === undefined) {
+          return Promise.reject("Invalid mentor");
+        }
+        const mentor = await UserService.findMentor(request.mentor._id);
+        await CommunicationService.sendMessage(
+          mentor,
+          CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR,
+          request
+        );
         return mentorship;
       });
     });

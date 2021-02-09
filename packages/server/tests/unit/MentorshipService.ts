@@ -1,6 +1,16 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
+import mockery from "mockery";
+import nodemailerMock from "nodemailer-mock";
+
+// We need to setup the mocks before importing CommunicationService
+// so nodemailer is actually mocked.
+mockery.enable({ warnOnReplace: false, warnOnUnregistered: false });
+// Replace all nodemailer calls with nodemailerMock
+mockery.registerMock("nodemailer", nodemailerMock);
+
+import CommunicationPreference from "../../src/models/CommunicationPreference";
 import { IMentor } from "../../src/models/Mentors";
 import { MentorshipState } from "../../src/models/Mentorships";
 import { IParent } from "../../src/models/Parents";
@@ -64,6 +74,25 @@ describe("📚 Mentorship Service", () => {
       expect(mentorship.state).to.be.equal(MentorshipState.PENDING);
       expect(mentorship.sessions).to.have.length.gte(0);
       expect(mentorship.startDate).to.be.undefined;
+    });
+
+    it("sends an email", async () => {
+      const mentor = await UserService.createMentor({
+        ...testMentor,
+        communicationPreference: CommunicationPreference.EMAIL,
+      });
+      const parent = await UserService.createParent(testParent);
+      const student = parent.students[0];
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      await MentorshipService.sendRequest(request);
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.be.equal(1);
     });
 
     it("rejects empty messages", async () => {
