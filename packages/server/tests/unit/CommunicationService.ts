@@ -199,7 +199,7 @@ describe("🛰️ Communication Service ", () => {
 
     it("ignores invalid but unused contact info", async () => {
       const template = CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR;
-      const method = CommunicationPreference.SMS;
+      const method = CommunicationPreference.EMAIL;
       const info = {
         mentor: testMentor,
         parent: testParent,
@@ -212,7 +212,7 @@ describe("🛰️ Communication Service ", () => {
         communicationPreference: method,
       };
       await expect(CommunicationService.sendMessage(user, template, info)).to
-        .eventually.not.be.rejected;
+        .not.eventually.be.rejected;
     });
   });
 });
