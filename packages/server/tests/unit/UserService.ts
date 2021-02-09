@@ -1,4 +1,4 @@
-import chai, { expect } from "chai";
+import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
 import { mongoose } from "@typegoose/typegoose";
@@ -11,6 +11,7 @@ import { IParent } from "../../src/models/Parents";
 
 chai.use(chaiAsPromised); // Allows us to handle promise rejections.
 chai.use(chaiSubset);
+const expect = chai.expect;
 /**
  * Start a new server & connect to a new in-memory database before running any tests.
  */
@@ -41,7 +42,8 @@ describe("🙋‍ User Service", () => {
 
     it("prevents duplicates", async () => {
       await UserService.createMentor(testMentor);
-      expect(UserService.createMentor(testMentor)).to.be.rejected;
+      await expect(UserService.createMentor(testMentor)).to.eventually.be
+        .rejected;
     });
   });
 
@@ -88,7 +90,8 @@ describe("🙋‍ User Service", () => {
     it("prevents duplicates", async () => {
       const parent = await UserService.createParent(testParent);
       if (parent._id) {
-        expect(UserService.createParent(testParent)).to.be.rejected;
+        await expect(UserService.createParent(testParent)).to.eventually.be
+          .rejected;
       }
     });
 

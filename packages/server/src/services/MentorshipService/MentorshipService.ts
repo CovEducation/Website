@@ -65,18 +65,20 @@ class MentorshipService {
     if (request.parent._id === undefined) {
       return Promise.reject(`Parent: ${request.parent.name} has no _id`);
     }
-
     if (await this.isStudentBeingMentored(request.student)) {
       return Promise.reject(
         `${request.student.name} is already being mentored.`
       );
-    }
-    if (
+    } else if (await this.isDuplicate(request)) {
+      return Promise.reject("Duplicated request.");
+    } else if (
       await this.hasStudentBeenRejectedByMentor(request.student, request.mentor)
     ) {
       return Promise.reject(
         `${request.student.name} has previous been rejected by ${request.mentor.name}`
       );
+    } else {
+      return Promise.resolve();
     }
   }
 
@@ -92,14 +94,32 @@ class MentorshipService {
   private hasStudentBeenRejectedByMentor(student: IStudent, mentor: IMentor) {
     return this.getStudentMentorships(student).then((mentorships) => {
       const reqsToMentor = mentorships.filter((req) => {
-        req.mentor === mentor && req.state === MentorshipState.REJECTED;
+        return (
+          (req.mentor === mentor || req.mentor === mentor._id) &&
+          req.state === MentorshipState.REJECTED
+        );
       });
       return reqsToMentor.length > 0;
     });
   }
 
+  private isDuplicate(request: MentorshipRequest) {
+    return MentorshipModel.find({
+      student: request.student._id,
+      mentor: request.mentor._id,
+      state: MentorshipState.PENDING,
+    }).then((docs) => {
+      return docs.length > 0;
+    });
+  }
+
   private getStudentMentorships(student: IStudent) {
-    return MentorshipModel.find({ student: student });
+    if (student._id === undefined) {
+      throw new Error(
+        `Cannot get mentorships for student not in database: ${student.name}`
+      );
+    }
+    return this.getCurrentMentorships(student._id);
   }
 
   public getCurrentMentorships(userId: mongoose.Types.ObjectId) {
@@ -112,15 +132,18 @@ class MentorshipService {
    * @param mentorship to be accepted.
    */
   public acceptRequest(mentorship: IMentorship) {
-    if (mentorship.state !== MentorshipState.PENDING) {
-      Promise.reject(
-        `Cannot accept mentorship that is not pending: ${mentorship.state}`
-      );
+    if (mentorship._id === undefined) {
+      return Promise.reject("Missing mentorship._id");
     }
     return MentorshipModel.findOne(mentorship._id)
       .then((doc) => {
         if (doc === null) {
           throw new Error(`Mentorship does not exist: ${mentorship._id}`);
+        }
+        if (doc.state !== MentorshipState.PENDING) {
+          throw new Error(
+            `Cannot accept mentorship that is not pending: ${doc.state}`
+          );
         }
         doc.startDate = new Date();
         doc.state = MentorshipState.ACTIVE;
@@ -168,6 +191,7 @@ class MentorshipService {
       })
     ).then(() => {});
   }
+
   public archiveMentorship(mentorship: IMentorship) {
     if (mentorship._id === undefined) {
       return Promise.reject("Cannot archive non-existent mentorship");
@@ -184,6 +208,7 @@ class MentorshipService {
       return doc.save();
     });
   }
+
   /**
    * A session can only be added to an ACTIVE mentorship.
    */

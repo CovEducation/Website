@@ -26,4 +26,12 @@ jobs:
       - run: npm i -g yarn@1
       - run: npm i -g lerna@latest
       - run: yarn --frozen-lockfile
-      - run: lerna run test
+      - name: Test
+        run: lerna run test
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI}}
+          DB_NAME: ${{ secrets.DB_NAME}}
+          MANDRILL_KEY: ${{ secrets.MANDRILL_KEY}}
+          TWILIO_SID: ${{ secrets.TWILIO_SID}}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN}}
+          TWILIO_NUM: ${{ secrets.TWILIO_NUM}}
