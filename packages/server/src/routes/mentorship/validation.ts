@@ -9,7 +9,7 @@ import {
 
 const mentorshipRequirement = body("mentorship").custom((mentorship) => {
   return MentorshipModel.create(mentorship).then(async (doc) => {
-    const valid = doc.validateSync();
+    const valid = doc.validateSync() === undefined;
     await MentorshipModel.findById(doc._id);
     return valid;
   });
@@ -31,11 +31,9 @@ const sessionRequirement = checkSchema({
   },
 });
 
-export const postRequestValidation = [
-  mentorRequirement,
-  parentRequirement,
-  studentRequirement,
-];
+export const postRequestValidation = [studentRequirement]
+  .concat(mentorRequirement)
+  .concat(parentRequirement);
 
 export const getMentorshipsValidation = userRequirement; // checkSchema is already a ValidationChain[]
 

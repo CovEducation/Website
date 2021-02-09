@@ -45,6 +45,8 @@ describe("🙋‍ User Service", () => {
       await expect(UserService.createMentor(testMentor)).to.eventually.be
         .rejected;
     });
+
+    it("syncs with algolia", async () => {});
   });
 
   describe("::deleteMentor()", () => {
@@ -61,6 +63,8 @@ describe("🙋‍ User Service", () => {
       const ok = await UserService.deleteMentor(mongoose.Types.ObjectId());
       expect(ok).to.be.false;
     });
+
+    it("syncs with algolia", async () => {});
   });
 
   describe("::findMentor()", () => {

@@ -6,35 +6,35 @@ import CommunicationPreference from "../../models/CommunicationPreference";
 // Common fields between all types of users.
 export const userRequirement = checkSchema({
   firebaseUID: {
-    in: ["body"],
+    in: ["body", "query"],
     isUUID: true,
   },
   name: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   email: {
-    in: ["body"],
+    in: ["body", "query"],
     isEmail: true,
   },
   timezone: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   phone: {
-    in: ["body"],
+    in: ["body", "query"],
     isMobilePhone: true,
   },
   pronouns: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   avatar: {
-    in: ["body"],
+    in: ["body", "query"],
     isURL: true,
   },
   communicationPreference: {
-    in: ["body"],
+    in: ["body", "query"],
     isIn: {
       options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
     },
@@ -44,39 +44,39 @@ export const userRequirement = checkSchema({
 // Requirements shared between endpoints.
 export const mentorRequirement = checkSchema({
   firebaseUID: {
-    in: ["body"],
+    in: ["body", "query"],
     isUUID: true,
   },
   name: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   email: {
-    in: ["body"],
+    in: ["body", "query"],
     isEmail: true,
   },
   timezone: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   phone: {
-    in: ["body"],
+    in: ["body", "query"],
     isMobilePhone: true,
   },
   pronouns: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   avatar: {
-    in: ["body"],
+    in: ["body", "query"],
     isURL: true,
   },
   bio: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   major: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   gradeLevels: {
@@ -84,7 +84,7 @@ export const mentorRequirement = checkSchema({
     isArray: true,
   },
   communicationPreference: {
-    in: ["body"],
+    in: ["body", "query"],
     isIn: {
       options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
     },
@@ -93,31 +93,31 @@ export const mentorRequirement = checkSchema({
 
 export const parentRequirement = checkSchema({
   firebaseUID: {
-    in: ["body"],
+    in: ["body", "query"],
     isUUID: true,
   },
   name: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   email: {
-    in: ["body"],
+    in: ["body", "query"],
     isEmail: true,
   },
   timezone: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   phone: {
-    in: ["body"],
+    in: ["body", "query"],
     isMobilePhone: true,
   },
   pronouns: {
-    in: ["body"],
+    in: ["body", "query"],
     isString: true,
   },
   avatar: {
-    in: ["body"],
+    in: ["body", "query"],
     isURL: true,
   },
   students: {
@@ -125,7 +125,7 @@ export const parentRequirement = checkSchema({
     isArray: true,
   },
   communicationPreference: {
-    in: ["body"],
+    in: ["body", "query"],
     isIn: {
       options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
     },
@@ -135,9 +135,9 @@ export const parentRequirement = checkSchema({
 export const studentRequirement = body("students").custom((students: []) => {
   return students.every(async (student) => {
     const doc = await StudentModel.create(student);
-    const valid = doc.validateSync();
+    const valid = doc.validateSync() === undefined;
     await StudentModel.findByIdAndDelete(doc._id);
-    return await valid;
+    return valid;
   });
 });
 

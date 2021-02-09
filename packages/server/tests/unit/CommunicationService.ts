@@ -28,6 +28,11 @@ after(async () => {
   mockery.disable();
 });
 
+/**
+ * Note:
+ * For now, it's not possible to retrieve SMS history using  the twilio test credentials,
+ * so I'm assuming that if an exception was not thrown, the SMS message was sent successfully.
+ */
 describe("🛰️ Communication Service ", () => {
   describe("::sendMessage()", () => {
     it("sends a email message", async () => {

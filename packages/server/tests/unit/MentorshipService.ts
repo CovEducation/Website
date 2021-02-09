@@ -51,14 +51,6 @@ const createUsers = async (): Promise<[IParent, IMentor, IStudent]> => {
   return [parent, mentor, student];
 };
 
-/**
- * Testing strategy
- *  sendRequest():
- *    - Ensure that all 4 combinations of communication preferences between mentors and parents are respected.
- *    - Ensure that a parent cannot request mentorship for a student that is already mentored
- *    - Ensure that empty messages are rejected.
- *
- */
 describe("📚 Mentorship Service", () => {
   describe("::sendRequest()", () => {
     it("creates a mentorship document", async () => {
