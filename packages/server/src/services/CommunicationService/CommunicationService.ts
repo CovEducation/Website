@@ -53,25 +53,40 @@ class CommunicationService {
   }
 
   public sendMessage(
-    recipient: string,
+    user: IMentor | IParent,
     template: CommunicationTemplates,
-    method: CommunicationPreference,
     info: MessageData
   ): Promise<void> {
+    const recipient = this.getRecipientAddress(user);
     if (recipient.length === 0) {
       return Promise.reject("invalid email");
     }
-    return CommunicationService.verifyMessage(recipient, method).then(() => {
-      if (method === CommunicationPreference.EMAIL) {
+    return CommunicationService.verifyMessage(
+      recipient,
+      user.communicationPreference
+    ).then(() => {
+      if (user.communicationPreference === CommunicationPreference.EMAIL) {
         return this.sendEmail(recipient, template, info);
-      } else if (method === CommunicationPreference.SMS) {
+      } else if (user.communicationPreference === CommunicationPreference.SMS) {
         return this.sendSMS(recipient, template, info);
       } else {
         throw Error(
-          `CommunicationService::sendMessage(): Invalid communication method: ${method}`
+          `CommunicationService::sendMessage(): Invalid communication method: ${user.communicationPreference}`
         );
       }
     });
+  }
+
+  private getRecipientAddress(user: IMentor | IParent) {
+    if (user.communicationPreference === CommunicationPreference.SMS) {
+      return user.phone;
+    } else if (user.communicationPreference === CommunicationPreference.EMAIL) {
+      return user.email;
+    } else {
+      throw new Error(
+        `Invalid communication method: ${user.communicationPreference}`
+      );
+    }
   }
 
   // Promise so sendMessage remains a promise.

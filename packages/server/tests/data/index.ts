@@ -7,8 +7,8 @@ import { IParent } from "../../src/models/Parents";
 export const testMentor: IMentor = {
   firebaseUID: uuid(),
   name: "Ben Bitdiddle",
-  email: "testUser@email.com",
-  phone: "18002920011",
+  email: "jack@mit.edu",
+  phone: "8002016779",
   pronouns: "He/Him",
   avatar: "www.imgur.com/testImage.jpg",
   bio: "Hello I'm a test user",

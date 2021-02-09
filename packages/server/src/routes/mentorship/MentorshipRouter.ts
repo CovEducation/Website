@@ -14,7 +14,7 @@ class MentorshipRouter {
       res.send({});
     });
 
-    this.router.get("/status", (_, res) => {
+    this.router.get("/mentorships", (_, res) => {
       res.send({});
     });
 
@@ -25,6 +25,8 @@ class MentorshipRouter {
     this.router.post("/reject", (_, res) => {
       res.send({});
     });
+
+    this.router.post("/archive", (_, res) => res.send({}));
 
     this.router.post("/session", (_, res) => {
       res.send({});

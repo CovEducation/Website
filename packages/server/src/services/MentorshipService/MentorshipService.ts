@@ -54,6 +54,9 @@ class MentorshipService {
         mentor: request.mentor._id,
         parent: request.parent._id,
         sessions: [],
+      }).then((mentorship) => {
+        // TODO: Send welcome message.
+        return mentorship;
       });
     });
   }
@@ -147,6 +150,8 @@ class MentorshipService {
         }
         doc.startDate = new Date();
         doc.state = MentorshipState.ACTIVE;
+
+        // TODO: Send acceptance message.
         return doc.save();
       })
       .then(() => this.rejectOtherRequestsMadeForStudent(mentorship));
@@ -170,6 +175,8 @@ class MentorshipService {
         );
       }
       doc.state = MentorshipState.REJECTED;
+
+      // TODO(external) - Ask Dheekshu if it makes sense to not send a message?
       return doc.save();
     });
   }
@@ -205,6 +212,7 @@ class MentorshipService {
       }
       doc.endDate = new Date();
       doc.state = MentorshipState.ARCHIVED;
+      // TODO(management) - End of mentorship survey?
       return doc.save();
     });
   }

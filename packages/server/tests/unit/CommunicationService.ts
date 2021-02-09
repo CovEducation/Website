@@ -19,9 +19,6 @@ import CommunicationPreference from "../../src/models/CommunicationPreference";
 chai.use(chaiAsPromised); // Allows us to handle promise rejections.
 const expect = chai.expect;
 
-const TEST_EMAIL = "jack@bakerhouse.com";
-const TEST_PHONE = "8572096179";
-
 afterEach(async () => {
   nodemailerMock.mock.reset();
 });
@@ -35,7 +32,7 @@ describe("🛰️ Communication Service ", () => {
   describe("::sendMessage()", () => {
     it("sends a email message", async () => {
       const template = CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR;
-      const method = CommunicationPreference.EMAIL;
+
       const info = {
         mentor: testMentor,
         parent: testParent,
@@ -43,12 +40,7 @@ describe("🛰️ Communication Service ", () => {
         message: "hello world",
       };
 
-      await CommunicationService.sendMessage(
-        TEST_EMAIL,
-        template,
-        method,
-        info
-      );
+      await CommunicationService.sendMessage(testMentor, template, info);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.be.equal(1);
@@ -62,10 +54,12 @@ describe("🛰️ Communication Service ", () => {
         parent: testParent,
         message: "hello world",
       };
-
-      expect(
-        CommunicationService.sendMessage(TEST_EMAIL, template, method, info)
-      ).to.eventually.be.rejected;
+      const user = {
+        ...testMentor,
+        communicationPreference: method,
+      };
+      expect(CommunicationService.sendMessage(user, template, info)).to
+        .eventually.be.rejected;
     });
 
     it("respects the communication preference", async () => {
@@ -79,9 +73,8 @@ describe("🛰️ Communication Service ", () => {
       };
 
       await CommunicationService.sendMessage(
-        TEST_PHONE,
+        { ...testMentor, communicationPreference: method },
         template,
-        method,
         msgData
       );
 
@@ -96,13 +89,13 @@ describe("🛰️ Communication Service ", () => {
         student: testStudent,
         message: "This is a test email!",
       };
+      const method = CommunicationPreference.EMAIL;
       let template: unknown;
       for (template in CommunicationTemplates) {
         await expect(
           CommunicationService.sendMessage(
-            TEST_EMAIL,
+            { ...testMentor, communicationPreference: method },
             template as CommunicationTemplates,
-            CommunicationPreference.EMAIL,
             msgData
           )
         ).to.eventually.not.be.rejected;
@@ -118,15 +111,13 @@ describe("🛰️ Communication Service ", () => {
         student: testStudent,
         message: "hello world",
       };
-
-      await expect(
-        CommunicationService.sendMessage(
-          "florey@invalid@email.com",
-          template,
-          method,
-          info
-        )
-      ).to.eventually.be.rejected;
+      const user = {
+        ...testMentor,
+        email: "florey@invalid@email.com",
+        communicationPreference: method,
+      };
+      await expect(CommunicationService.sendMessage(user, template, info)).to
+        .eventually.be.rejected;
     });
 
     it("sends a text message", async () => {
@@ -140,9 +131,11 @@ describe("🛰️ Communication Service ", () => {
       };
 
       await CommunicationService.sendMessage(
-        TEST_PHONE,
+        {
+          ...testMentor,
+          communicationPreference: method,
+        },
         template,
-        method,
         info
       );
     });
@@ -154,10 +147,12 @@ describe("🛰️ Communication Service ", () => {
         mentor: testMentor,
         message: "hello world",
       };
-
-      await expect(
-        CommunicationService.sendMessage(TEST_PHONE, template, method, info)
-      ).to.eventually.be.rejected;
+      const user = {
+        ...testMentor,
+        communicationPreference: method,
+      };
+      await expect(CommunicationService.sendMessage(user, template, info)).to
+        .eventually.be.rejected;
     });
 
     it("blocks invalid phone numbers", async () => {
@@ -169,10 +164,13 @@ describe("🛰️ Communication Service ", () => {
         student: testStudent,
         message: "hello world",
       };
-
-      await expect(
-        CommunicationService.sendMessage("1234", template, method, info)
-      ).to.eventually.be.rejected;
+      const user = {
+        ...testMentor,
+        phone: "1234",
+        communicationPreference: method,
+      };
+      await expect(CommunicationService.sendMessage(user, template, info)).to
+        .eventually.be.rejected;
     });
 
     it("works on all sms templates", async () => {
@@ -183,31 +181,38 @@ describe("🛰️ Communication Service ", () => {
         message: "This is a test SMS!",
       };
       let template: unknown;
+      const user = {
+        ...testMentor,
+        phone: "1234",
+        communicationPreference: CommunicationPreference.SMS,
+      };
       for (template in CommunicationTemplates) {
         await expect(
           CommunicationService.sendMessage(
-            TEST_PHONE,
+            user,
             template as CommunicationTemplates,
-            CommunicationPreference.SMS,
             msgData
           )
         ).to.eventually.not.be.rejected;
       }
     });
 
-    it("handles communication method mismatch", async () => {
+    it("ignores invalid but unused contact info", async () => {
       const template = CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR;
-      const method = CommunicationPreference.EMAIL;
+      const method = CommunicationPreference.SMS;
       const info = {
         mentor: testMentor,
         parent: testParent,
         student: testStudent,
         message: "hello world",
       };
-
-      await expect(
-        CommunicationService.sendMessage(TEST_PHONE, template, method, info)
-      ).to.eventually.be.rejected;
+      const user = {
+        ...testMentor,
+        phone: "1234",
+        communicationPreference: method,
+      };
+      await expect(CommunicationService.sendMessage(user, template, info)).to
+        .eventually.not.be.rejected;
     });
   });
 });
