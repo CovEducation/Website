@@ -70,7 +70,7 @@
     "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-knobs": "^6.1.15",
     "@storybook/addon-links": "^6.1.15",
-    "@storybook/addon-notes": "^5.3.21",
+    "@storybook/addon-notes": "^6.0.0-alpha.6",
     "@storybook/addons": "^6.1.15",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/preset-scss": "^1.0.3",
