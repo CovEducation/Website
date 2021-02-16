@@ -562,7 +562,7 @@ describe("📚 Mentorship Service", () => {
       };
       const mentorship = await MentorshipService.sendRequest(request);
       await MentorshipService.sendRequest(otherRequest);
-      MentorshipService.acceptRequest(mentorship);
+
       const updatedMentorship = await MentorshipService.rejectRequest(
         mentorship
       );
