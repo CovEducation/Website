@@ -1,25 +1,22 @@
 import {
-  mentorRequirement,
-  idParamRequirement,
-  idBodyRequirement,
-  studentRequirement,
-  parentRequirement,
+  mentorRequirementsBody,
+  parentRequirementsBody,
+  idRequirementBody,
+  idRequirementQuery,
 } from "../utils";
 
 // Endpoint specific validation.
-export const postMentorValidation = mentorRequirement; // checkSchema is already a ValidationChain[]
+export const postMentorValidation = mentorRequirementsBody; // checkSchema is already a ValidationChain[]
 
-export const getMentorValidation = [idParamRequirement];
+export const getMentorValidation = [idRequirementQuery];
 
-export const deleteMentorValidation = [idBodyRequirement];
+export const deleteMentorValidation = [idRequirementBody];
 
-export const postParentValidation = [studentRequirement].concat(
-  parentRequirement
-);
+export const postParentValidation = parentRequirementsBody;
 
-export const getParentValidation = [idParamRequirement];
+export const getParentValidation = [idRequirementQuery];
 
-export const deleteParentValidation = [idBodyRequirement];
+export const deleteParentValidation = [idRequirementBody];
 
 export default {
   postMentorValidation,

@@ -1,15 +1,9 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
-import mockery from "mockery";
+import { setupMocks } from "../utils";
+setupMocks();
 import nodemailerMock from "nodemailer-mock";
-
-// We need to setup the mocks before importing CommunicationService
-// so nodemailer is actually mocked.
-mockery.enable({ warnOnReplace: false, warnOnUnregistered: false });
-// Replace all nodemailer calls with nodemailerMock
-mockery.registerMock("nodemailer", nodemailerMock);
-
 import CommunicationPreference from "../../src/models/CommunicationPreference";
 import { IMentor } from "../../src/models/Mentors";
 import { MentorshipState } from "../../src/models/Mentorships";
@@ -471,7 +465,8 @@ describe("📚 Mentorship Service", () => {
         student,
         mentor,
       };
-      await MentorshipService.sendRequest(request);
+      const mentorship = await MentorshipService.sendRequest(request);
+      await MentorshipService.acceptRequest(mentorship);
       const mentorships = await MentorshipService.getCurrentMentorships(
         student._id
       );
@@ -480,9 +475,15 @@ describe("📚 Mentorship Service", () => {
         date: new Date(),
         rating: -0.1,
       };
-      expect(() =>
+
+      await expect(
         MentorshipService.addSessionToMentorship(session, mentorships[0])
-      ).to.throw;
+      ).to.be.rejected;
+
+      const [mentorshipUpdated] = await MentorshipService.getCurrentMentorships(
+        student._id
+      );
+      expect(mentorshipUpdated.sessions.length).to.be.equal(0);
     });
 
     it("blocks invalid calls", async () => {

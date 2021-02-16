@@ -1,6 +1,10 @@
 import { mongoose } from "@typegoose/typegoose";
 
 import { MongoMemoryServer } from "mongodb-memory-server";
+// Mocking
+
+import mockery from "mockery";
+import nodemailerMock from "nodemailer-mock";
 
 const mongod = new MongoMemoryServer();
 
@@ -47,8 +51,17 @@ export const clearDatabase = async () => {
   }
 };
 
+export const setupMocks = async () => {
+  // We need to setup the mocks before importing CommunicationService
+  // so nodemailer is actually mocked.
+  mockery.enable({ warnOnReplace: false, warnOnUnregistered: false });
+  // Replace all nodemailer calls with nodemailerMock
+  mockery.registerMock("nodemailer", nodemailerMock);
+};
+
 export default {
   connect,
   clearDatabase,
   closeDatabase,
+  setupMocks,
 };

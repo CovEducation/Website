@@ -43,11 +43,15 @@ class MentorshipService {
    */
   public async sendRequest(request: MentorshipRequest): Promise<Mentorship> {
     return this.validateRequest(request).then(() => {
+      // These checks are done in validateRequest, but TS complains if we don't validate the fields here.
       if (request.message.length === 0) {
         return Promise.reject("Received empty mentorship request message.");
       }
       if (request.mentor._id === undefined) {
         return Promise.reject("Invalid mentor");
+      }
+      if (request.student._id === undefined) {
+        return Promise.reject("Invalid student");
       }
       if (request.parent._id === undefined) {
         return Promise.reject("Invalid parent");
@@ -80,6 +84,12 @@ class MentorshipService {
     }
     if (request.parent._id === undefined) {
       return Promise.reject(`Parent: ${request.parent.name} has no _id`);
+    }
+    if (request.student._id === undefined) {
+      return Promise.reject(`Student ${request.student.name} has no _id`);
+    }
+    if (request.message.length === 0) {
+      return Promise.reject(`Please specify a message`);
     }
     if (await this.isStudentBeingMentored(request.student)) {
       return Promise.reject(
@@ -121,6 +131,7 @@ class MentorshipService {
 
   private isDuplicate(request: MentorshipRequest) {
     return MentorshipModel.find({
+      parent: request.parent._id,
       student: request.student._id,
       mentor: request.mentor._id,
       state: MentorshipState.PENDING,
@@ -151,7 +162,7 @@ class MentorshipService {
     if (mentorship._id === undefined) {
       return Promise.reject("Missing mentorship._id");
     }
-    return MentorshipModel.findOne(mentorship._id)
+    return MentorshipModel.findOne({ _id: mentorship._id })
       .then((doc) => {
         if (doc === null) {
           throw new Error(`Mentorship does not exist: ${mentorship._id}`);
@@ -235,10 +246,10 @@ class MentorshipService {
    */
   public addSessionToMentorship(session: ISession, mentorship: Mentorship) {
     if (mentorship._id === undefined) {
-      throw new Error("Missing mentorship._id");
+      return Promise.reject("Missing mentorship._id");
     }
     if (session.rating > 1 || session.rating < 0) {
-      throw new Error(`Session rating out of range: ${session.rating}`);
+      return Promise.reject(`Session rating out of range: ${session.rating}`);
     }
     return MentorshipModel.findById(mentorship._id).then((doc) => {
       if (doc === null) {

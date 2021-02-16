@@ -3,7 +3,7 @@ import { IMentor } from "src/models/Mentors";
 import { IParent } from "src/models/Parents";
 
 export interface PostMentorRequest extends Request {
-  body: IMentor;
+  body: { mentor: IMentor };
 }
 
 export interface PostMentorResponse extends Response<IMentor> {}
@@ -21,7 +21,7 @@ export interface DeleteMentorRequest extends Request {
 export interface DeleteMentorResponse extends Response {}
 
 export interface PostParentRequest extends Request {
-  body: IParent;
+  body: { parent: IParent };
 }
 
 export interface PostParentResponse extends Response<IParent> {}

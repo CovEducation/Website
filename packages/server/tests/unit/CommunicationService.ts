@@ -1,19 +1,15 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
+import { setupMocks } from "../utils";
+setupMocks();
 import mockery from "mockery";
 import nodemailerMock from "nodemailer-mock";
 import { testMentor, testParent, testStudent } from "../data";
-
-// We need to setup the mocks before importing CommunicationService
-// so nodemailer is actually mocked.
-mockery.enable({ warnOnReplace: false, warnOnUnregistered: false });
-// Replace all nodemailer calls with nodemailerMock
-mockery.registerMock("nodemailer", nodemailerMock);
-
 import CommunicationService, {
-  CommunicationTemplates,
   MessageData,
+  CommunicationTemplates,
 } from "../../src/services/CommunicationService";
+
 import CommunicationPreference from "../../src/models/CommunicationPreference";
 
 chai.use(chaiAsPromised); // Allows us to handle promise rejections.
@@ -30,8 +26,7 @@ after(async () => {
 
 /**
  * Note:
- * For now, it's not possible to retrieve SMS history using  the twilio test credentials,
- * so I'm assuming that if an exception was not thrown, the SMS message was sent successfully.
+ * For now, it's not possible to retrieve SMS history using  the twilio test credentials, so I'm assuming that if an exception was not thrown, the SMS message was sent successfully.
  */
 describe("🛰️ Communication Service ", () => {
   describe("::sendMessage()", () => {

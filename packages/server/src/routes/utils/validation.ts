@@ -1,157 +1,58 @@
-import { mongoose } from "@typegoose/typegoose";
-import { checkSchema, query, body } from "express-validator";
-import StudentModel from "../../models/Students";
+import { query, body } from "express-validator";
 import CommunicationPreference from "../../models/CommunicationPreference";
 
-// Common fields between all types of users.
-export const userRequirement = checkSchema({
-  firebaseUID: {
-    in: ["body", "query"],
-    isUUID: true,
-  },
-  name: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  email: {
-    in: ["body", "query"],
-    isEmail: true,
-  },
-  timezone: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  phone: {
-    in: ["body", "query"],
-    isMobilePhone: true,
-  },
-  pronouns: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  avatar: {
-    in: ["body", "query"],
-    isURL: true,
-  },
-  communicationPreference: {
-    in: ["body", "query"],
-    isIn: {
-      options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
-    },
-  },
-});
-
-// Requirements shared between endpoints.
-export const mentorRequirement = checkSchema({
-  firebaseUID: {
-    in: ["body", "query"],
-    isUUID: true,
-  },
-  name: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  email: {
-    in: ["body", "query"],
-    isEmail: true,
-  },
-  timezone: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  phone: {
-    in: ["body", "query"],
-    isMobilePhone: true,
-  },
-  pronouns: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  avatar: {
-    in: ["body", "query"],
-    isURL: true,
-  },
-  bio: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  major: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  gradeLevels: {
-    in: "body",
-    isArray: true,
-  },
-  communicationPreference: {
-    in: ["body", "query"],
-    isIn: {
-      options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
-    },
-  },
-});
-
-export const parentRequirement = checkSchema({
-  firebaseUID: {
-    in: ["body", "query"],
-    isUUID: true,
-  },
-  name: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  email: {
-    in: ["body", "query"],
-    isEmail: true,
-  },
-  timezone: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  phone: {
-    in: ["body", "query"],
-    isMobilePhone: true,
-  },
-  pronouns: {
-    in: ["body", "query"],
-    isString: true,
-  },
-  avatar: {
-    in: ["body", "query"],
-    isURL: true,
-  },
-  students: {
-    in: "body",
-    isArray: true,
-  },
-  communicationPreference: {
-    in: ["body", "query"],
-    isIn: {
-      options: [CommunicationPreference.EMAIL, CommunicationPreference.SMS],
-    },
-  },
-});
-
-export const studentRequirement = body("students").custom((students: []) => {
-  return students.every(async (student) => {
-    const doc = await StudentModel.create(student);
-    const valid = doc.validateSync() === undefined;
-    await StudentModel.findByIdAndDelete(doc._id);
-    return valid;
-  });
-});
-
-export const idParamRequirement = query("_id")
+export const idRequirementQuery = query("_id")
   .exists({ checkFalsy: true, checkNull: true })
   .isString()
-  .custom((value) => {
-    return mongoose.Types.ObjectId.isValid(value);
-  });
+  .isMongoId();
 
-export const idBodyRequirement = body("_id")
+export const idRequirementBody = body("_id")
   .exists({
     checkFalsy: true,
     checkNull: true,
   })
   .isString()
-  .custom((value) => mongoose.Types.ObjectId.isValid(value));
+  .isMongoId();
+
+// https://stackoverflow.com/questions/54329336/nodejs-express-nested-input-body-object-validation
+export const mentorRequirementsBody = [
+  body("mentor._id").optional().isMongoId(),
+  body("mentor.email").optional().exists().isEmail(),
+  body("mentor.name").exists().isString(),
+  body("mentor.major").exists().isString(),
+  body("mentor.pronouns").exists().isString(),
+  body("mentor.gradeLevels").exists().isArray({ min: 1 }),
+  body("mentor.mentorships.*._id").optional().isMongoId(),
+  body("mentor.firebaseUID").exists().isUUID(),
+  body("mentor.timezone").exists().isString(),
+  body("mentor.phone").optional().isString(),
+  body("mentor.avatar").optional().exists().isURL(),
+  body("mentor.communicationPreference")
+    .exists()
+    .isIn([CommunicationPreference.EMAIL, CommunicationPreference.SMS]),
+];
+
+export const parentRequirementsBody = [
+  body("parent._id").optional().isMongoId(),
+  body("parent.email").optional().isEmail(),
+  body("parent.name").exists().isString(),
+  body("parent.firebaseUID").exists().isUUID(),
+  body("parent.timezone").exists().isString(),
+  body("parent.phone").optional().isString(),
+  body("parent.avatar").optional().isURL(),
+  body("parent.communicationPreference")
+    .exists()
+    .isIn([CommunicationPreference.EMAIL, CommunicationPreference.SMS]),
+  body("parent.students").isArray({ min: 1 }),
+  body("parent.students.*._id").optional().isMongoId(),
+  body("parent.students.*.name").exists().isString(),
+  body("parent.students.*.subjects").isArray({ min: 1 }),
+  body("parent.students.*.gradeLevel").isString(),
+];
+
+export const studentRequirementsBody = [
+  body("student._id").optional().isMongoId(),
+  body("student.name").exists().isString(),
+  body("student.subjects").isArray({ min: 1 }),
+  body("student.gradeLevel").isString(),
+];

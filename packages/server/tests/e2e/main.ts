@@ -1,9 +1,10 @@
 import chai, { expect } from "chai";
 import chaiSubset from "chai-subset";
 import { agent, SuperAgentTest } from "supertest";
-import { connect, clearDatabase, closeDatabase } from "../utils";
-
 import http from "http";
+import { setupMocks } from "../utils";
+setupMocks();
+import { connect, clearDatabase, closeDatabase } from "../utils";
 import createHttpServer from "../../src/server";
 import { testMentor, testParent } from "../data";
 import { IMentor } from "../../src/models/Mentors";
@@ -42,7 +43,9 @@ describe("💾 Server", () => {
   describe("/users 😷", () => {
     describe("/mentor", () => {
       it("POST - creates new user", async () => {
-        const res = await app.post("/users/mentor").send(testMentor);
+        const res = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body as IMentor).to.deep.contain(testMentor);
@@ -63,26 +66,28 @@ describe("💾 Server", () => {
       it("POST - rejects partial data", async () => {
         const res = await app
           .post("/users/mentor")
-          .send({ name: "Alyssa P Hacker" });
+          .send({ mentor: { name: "Alyssa P Hacker" } });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid firebaseUID", async () => {
         const res = await app
           .post("/users/mentor")
-          .send({ name: "Alyssa P Hacker", firebaseUID: "" });
+          .send({ mentor: { name: "Alyssa P Hacker", firebaseUID: "" } });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid phone number", async () => {
         const res = await app
           .post("/users/mentor")
-          .send({ name: "Alyssa P Hacker", phone: 0 });
+          .send({ mentor: { name: "Alyssa P Hacker", phone: 0 } });
         expect(res.status).to.be.equal(400);
       });
 
       it("GET - gets a mentor", async () => {
-        const setup = await app.post("/users/mentor").send(testMentor);
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
         expect(setup.status).to.be.equal(200);
 
         const res = await app
@@ -111,7 +116,9 @@ describe("💾 Server", () => {
       });
 
       it("DELETE - deletes a mentor", async () => {
-        const setup = await app.post("/users/mentor").send(testMentor);
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
         const res = await app
           .delete("/users/mentor")
           .send({ _id: setup.body._id });
@@ -119,7 +126,9 @@ describe("💾 Server", () => {
       });
 
       it("DELETE - fails nicely", async () => {
-        const setup = await app.post("/users/mentor").send(testMentor);
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
         await app.delete("/users/mentor").send({ _id: setup.body._id });
         const res = await app
           .delete("/users/mentor")
@@ -142,7 +151,9 @@ describe("💾 Server", () => {
 
     describe("/parent", () => {
       it("POST - creates new parent", async () => {
-        const res = await app.post("/users/parent").send(testParent);
+        const res = await app
+          .post("/users/parent")
+          .send({ parent: testParent });
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body).to.containSubset(testParent);
@@ -163,26 +174,28 @@ describe("💾 Server", () => {
       it("POST - rejects partial data", async () => {
         const res = await app
           .post("/users/parent")
-          .send({ name: "Alyssa P Hacker" });
+          .send({ parent: { name: "Alyssa P Hacker" } });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid firebaseUID", async () => {
         const res = await app
           .post("/users/parent")
-          .send({ name: "Alyssa P Hacker", firebaseUID: "0000" });
+          .send({ parent: { name: "Alyssa P Hacker", firebaseUID: "0000" } });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid phone number", async () => {
         const res = await app
           .post("/users/parent")
-          .send({ name: "Alyssa P Hacker", phone: 0 });
+          .send({ parent: { name: "Alyssa P Hacker", phone: 0 } });
         expect(res.status).to.be.equal(400);
       });
 
       it("GET - gets a parent", async () => {
-        const setup = await app.post("/users/parent").send(testParent);
+        const setup = await app
+          .post("/users/parent")
+          .send({ parent: testParent });
         expect(setup.status).to.be.equal(200);
 
         const res = await app
@@ -212,7 +225,9 @@ describe("💾 Server", () => {
       });
 
       it("DELETE - deletes a parent", async () => {
-        const setup = await app.post("/users/parent").send(testParent);
+        const setup = await app
+          .post("/users/parent")
+          .send({ parent: testParent });
         const res = await app
           .delete("/users/parent")
           .send({ _id: setup.body._id });
@@ -220,7 +235,9 @@ describe("💾 Server", () => {
       });
 
       it("DELETE - fails nicely", async () => {
-        const setup = await app.post("/users/parent").send(testParent);
+        const setup = await app
+          .post("/users/parent")
+          .send({ parent: testParent });
         await app.delete("/users/parent").send({ _id: setup.body._id });
         const res = await app
           .delete("/users/parent")

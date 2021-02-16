@@ -15,7 +15,7 @@
     "postinstall": "husky install",
     "build": "run-p clean run-s tsc -b ./packages/tsconfig.base.json",
     "bootstrap": "lerna bootstrap",
-    "clean": "lerna run --parallel clean",
+    "clean": "lerna run --parallel lint",
     "lint": "yarn run workspaces lint",
     "release": "lerna publish"
   },

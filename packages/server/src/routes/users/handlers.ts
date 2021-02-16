@@ -21,7 +21,7 @@ export const postMentorHandler = (
   req: PostMentorRequest,
   res: PostMentorResponse
 ) => {
-  const mentor: IMentor = req.body;
+  const mentor: IMentor = req.body.mentor;
   UserService.createMentor(mentor)
     .then((newMentor) => res.send(newMentor))
     .catch(() => {
@@ -65,7 +65,7 @@ export const postParentHandler = (
   req: PostParentRequest,
   res: PostParentResponse
 ) => {
-  const parent: IParent = req.body;
+  const parent: IParent = req.body.parent;
   UserService.createParent(parent)
     .then((newParent) => res.send(newParent))
     .catch(() => {

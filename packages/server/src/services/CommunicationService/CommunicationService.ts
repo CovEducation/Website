@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import mandrill from "nodemailer-mandrill-transport";
 import twilio from "twilio";
+import dotenv from "dotenv";
+import findUp from "find-up";
 import {
   CommunicationTemplates,
   generateTemplate,
@@ -12,6 +14,8 @@ import CommunicationPreference from "../../models/CommunicationPreference";
 import { IMentor } from "../../models/Mentors";
 import { IParent } from "../../models/Parents";
 import { IStudent } from "../../models/Students";
+
+dotenv.config({ path: findUp.sync(".env") });
 
 export interface MessageData {
   mentor?: IMentor;
@@ -29,6 +33,7 @@ class CommunicationService {
 
   private connect() {
     CommunicationService.verifyEnvironment();
+
     const mandrillKey = process.env.MANDRILL_APIKEY;
     this.transporter = nodemailer.createTransport(
       mandrill({ auth: { apiKey: mandrillKey } })
@@ -39,6 +44,7 @@ class CommunicationService {
   }
 
   private static verifyEnvironment() {
+    // TODO(johanc): This method of loading env variables is messy. Create a config file that loads the environment that is shared among all components.
     const requiredEnvKeys = [
       "MANDRILL_APIKEY",
       "TWILIO_SID",
@@ -59,7 +65,7 @@ class CommunicationService {
   ): Promise<void> {
     const recipient = this.getRecipientAddress(user);
     if (recipient.length === 0) {
-      return Promise.reject("invalid email");
+      return Promise.reject("Invalid email");
     }
     return CommunicationService.verifyMessage(
       recipient,
@@ -117,7 +123,9 @@ class CommunicationService {
   }
 
   private static isPhone(phone: string) {
-    return /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone);
+    return /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/.test(
+      phone
+    );
   }
 
   private async sendEmail(

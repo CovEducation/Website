@@ -27,18 +27,18 @@ class MentorshipRouter {
   }
 
   private configure() {
+    this.router.get(
+      "/",
+      getMentorshipsValidation,
+      validate,
+      getMentorshipHandler
+    );
+
     this.router.post(
       "/request",
       postRequestValidation,
       validate,
       postRequestHandler
-    );
-
-    this.router.get(
-      "/mentorships",
-      getMentorshipsValidation,
-      validate,
-      getMentorshipHandler
     );
 
     this.router.post(

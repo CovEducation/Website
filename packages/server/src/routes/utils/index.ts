@@ -1,17 +1,15 @@
 import {
-  userRequirement,
-  mentorRequirement,
-  parentRequirement,
-  studentRequirement,
-  idBodyRequirement,
-  idParamRequirement,
+  mentorRequirementsBody,
+  parentRequirementsBody,
+  studentRequirementsBody,
+  idRequirementBody,
+  idRequirementQuery,
 } from "./validation";
 
 export {
-  userRequirement,
-  mentorRequirement,
-  parentRequirement,
-  studentRequirement,
-  idBodyRequirement,
-  idParamRequirement,
+  mentorRequirementsBody,
+  parentRequirementsBody,
+  studentRequirementsBody,
+  idRequirementBody,
+  idRequirementQuery,
 };
