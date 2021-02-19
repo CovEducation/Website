@@ -57,13 +57,15 @@ const createHttpServer = async (): Promise<http.Server> => {
     DB_NAME = "",
     FIREBASE_CREDENTIALS = "",
   } = process.env;
-  const firebaseCertPath = findUp.sync(FIREBASE_CREDENTIALS);
-  if (firebaseCertPath === undefined) {
-    throw new Error(`Invalid certificate path: ${FIREBASE_CREDENTIALS}`);
+  if (process.env.NODE_ENV !== "test") {
+    const firebaseCertPath = findUp.sync(FIREBASE_CREDENTIALS);
+    if (firebaseCertPath === undefined) {
+      throw new Error(`Invalid certificate path: ${FIREBASE_CREDENTIALS}`);
+    }
+    firebase.initializeApp({
+      credential: firebase.credential.cert(firebaseCertPath),
+    });
   }
-  firebase.initializeApp({
-    credential: firebase.credential.cert(firebaseCertPath),
-  });
 
   return mongoose
     .connect(MONGO_URI, {
