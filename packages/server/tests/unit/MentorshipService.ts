@@ -2,7 +2,9 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
 import { setupMocks } from "../utils";
-setupMocks();
+(async () => {
+  await setupMocks();
+})();
 import nodemailerMock from "nodemailer-mock";
 import CommunicationPreference from "../../src/models/CommunicationPreference";
 import { IMentor } from "../../src/models/Mentors";

@@ -21,12 +21,19 @@ export const postMentorHandler = (
   req: PostMentorRequest,
   res: PostMentorResponse
 ) => {
-  const mentor: IMentor = req.body.mentor;
-  UserService.createMentor(mentor)
-    .then((newMentor) => res.send(newMentor))
-    .catch(() => {
-      res.status(500).end();
-    });
+  if (req.session.userId !== undefined) {
+    res.status(400);
+  } else {
+    const mentor: IMentor = req.body.mentor;
+    UserService.createMentor(mentor)
+      .then((newMentor) => {
+        req.session.userId = newMentor._id;
+        res.send(newMentor);
+      })
+      .catch(() => {
+        res.status(500).end();
+      });
+  }
 };
 
 export const getMentorHandler = (
@@ -38,7 +45,7 @@ export const getMentorHandler = (
       if (mentor === null) {
         res.status(404).end();
       } else {
-        res.send(mentor as IMentor);
+        res.send(mentor);
       }
     })
     .catch(() => {
@@ -50,27 +57,39 @@ export const deleteMentorHandler = (
   req: DeleteMentorRequest,
   res: DeleteMentorResponse
 ) => {
-  UserService.deleteMentor(new mongoose.Types.ObjectId(req.body._id)).then(
-    (ok) => {
-      if (ok) {
-        res.status(200).end();
-      } else {
-        res.status(404).end();
+  if (req.body._id !== String(req.session.userId)) {
+    res.status(403).send();
+  } else {
+    UserService.deleteMentor(new mongoose.Types.ObjectId(req.body._id)).then(
+      (ok) => {
+        req.session.userId = undefined;
+        if (ok) {
+          res.status(200).end();
+        } else {
+          res.status(400).end();
+        }
       }
-    }
-  );
+    );
+  }
 };
 
 export const postParentHandler = (
   req: PostParentRequest,
   res: PostParentResponse
 ) => {
-  const parent: IParent = req.body.parent;
-  UserService.createParent(parent)
-    .then((newParent) => res.send(newParent))
-    .catch(() => {
-      res.status(500).end();
-    });
+  if (req.session.userId !== undefined) {
+    res.status(400).send();
+  } else {
+    const parent: IParent = req.body.parent;
+    UserService.createParent(parent)
+      .then((newParent) => {
+        req.session.userId = newParent._id;
+        res.send(newParent);
+      })
+      .catch(() => {
+        res.status(500).end();
+      });
+  }
 };
 
 export const getParentHandler = (
@@ -94,13 +113,18 @@ export const deleteParentHandler = (
   req: DeleteParentRequest,
   res: DeleteParentResponse
 ) => {
-  UserService.deleteParent(new mongoose.Types.ObjectId(req.body._id)).then(
-    (ok) => {
-      if (ok) {
-        res.status(200).end();
-      } else {
-        res.status(404).end();
+  if (req.body._id !== String(req.session.userId)) {
+    res.status(403).send();
+  } else {
+    UserService.deleteParent(new mongoose.Types.ObjectId(req.body._id)).then(
+      (ok) => {
+        if (ok) {
+          req.session.userId = undefined;
+          res.status(200).end();
+        } else {
+          res.status(404).end();
+        }
       }
-    }
-  );
+    );
+  }
 };

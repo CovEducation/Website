@@ -1,7 +1,9 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { setupMocks } from "../utils";
-setupMocks();
+(async () => {
+  await setupMocks();
+})();
 import mockery from "mockery";
 import nodemailerMock from "nodemailer-mock";
 import { testMentor, testParent, testStudent } from "../data";

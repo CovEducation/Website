@@ -1,9 +1,12 @@
+import { setupMocks } from "../utils";
+(async () => {
+  await setupMocks();
+})();
+
 import chai, { expect } from "chai";
 import chaiSubset from "chai-subset";
 import { agent, SuperAgentTest } from "supertest";
 import http from "http";
-import { setupMocks } from "../utils";
-setupMocks();
 import { connect, clearDatabase, closeDatabase } from "../utils";
 import createHttpServer from "../../src/server";
 import { testMentor, testParent } from "../data";
@@ -20,14 +23,19 @@ chai.use(chaiSubset);
 before(async function () {
   this.timeout(120000); // 2 mins to download a local MongoDB installation.
   await connect();
-  server = await createHttpServer();
-  app = agent(server);
+  await createHttpServer().then((s) => {
+    server = s;
+    app = agent(server);
+  });
 });
 
 /**
  * Clear all test data after every test.
  */
-afterEach(async () => await clearDatabase());
+afterEach(async () => {
+  await clearDatabase();
+  await app.post("/logout");
+});
 
 /**
  * Remove and close the db and server.
@@ -49,13 +57,6 @@ describe("💾 Server", () => {
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body as IMentor).to.deep.contain(testMentor);
-
-        if (res.body._id) {
-          const cleanup = await app
-            .delete("/users/mentor")
-            .send({ _id: res.body._id });
-          expect(cleanup.status).to.be.equal(200);
-        }
       });
 
       it("POST - rejects empty requests", async () => {
@@ -89,29 +90,34 @@ describe("💾 Server", () => {
           .post("/users/mentor")
           .send({ mentor: testMentor });
         expect(setup.status).to.be.equal(200);
-
         const res = await app
           .get("/users/mentor")
           .query({ _id: setup.body._id });
         expect(res.status).to.be.equal(200);
-
-        if (setup.body._id) {
-          const cleanup = await app
-            .delete("/users/mentor")
-            .send({ _id: setup.body._id });
-          expect(cleanup.status).to.be.equal(200);
-        }
       });
 
       it("GET - rejects invalid id", async () => {
-        const res = await app.get("/users/mentor").query({ _id: "" });
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
+        expect(setup.status).to.be.equal(200);
+
+        const res = await app
+          .get("/users/mentor")
+          .query({ _id: "" })
+          .set({ token: setup.body._id });
         expect(res.status).to.be.equal(400);
       });
 
       it("GET - rejects non-existent id", async () => {
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
+        expect(setup.status).to.be.equal(200);
         const res = await app
           .get("/users/mentor")
-          .query({ _id: mongoose.Types.ObjectId().toHexString() });
+          .query({ _id: mongoose.Types.ObjectId().toHexString() })
+          .set({ token: setup.body._id });
         expect(res.status).to.be.equal(404);
       });
 
@@ -121,7 +127,8 @@ describe("💾 Server", () => {
           .send({ mentor: testMentor });
         const res = await app
           .delete("/users/mentor")
-          .send({ _id: setup.body._id });
+          .send({ _id: setup.body._id })
+          .set({ token: setup.body._id });
         expect(res.status).to.be.equal(200);
       });
 
@@ -132,19 +139,30 @@ describe("💾 Server", () => {
         await app.delete("/users/mentor").send({ _id: setup.body._id });
         const res = await app
           .delete("/users/mentor")
-          .send({ _id: setup.body._id });
-        expect(res.status).to.be.equal(404);
+          .send({ _id: setup.body._id })
+          .set({ token: setup.body._id });
+        expect(res.status).to.be.equal(401);
       });
 
       it("DELETE - rejects invalid ids", async () => {
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
         const res = await app
           .delete("/users/mentor")
-          .send({ _id: mongoose.Types.ObjectId().toHexString() });
-        expect(res.status).to.be.equal(404);
+          .send({ _id: mongoose.Types.ObjectId().toHexString() })
+          .set({ token: setup.body._id });
+        expect(res.status).to.be.equal(403);
       });
 
       it("DELETE - rejects invalid requests", async () => {
-        const res = await app.delete("/users/mentor").send({ _id: 8 });
+        const setup = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor });
+        const res = await app
+          .delete("/users/mentor")
+          .send({ _id: 8 })
+          .set({ token: setup.body._id });
         expect(res.status).to.be.equal(400);
       });
     });
@@ -157,13 +175,6 @@ describe("💾 Server", () => {
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body).to.containSubset(testParent);
-
-        if (res.body._id) {
-          const cleanup = await app
-            .delete("/users/parent")
-            .send({ _id: res.body._id });
-          expect(cleanup.status).to.be.equal(200);
-        }
       });
 
       it("POST - rejects empty requests", async () => {
@@ -204,24 +215,18 @@ describe("💾 Server", () => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.containSubset(testParent);
         expect(res.body).to.containSubset(setup.body);
-        if (setup.body._id) {
-          const cleanup = await app
-            .delete("/users/parent")
-            .send({ _id: setup.body._id });
-          expect(cleanup.status).to.be.equal(200);
-        }
       });
 
       it("GET - rejects invalid id", async () => {
         const res = await app.get("/users/parent").query({ _id: "" });
-        expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.equal(401);
       });
 
       it("GET - rejects non-existent id", async () => {
         const res = await app
           .get("/users/parent")
           .query({ _id: mongoose.Types.ObjectId().toHexString() });
-        expect(res.status).to.be.equal(404);
+        expect(res.status).to.be.equal(401);
       });
 
       it("DELETE - deletes a parent", async () => {
@@ -238,23 +243,26 @@ describe("💾 Server", () => {
         const setup = await app
           .post("/users/parent")
           .send({ parent: testParent });
-        await app.delete("/users/parent").send({ _id: setup.body._id });
+        const del = await app
+          .delete("/users/parent")
+          .send({ _id: setup.body._id });
+        expect(del.status).to.be.equal(200);
         const res = await app
           .delete("/users/parent")
           .send({ _id: setup.body._id });
-        expect(res.status).to.be.equal(404);
+        expect(res.status).to.be.equal(401);
       });
 
       it("DELETE - rejects invalid ids", async () => {
         const res = await app
           .delete("/users/parent")
           .send({ _id: mongoose.Types.ObjectId().toHexString() });
-        expect(res.status).to.be.equal(404);
+        expect(res.status).to.be.equal(401);
       });
 
       it("DELETE - rejects invalid requests", async () => {
         const res = await app.delete("/users/parent").send({ _id: 8 });
-        expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.equal(401);
       });
     });
   });

@@ -1,9 +1,11 @@
+import { setupMocks } from "../utils";
+(async () => {
+  await setupMocks();
+})();
 import chai from "chai";
 import chaiSubset from "chai-subset";
 import { agent, SuperAgentTest } from "supertest";
 import http from "http";
-import { setupMocks } from "../utils";
-setupMocks();
 import createHttpServer from "../../src/server";
 import { connect, clearDatabase, closeDatabase } from "../utils";
 import UserService from "../../src/services/UserService";
@@ -25,7 +27,7 @@ before(async function () {
   this.timeout(120000); // 2 mins to download a local MongoDB installation.
   await connect();
   server = await createHttpServer();
-  app = agent(server);
+  app = agent(server); // Acts as if we are logged in.
 });
 
 /**
@@ -56,12 +58,16 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
         const existingMentorships = await app
           .get("/mentorships")
-          .query({ user: { _id: parent._id?.toHexString() } });
+          .query({ user: { _id: parent._id?.toHexString() } })
+          .set({ token: parent.firebaseUID });
         expect(existingMentorships.status).to.be.equal(200);
         expect(existingMentorships.body.length).to.be.equal(1);
       });
@@ -74,11 +80,17 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
 
-        const repeat = await app.post("/mentorships/request").send(request);
+        const repeat = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         expect(repeat.status).to.be.equal(400);
       });
 
@@ -94,7 +106,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
         const other = {
@@ -121,7 +136,10 @@ describe("💾 Server", async () => {
           mentor,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(400);
       });
@@ -136,7 +154,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -156,7 +177,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -184,7 +208,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -216,7 +243,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         expect(resp.status).to.be.equal(400);
       });
 
@@ -232,7 +262,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -253,7 +286,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -272,7 +308,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -304,7 +343,10 @@ describe("💾 Server", async () => {
           student: otherParent.students[0],
           mentor,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         const otherResp = await app
@@ -334,7 +376,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -355,7 +400,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         await app.post("/mentorships/accept").send({ mentor, mentorship });
@@ -374,7 +422,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         await app.post("/mentorships/accept").send({ mentor, mentorship });
@@ -400,7 +451,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         await app.post("/mentorships/accept").send({ mentor, mentorship });
@@ -428,7 +482,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         await app.post("/mentorships/accept").send({ mentor, mentorship });
@@ -459,7 +516,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -478,7 +538,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
         await app.post("/mentorships/accept").send({ mentor, mentorship });
@@ -501,7 +564,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -537,7 +603,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
         const mentorship = resp.body;
         expect(resp.status).to.be.equal(200);
 
@@ -575,7 +644,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
 
@@ -609,7 +681,10 @@ describe("💾 Server", async () => {
           parent,
           student: parent.students[0],
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
         const otherRequest = {
@@ -648,7 +723,10 @@ describe("💾 Server", async () => {
           parent,
           student,
         };
-        const resp = await app.post("/mentorships/request").send(request);
+        const resp = await app
+          .post("/mentorships/request")
+          .send(request)
+          .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
 

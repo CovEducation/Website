@@ -16,6 +16,7 @@ import {
   postSessionHandler,
   getMentorshipHandler,
 } from "./handlers";
+import { ensureLoggedIn } from "../../middleware/auth";
 
 class MentorshipRouter {
   private _router = Router();
@@ -29,6 +30,7 @@ class MentorshipRouter {
   private configure() {
     this.router.get(
       "/",
+      ensureLoggedIn,
       getMentorshipsValidation,
       validate,
       getMentorshipHandler
@@ -36,6 +38,7 @@ class MentorshipRouter {
 
     this.router.post(
       "/request",
+      ensureLoggedIn,
       postRequestValidation,
       validate,
       postRequestHandler
@@ -43,6 +46,7 @@ class MentorshipRouter {
 
     this.router.post(
       "/accept",
+      ensureLoggedIn,
       acceptMentorshipValidation,
       validate,
       postAcceptRequestHandler
@@ -50,6 +54,7 @@ class MentorshipRouter {
 
     this.router.post(
       "/reject",
+      ensureLoggedIn,
       rejectMentorshipValidation,
       validate,
       postRejectRequestHandler
@@ -57,6 +62,7 @@ class MentorshipRouter {
 
     this.router.post(
       "/archive",
+      ensureLoggedIn,
       archiveMentorshipValidation,
       validate,
       postArchiveMentorshipHandler
@@ -64,6 +70,7 @@ class MentorshipRouter {
 
     this.router.post(
       "/session",
+      ensureLoggedIn,
       postSessionValidation,
       validate,
       postSessionHandler

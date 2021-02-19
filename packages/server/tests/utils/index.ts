@@ -5,7 +5,6 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 import mockery from "mockery";
 import nodemailerMock from "nodemailer-mock";
-
 const mongod = new MongoMemoryServer();
 
 /**
@@ -55,8 +54,22 @@ export const setupMocks = async () => {
   // We need to setup the mocks before importing CommunicationService
   // so nodemailer is actually mocked.
   mockery.enable({ warnOnReplace: false, warnOnUnregistered: false });
-  // Replace all nodemailer calls with nodemailerMock
+  // Replace all nodemailer and firebase calls with mocks.
+  const firebaseMock = {
+    initializeApp: () => {},
+    credential: {
+      cert: () => {},
+    },
+    auth: () => {
+      return {
+        verifyIdToken: (user) => {
+          return Promise.resolve({ sub: user });
+        },
+      };
+    },
+  };
   mockery.registerMock("nodemailer", nodemailerMock);
+  mockery.registerMock("firebase-admin", firebaseMock);
 };
 
 export default {

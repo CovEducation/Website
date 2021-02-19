@@ -16,6 +16,7 @@ import {
   deleteParentHandler,
 } from "./handlers";
 import validate from "../../middleware/validation";
+import { ensureLoggedIn } from "../../middleware/auth";
 
 class UserRouter {
   private _router = Router();
@@ -32,44 +33,49 @@ class UserRouter {
     this.configurePublicRoutes();
   }
 
-  private configureAuthRoutes() {}
-
-  private configurePublicRoutes() {
-    this.setupMentorRoutes();
-    this.setupParentRoutes();
+  private configureAuthRoutes() {
+    this.router.get(
+      "/mentor",
+      ensureLoggedIn,
+      getMentorValidation,
+      validate,
+      getMentorHandler
+    );
+    this.router.delete(
+      "/mentor",
+      ensureLoggedIn,
+      deleteMentorValidation,
+      validate,
+      deleteMentorHandler
+    );
+    this.router.get(
+      "/parent",
+      ensureLoggedIn,
+      getParentValidation,
+      validate,
+      getParentHandler
+    );
+    this.router.delete(
+      "/parent",
+      ensureLoggedIn,
+      deleteParentValidation,
+      validate,
+      deleteParentHandler
+    );
   }
 
-  private setupMentorRoutes() {
+  private configurePublicRoutes() {
     this.router.post(
       "/mentor",
       postMentorValidation,
       validate,
       postMentorHandler
     );
-
-    this.router.get("/mentor", getMentorValidation, validate, getMentorHandler);
-
-    this.router.delete(
-      "/mentor",
-      deleteMentorValidation,
-      validate,
-      deleteMentorHandler
-    );
-  }
-
-  private setupParentRoutes() {
-    this.router.get("/parent", getParentValidation, validate, getParentHandler);
     this.router.post(
       "/parent",
       postParentValidation,
       validate,
       postParentHandler
-    );
-    this.router.delete(
-      "/parent",
-      deleteParentValidation,
-      validate,
-      deleteParentHandler
     );
   }
 }

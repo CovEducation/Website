@@ -2,8 +2,10 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
 import { mongoose } from "@typegoose/typegoose";
-import { connect, clearDatabase, closeDatabase } from "../utils";
-
+import { connect, clearDatabase, closeDatabase, setupMocks } from "../utils";
+(async () => {
+  await setupMocks();
+})();
 import UserService from "../../src/services/UserService";
 import { testMentor, testParent } from "../data";
 import { IMentor } from "../../src/models/Mentors";
