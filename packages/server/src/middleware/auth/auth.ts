@@ -8,6 +8,25 @@ const verify = (token: string) => {
   return firebase.auth().verifyIdToken(token);
 };
 
+
+const getUser = (user: firebase.auth.DecodedIdToken) => {
+  return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+    if (doc === null) {
+      return ParentModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+          return {
+            id: doc?._id,
+            type: "PARENT"
+          }
+      });
+    } else {
+      return {
+        id: doc._id,
+        type: "MENTOR"
+      }
+    }
+  })
+}
+
 const getUserId = (user: firebase.auth.DecodedIdToken) => {
   return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
     if (doc === null) {
@@ -27,13 +46,13 @@ const login = (req: Request, res: Response) => {
     verify(req.headers.token || req.body.token)
       .then((user) => {
         if (user === undefined) return;
-        return getUserId(user);
+        return getUser(user);
       })
       .then((userId) => {
         if (userId === null || userId === undefined) {
           throw new Error("Unable to retrieve user.");
         }
-        req.session.userId = userId;
+        req.session.userId = userId.id;
         res.send({ userId });
       })
       .catch((err) => {

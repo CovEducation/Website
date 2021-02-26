@@ -88,10 +88,10 @@ const useAuthProvider = () => {
         }
         // Query for the user if not cached.
         if (user) {
+            console.log(user)
             return Promise.resolve(user);
         }
         return getUser();
-
     };
 
     // TODO this may have to be done synchronously
@@ -117,7 +117,7 @@ const useAuthProvider = () => {
     useEffect(() => {
         if (authState !== AUTH_STATES.LOGGED_IN) return;
 
-        getCurrentUser()
+        getUser()
             .then((user) => setUser(user))
             .catch((err) => {
                 console.log(`Error fetching user: ${err}`);

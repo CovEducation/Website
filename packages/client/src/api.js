@@ -28,7 +28,7 @@ export const getUser = async () => {
         throw Error('Unable to retrive user data with uninitilized Auth user.');
     }
     const token = await Auth.currentUser.getIdToken();
-    return await get(host + 'users', {}, {token});
+    return await get(host + 'login', {}, {token});
 }
 
 const createUserWithEmail = async (email, password, data, role) => {
