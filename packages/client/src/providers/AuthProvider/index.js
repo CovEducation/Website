@@ -118,7 +118,10 @@ const useAuthProvider = () => {
         if (authState !== AUTH_STATES.LOGGED_IN) return;
 
         getUser()
-            .then((user) => setUser(user))
+            .then((user) => {
+                console.log(user)
+                setUser(user)
+            })
             .catch((err) => {
                 console.log(`Error fetching user: ${err}`);
                 setUser(null);

@@ -48,14 +48,15 @@ const login = (req: Request, res: Response) => {
         if (user === undefined) return;
         return getUser(user);
       })
-      .then((userId) => {
-        if (userId === null || userId === undefined) {
+      .then((user) => {
+        if (user === null || user?.id === undefined) {
           throw new Error("Unable to retrieve user.");
         }
-        req.session.userId = userId.id;
-        res.send({ userId });
+        req.session.userId = user.id;
+        res.send({ user });
       })
       .catch((err) => {
+        console.log(err)
         res.status(401).send({ err });
       });
   }
