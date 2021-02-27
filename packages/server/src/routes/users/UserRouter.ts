@@ -16,7 +16,7 @@ import {
   deleteParentHandler,
 } from "./handlers";
 import validate from "../../middleware/validation";
-import { ensureLoggedIn } from "../../middleware/auth";
+import { ensureLoggedIn, verifyFirebaseToken } from "../../middleware/auth";
 
 class UserRouter {
   private _router = Router();
@@ -67,12 +67,14 @@ class UserRouter {
   private configurePublicRoutes() {
     this.router.post(
       "/mentor",
+      verifyFirebaseToken,
       postMentorValidation,
       validate,
       postMentorHandler
     );
     this.router.post(
       "/parent",
+      verifyFirebaseToken,
       postParentValidation,
       validate,
       postParentHandler

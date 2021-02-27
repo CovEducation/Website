@@ -4,9 +4,9 @@ export const createMentorModel = (mentorData) => ({
     gradeLevels: mentorData.selectedGradeLevels,
     subjects: mentorData.selectedSubjects,
     major: mentorData.major,
-    role: 'MENTOR', 
+    role: 'MENTOR',
     introduction: mentorData.introduction,
-    notificationPreference:mentorData.notificationPreference
+    communicationPreference:mentorData.communicationPreference
 })
 
 
@@ -20,7 +20,7 @@ export const createStudentModel = (studentData) => {
 }
 
 /**
- * Gets all the data from the from and creates a parent 
+ * Gets all the data from the from and creates a parent
  * object based on the parent schema.
  * @param {object} parentData - Fields the parent filled out.
  */
@@ -33,7 +33,7 @@ export const createParentModel = (parentData) => {
         students: parentData.registeredChildren
             .map((studentData) => createStudentModel(studentData)),
         role: 'PARENT',
-        notificationPreference:parentData.notificationPreference
+        communicationPreference:parentData.communicationPreference
     }
 }
 

@@ -34,7 +34,7 @@ const ParentEditForm = (props) => {
     const proNounsMenuItems = proNouns.map(item => {
         return <MenuItem key={item.value} value={item.pronoun}>{item.pronoun}</MenuItem>;
     });
-    
+
 
     return (
         <div>
@@ -102,9 +102,9 @@ const ParentEditForm = (props) => {
             </WizardInput>
             <WizardInput>
                 <InputLabel id="wizard-notification-preference">Notification preference</InputLabel>
-                <RadioGroup row name="notificationPreference" defaultValue={props.data.notificationPreference?props.data.notificationPreference:"phone"} onChange={props.handleChange}>
-                    <FormControlLabel value="phone" control={<Radio color="primary" />} label="Phone" />
-                    <FormControlLabel value="email" control={<Radio color="primary" />} label="Email" />
+                <RadioGroup row name="communicationPreference" defaultValue={props.data.communicationPreference?props.data.communicationPreference:"SMS"} onChange={props.handleChange}>
+                    <FormControlLabel value="SMS" control={<Radio color="primary" />} label="SMS" />
+                    <FormControlLabel value="EMAIL" control={<Radio color="primary" />} label="Email" />
                 </RadioGroup>
             </WizardInput>
         </div>

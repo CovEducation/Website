@@ -132,9 +132,9 @@ const MentorStep2 = (props) => {
             </WizardInput>
             <WizardInput>
                 <InputLabel id="wizard-notification-preference">Notification preference</InputLabel>
-                <RadioGroup row name="notificationPreference" defaultValue="phone">
-                    <FormControlLabel value="phone" control={<Radio color="primary" />} label="Phone"  onChange={handleChange}/>
-                    <FormControlLabel value="email" control={<Radio color="primary" />} label="Email" onChange={handleChange}/>
+                <RadioGroup row name="communicationPreference" defaultValue="EMAIL">
+                    <FormControlLabel value="SMS" control={<Radio color="primary" />} label="Phone"  onChange={handleChange}/>
+                    <FormControlLabel value="EMAIL" control={<Radio color="primary" />} label="Email" onChange={handleChange}/>
                 </RadioGroup>
             </WizardInput>
 

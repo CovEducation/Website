@@ -19,7 +19,7 @@ const MentorConverter = {
             subjects: mentor.subjects,
             tags: mentor.tags,
             gradeLevels: mentor.gradeLevels,
-            notificationPreference:mentor.notificationPreference
+            communicationPreference:mentor.communicationPreference
         };
     },
 
@@ -38,7 +38,7 @@ const MentorConverter = {
             data.subjects,
             data.tags,
             data.gradeLevels,
-            data.notificationPreference
+            data.communicationPreference
         );
     }
 };
@@ -79,7 +79,7 @@ const mentorSchema = Yup.object().shape({
     gradeLevels: Yup
         .array()
         .required('Grade Levels Required'),
-    notificationPreference: Yup
+    communicationPreference: Yup
         .string()
 });
 
@@ -103,7 +103,7 @@ export default class Mentor {
         subjects,
         tags,
         gradeLevels,
-        notificationPreference
+        communicationPreference
     ) {
         this.id = undefined;
         this.name = name;
@@ -119,7 +119,7 @@ export default class Mentor {
         this.tags = tags;
         this.gradeLevels = gradeLevels;
         this.role = 'MENTOR';
-        this.notificationPreference = notificationPreference
+        this.communicationPreference = communicationPreference
         this.validate();
     }
 

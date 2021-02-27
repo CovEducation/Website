@@ -113,20 +113,20 @@ const ProfileDetailItem = ({ header, value }) => {
   if (value instanceof Array) {
     valueParsed = value.join(', ');
   }
- 
+
     return (
       <>
-      {valueParsed && 
+      {valueParsed &&
       <div>
         <p><b>{header}</b></p>
-        <p>{valueParsed}</p> 
-       
+        <p>{valueParsed}</p>
+
       </div>
       }
       </>
     )
   }
- 
+
 
 const StudentDetailItem = ({ name, gradeLevel, subjects }) => {
   let subjectsList = subjects;
@@ -155,16 +155,16 @@ const ProfilePage = ({ user }) => {
     parentEmail: user.email,
     parentPhoneNumber: user.phone,
     timeZone: user.timezone,
-    notificationPreference: user.notificationPreference?user.notificationPreference:"phone",
-  
+    communicationPreference: user.communicationPreference?user.communicationPreference:"SMS",
+
     // Page 3
     registeredChildren: user.students,
-  
-  
+
+
   };
 
-  
-  
+
+
   const updateParentWizardSignUpData = (data) => {
     parentWizardSignUpData = { ...parentWizardSignUpData, ...data };
   }
@@ -178,13 +178,13 @@ const ProfilePage = ({ user }) => {
   const SecondPage = () => {
 
     const [state, setState] = useState({});
-  
+
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.value });
         console.log(event.target.value);
         updateParentWizardSignUpData({ [event.target.name]: event.target.value });
     };
-  
+
     return (
         <SignUpChildWrapper>
             <ParentEditForm data={parentWizardSignUpData} handleChange={handleChange} />
@@ -244,7 +244,7 @@ const ProfilePage = ({ user }) => {
       )
     });
 
-    
+
 
 
 
@@ -266,7 +266,7 @@ const ProfilePage = ({ user }) => {
     mentorEmail: user.email,
     selectedGradeLevels: user.gradeLevels?user.gradeLevels:[],
     selectedSubjects: user.subjects,
-    notificationPreference: user.notificationPreference?user.notificationPreference:"phone",
+    communicationPreference: user.communicationPreference?user.communicationPreference:"SMS",
     major: user.major,
     introduction: user.bio,
     pronouns: user.pronouns
@@ -278,7 +278,7 @@ const ProfilePage = ({ user }) => {
   }
 
   const SecondPageMentor = () => {
-    
+
       const [state, setState] = useState({});
 
       const handleChange = (event) => {
@@ -289,7 +289,7 @@ const ProfilePage = ({ user }) => {
       return (
         <SignUpChildWrapper>
           <MentorStep2 data={mentorWizardSignUpData} handleChange={handleChange} />
-        </SignUpChildWrapper>  
+        </SignUpChildWrapper>
       );
   }
 
@@ -316,7 +316,7 @@ const ProfilePage = ({ user }) => {
 
   const handleSaveProfile = async() => {
     var currentLoggedInUserId = (Auth.currentUser.uid);
-    
+
     if(user.role === "MENTOR")
     {
       var dataToSave = mentorWizardSignUpData;
@@ -334,7 +334,7 @@ const ProfilePage = ({ user }) => {
     });
     console.log(a);
   };
-  
+
   const editUserButton = (
     <>
       <Modal
@@ -342,7 +342,7 @@ const ProfilePage = ({ user }) => {
             trigger={
               <Button size='sm'> Edit Profile </Button>}
         >
-          {user.role === "PARENT" && 
+          {user.role === "PARENT" &&
             <div>
               <SecondPage/>
               <ThirdPage/>
@@ -352,7 +352,7 @@ const ProfilePage = ({ user }) => {
             </div>
           }
 
-          {user.role === "MENTOR" && 
+          {user.role === "MENTOR" &&
             <div>
               <SecondPageMentor />
               <ThirdPageMentor />
@@ -384,8 +384,8 @@ const ProfilePage = ({ user }) => {
       {user.role === "PARENT" ? (
       <ProfileDetailsGrid>
           <ProfileDetailItem header="Location" value={user.timezone} />
-          <ProfileDetailItem header="Notification Preference" value={capitalize(user.notificationPreference)} />
-        </ProfileDetailsGrid>   
+          <ProfileDetailItem header="Notification Preference" value={capitalize(user.communicationPreference)} />
+        </ProfileDetailsGrid>
       ) : (
         <MentorProfileDetailsGrid>
         <ProfileDetailItem header="Subjects" value={user.subjects} />
@@ -402,7 +402,7 @@ const ProfilePage = ({ user }) => {
         <>
         <h2>STUDENTS</h2>
         <StudentListGrid>
-          { user.students.map((student,index) => 
+          { user.students.map((student,index) =>
              <StudentDetailItem key={index} name={student.name} gradeLevel={student.gradeLevel} subjects={student.subjects}/>
           )}
         </StudentListGrid>
@@ -410,7 +410,7 @@ const ProfilePage = ({ user }) => {
         }
         </>
       )}
-      
+
 
     </ProfilePageWrapper>
   )

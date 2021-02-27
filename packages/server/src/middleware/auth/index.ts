@@ -1,3 +1,3 @@
 import auth from "./auth";
-const { ensureLoggedIn, login, logout } = auth;
-export { ensureLoggedIn, login, logout };
+const { verifyFirebaseToken, ensureLoggedIn, login, logout } = auth;
+export { verifyFirebaseToken, ensureLoggedIn, login, logout };

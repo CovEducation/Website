@@ -19,6 +19,8 @@ import RequestsPage from './pages/Requests';
 import { AuthProvider } from './providers/AuthProvider';
 import SpeakerSeriesPage from './pages/SpeakerSeries';
 
+import SignUp from './components/SignUp2';
+
 function App() {
   return (
     <Suspense fallback={<></>}>
@@ -64,6 +66,9 @@ function App() {
               </Route>
               <Route path="/forgot-password">
                 <br/>
+              </Route>
+              <Route path="/sanjay">
+                <SignUp></SignUp>
               </Route>
             </Switch>
           </Router>

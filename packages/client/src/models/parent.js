@@ -26,7 +26,7 @@ const ParentConverter = {
             avatar: parent.avatar,
             timezone: parent.timezone,
             students: parent.students,
-            notificationPreference:parent.notificationPreference
+            communicationPreference:parent.communicationPreference
         };
     },
 
@@ -48,7 +48,7 @@ const ParentConverter = {
             data.timezone,
             data.number_requests,
             students,
-            data.notificationPreference
+            data.communicationPreference
         );
     }
 }
@@ -73,7 +73,7 @@ const parentSchema = Yup.object().shape({
         .matches(phoneRegex, 'Phone number is not valid'),
     pronouns: Yup
         .string(),
-    notificationPreference: Yup
+        communicationPreference: Yup
     .string(),
     avatar: Yup
         .string()
@@ -113,7 +113,7 @@ export class Student {
 
 /** Firebase Parent Object */
 export default class Parent {
-    constructor(name, email, phone, pronouns, avatar, timezone, number_requests, students,notificationPreference) {
+    constructor(name, email, phone, pronouns, avatar, timezone, number_requests, students,communicationPreference) {
         this.id = undefined;
         this.name = name;
         this.email = email;
@@ -123,7 +123,7 @@ export default class Parent {
         this.timezone = timezone;
         this.number_requests = number_requests;
         this.students = students;
-        this.notificationPreference = notificationPreference;
+        this.communicationPreference = communicationPreference;
         this.role = 'PARENT';
         this.validate();
     }

@@ -72,7 +72,7 @@ let parentWizardSignUpData = {
     parentEmail: undefined,
     parentPhoneNumber: undefined,
     timeZone: '',
-    notificationPreference: "phone",
+    communicationPreference: "EMAIL",
 
     // Page 3
     registeredChildren: [{
@@ -99,7 +99,7 @@ let mentorWizardSignUpData = {
     mentorEmail: undefined,
     selectedGradeLevels: [],
     selectedSubjects: [],
-    notificationPreference: "phone",
+    communicationPreference: "EMAIL",
 
     // Page 3
     major: undefined,
@@ -119,7 +119,7 @@ const SignUpPage = (props) => {
     const updateParentWizardSignUpData = (data) => {
         parentWizardSignUpData = { ...parentWizardSignUpData, ...data };
     }
-    
+
     const updateRegisteredChild = (index, data) => {
         let childRegistrationInfo = parentWizardSignUpData.registeredChildren[index];
         let mergedChildRegistration = { ...childRegistrationInfo, ...data };
@@ -127,8 +127,8 @@ const SignUpPage = (props) => {
     }
 
     const [state, setState] = useState({});
-        
-    
+
+
     const handleChangeUserType = (event) => {
         a = event.target.value;
         setUserTypes(a);
@@ -136,13 +136,13 @@ const SignUpPage = (props) => {
         updateParentWizardSignUpData({ [event.target.name]: event.target.value });
     };
 
-    
-    
+
+
     const FirstPage = () => {
-    
+
         const [state, setState] = useState({});
-        
-    
+
+
         const handleChange = (event) => {
             a = event.target.value;
             setState({ ...state, [event.target.name]: event.target.value });
@@ -154,34 +154,34 @@ const SignUpPage = (props) => {
                 updateParentWizardSignUpData({ [event.target.name]: event.target.value });
             }
         };
-    
+
         return (
             <ParentStep1 data={parentWizardSignUpData} handleChange={handleChange} />
         );
     }
-    
+
     const SecondPage = () => {
-    
+
         const [state, setState] = useState({});
-    
+
         const handleChange = (event) => {
             setState({ ...state, [event.target.name]: event.target.value });
             updateParentWizardSignUpData({ [event.target.name]: event.target.value });
         };
-    
+
         return (
             <ParentStep2 data={parentWizardSignUpData} handleChange={handleChange} />
         );
     }
-    
+
     const ThirdPage = () => {
-    
+
         const [state, setState] = useState({});
-    
+
         let children = parentWizardSignUpData.registeredChildren.map((item, index) => {
             return <ParentStep3 key={index} index={index} data={parentWizardSignUpData} updateRegisteredChild={updateRegisteredChild} />;
         });
-    
+
         const handleAddClick = (event) => {
             event.preventDefault();
             parentWizardSignUpData.registeredChildren.push({
@@ -190,15 +190,15 @@ const SignUpPage = (props) => {
             });
             setState({ ...state });
         }
-    
+
         const handleRemoveClick = (event) => {
             event.preventDefault();
             parentWizardSignUpData.registeredChildren.pop();
             setState({ ...state });
         }
-    
+
         const showRemoveChildButton = parentWizardSignUpData.registeredChildren.length > 1;
-    
+
         return (
             <div>
                 {children}
@@ -214,7 +214,7 @@ const SignUpPage = (props) => {
             </div>
         );
     }
-    
+
     const FourthPage = () => {
         const [state, setState] = useState({});
         const { signup } = useAuth();
@@ -222,15 +222,15 @@ const SignUpPage = (props) => {
             setState({ ...state, [event.target.name]: event.target.checked });
             updateParentWizardSignUpData({ [event.target.name]: event.target.checked });
         };
-    
+
         return (
             <div>
-                <ParentStep4 data={parentWizardSignUpData} 
-                    handleCheck={handleCheck} 
+                <ParentStep4 data={parentWizardSignUpData}
+                    handleCheck={handleCheck}
                     onClick={ async () => {
                         var res = await signup(
-                            parentWizardSignUpData.parentEmail, 
-                            parentWizardSignUpData.password1, 
+                            parentWizardSignUpData.parentEmail,
+                            parentWizardSignUpData.password1,
                             createParentModel(parentWizardSignUpData)
                             );
                             if(res.success)
@@ -244,74 +244,74 @@ const SignUpPage = (props) => {
                             }
                         }
                     }/>
-                        
+
             </div>
         );
     }
-    
-    
-    
-    
+
+
+
+
     const updateMentorWizardSignUpData = (data) => {
         mentorWizardSignUpData = { ...mentorWizardSignUpData, ...data };
     }
-    
+
     const FirstPageMentor = () => {
         const [state, setState] = useState({});
-    
+
         const handleChange = (event) => {
             setState({ ...state, [event.target.name]: event.target.value });
             updateMentorWizardSignUpData({ [event.target.name]: event.target.value });
         };
-    
+
         return (
             <MentorStep1 data={mentorWizardSignUpData} handleChange={handleChange} />
         );
     }
-    
+
     const SecondPageMentor = () => {
-    
+
         const [state, setState] = useState({});
-    
+
         const handleChange = (event) => {
             setState({ ...state, [event.target.name]: event.target.value });
             updateMentorWizardSignUpData({ ...state, [event.target.name]: event.target.value });
         }
-    
+
         return (
             <MentorStep2 data={mentorWizardSignUpData} handleChange={handleChange} />
         );
     }
-    
+
     const ThirdPageMentor = () => {
-    
+
         const [state, setState] = useState({
             selectedGradeLevels: mentorWizardSignUpData.selectedGradeLevels ?? [],
             selectedSubjects: mentorWizardSignUpData.selectedSubjects ?? [],
         });
-    
+
         const { selectedGradeLevels, selectedSubjects } = state;
-    
+
         const handleChange = (event) => {
             setState({ ...state, [event.target.name]: event.target.value });
             updateMentorWizardSignUpData({ [event.target.name]: event.target.value });
         };
-    
+
         return (
             <MentorStep3 data={mentorWizardSignUpData} handleChange={handleChange} selectedGradeLevels={selectedGradeLevels} selectedSubjects={selectedSubjects} />
         );
     }
-    
+
     const FourthPageMentor = () => {
-    
+
         const [state, setState] = useState({});
         const { signup } = useAuth();
-    
+
         const handleChange = (event) => {
             setState({ ...state, [event.target.name]: event.target.checked });
             updateMentorWizardSignUpData({ [event.target.name]: event.target.checked });
         };
-    
+
         return (
             <div>
                 <MentorStep4
@@ -336,8 +336,8 @@ const SignUpPage = (props) => {
             </div>
         );
     }
-    
-    
+
+
     return (
         <div>
                 <SignUpWizardWrapper>
@@ -348,8 +348,8 @@ const SignUpPage = (props) => {
                         <FormControlLabel value="PARENT" control={<Radio color="primary" />} label="PARENT" onChange={handleChangeUserType}/>
                     </RadioGroup>
                 </WizardInput>
-                    
-                {userTypes === "MENTOR" && 
+
+                {userTypes === "MENTOR" &&
                 <>
                     <FirstPageMentor />
                     <SecondPageMentor />
@@ -357,7 +357,7 @@ const SignUpPage = (props) => {
                     <FourthPageMentor />
                 </>
                 }
-                {userTypes === "PARENT" && 
+                {userTypes === "PARENT" &&
                 <>
                     <FirstPage />
                     <SecondPage />

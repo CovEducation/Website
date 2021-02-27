@@ -28,7 +28,7 @@ export const getUser = async () => {
         throw Error('Unable to retrive user data with uninitilized Auth user.');
     }
     const token = await Auth.currentUser.getIdToken();
-    return await get(host + 'users', {}, {token});
+    return await get(host + 'login', {}, {token});
 }
 
 const createUserWithEmail = async (email, password, data, role) => {
@@ -36,8 +36,17 @@ const createUserWithEmail = async (email, password, data, role) => {
     try {
         await Auth.createUserWithEmailAndPassword(email, password);
         token = await Auth.currentUser.getIdToken();
-        await post(host + 'users', { role: role, ...data}, { token });
-        await Auth.currentUser.sendEmailVerification();
+
+        console.log(data)
+
+        if (role === Roles.MENTOR) {
+            await post(host + 'users/mentor', { mentor: data }, { token });
+        } else if (role === Roles.PARENT) {
+            await post(host + 'users/parent', { parent: data }, { token });
+        } else {
+           throw "unexpected user type"
+        }
+        // await Auth.currentUser.sendEmailVerification();
         return {success:1,message:"User Created Successfully."}
     } catch (err) {
         if (token) await Auth.currentUser.delete();

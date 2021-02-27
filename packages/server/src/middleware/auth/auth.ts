@@ -8,6 +8,18 @@ const verify = (token: string) => {
   return firebase.auth().verifyIdToken(token);
 };
 
+const getUser = (user: firebase.auth.DecodedIdToken) => {
+  return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+    if (doc === null) {
+      return ParentModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+        return { user: doc as any, type: "PARENT", userId: doc?._id };
+      })
+    }
+
+    return { user: doc as any, type: "MENTOR", userId: doc._id};
+  });
+};
+
 const getUserId = (user: firebase.auth.DecodedIdToken) => {
   return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
     if (doc === null) {
@@ -27,14 +39,14 @@ const login = (req: Request, res: Response) => {
     verify(req.headers.token || req.body.token)
       .then((user) => {
         if (user === undefined) return;
-        return getUserId(user);
+        return getUser(user);
       })
-      .then((userId) => {
-        if (userId === null || userId === undefined) {
+      .then((user) => {
+        if (user?.user === null || user?.userId === undefined) {
           throw new Error("Unable to retrieve user.");
         }
-        req.session.userId = userId;
-        res.send({ userId });
+        req.session.userId = user.userId;
+        res.send({ user });
       })
       .catch((err) => {
         res.status(401).send({ err });
@@ -51,6 +63,27 @@ const logout = (req: Request, res: Response) => {
   }
 };
 
+
+const verifyFirebaseToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  verify(req.headers.token || req.body.token)
+    .then((user) => {
+      if (user === undefined) {
+        res.status(401).send({err: "Not logged in."});
+        return;
+      }
+      req.decodedToken = user
+      next()
+    })
+    .catch(() => {
+      res.status(401).send({ err: "Not logged in." })
+    })
+}
+
+// SSY: we could change the verifyFirebaseToken and ensureLoggedIn middlewares
 const ensureLoggedIn = async (
   req: Request,
   res: Response,
@@ -81,6 +114,7 @@ const ensureLoggedIn = async (
 };
 
 export default {
+  verifyFirebaseToken,
   ensureLoggedIn,
   login,
   logout,
