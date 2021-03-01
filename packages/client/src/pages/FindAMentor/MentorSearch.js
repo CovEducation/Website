@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
   Configure,
   connectSearchBox,
   PoweredBy,
-  RefinementList,
   connectPagination,
 } from "react-instantsearch-dom";
 import MentorHits from "./MentorGrid";
@@ -14,12 +13,7 @@ import MdPagination from "@material-ui/lab/Pagination";
 import styled from "styled-components";
 import MentorFilters from "./MentorFilters";
 import { Grid } from "@material-ui/core";
-
-
-const ALGOLIA_API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
-const ALGOLIA_APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
-const ALGOLIA_INDEX_NAME = process.env.REACT_APP_ALGOLIA_INDEX_NAME;
-const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
+import { get } from "../../utilities";
 
 const SearchBox = connectSearchBox(({ currentRefinement, refine }) => {
   return (
@@ -63,28 +57,41 @@ const PaginationContainer = styled.div`
   padding: 1em;
 `;
 
-const MentorSearch = () => (
-  <div className="ais-InstantSearch">
-    <InstantSearch indexName={ALGOLIA_INDEX_NAME} searchClient={searchClient}>
-      <Grid container justify="center" spacing={0}>
-      <Configure hitsPerPage={12} />
-      <SearchBox />
-      {/* <MentorHits />
-          <PaginationContainer>
-            <Pagination showLast={true} />
-          </PaginationContainer> */}
-        <Grid item xs={3}>
-          <MentorFilters attribute="tags" />
+const MentorSearch = () => {
+  let [algoliaAppId, setAlgoliaAppId] = useState(null);
+  let [algoliaApiKey, setAlgoliaApiKey] = useState(null);
+
+  useEffect(() => {
+    if (!algoliaAppId || !algoliaApiKey) {
+      get("/algolia/credentials").then(({ key, appId }) => {
+        setAlgoliaApiKey(key);
+        setAlgoliaAppId(appId);
+      });
+    }
+  });
+  if (!algoliaAppId || !algoliaApiKey) {
+    return <div>Loading...</div>;
+  }
+  const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
+  return (
+    <div className="ais-InstantSearch">
+      <InstantSearch indexName={"mentors"} searchClient={searchClient}>
+        <Grid container justify="center" spacing={0}>
+          <Configure hitsPerPage={12} />
+          <SearchBox />
+          <Grid item xs={3}>
+            <MentorFilters attribute="tags" />
+          </Grid>
+          <Grid item xs={9}>
+            <MentorHits />
+            <PaginationContainer>
+              <Pagination showLast={true} />
+            </PaginationContainer>
+          </Grid>
         </Grid>
-        <Grid item xs={9}>
-          <MentorHits />
-          <PaginationContainer>
-            <Pagination showLast={true} />
-          </PaginationContainer>
-        </Grid>
-      </Grid>
-    </InstantSearch>
-  </div>
-);
+      </InstantSearch>
+    </div>
+  );
+};
 
 export default MentorSearch;

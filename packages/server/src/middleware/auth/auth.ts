@@ -38,7 +38,8 @@ const getUserId = (user: firebase.auth.DecodedIdToken) => {
 // TODO(johancc) - For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
 const login = (req: Request, res: Response) => {
   if (req.session.userId !== undefined) {
-    res.send(400).send({ err: "Already logged in." });
+    res.status(400).send({ err: "Already logged in." });
+    return;
   } else {
     verify(req.headers.token || req.body.token)
       .then((user) => {

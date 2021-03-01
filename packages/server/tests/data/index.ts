@@ -11,7 +11,7 @@ export const testMentor: IMentor = {
   phone: "15005550006",
   pronouns: "He/Him",
   avatar: "www.imgur.com/testImage.jpg",
-  bio: "Hello I'm a test user",
+  introduction: "Hello I'm a test user",
   major: "Testing",
   communicationPreference: CommunicationPreference.EMAIL,
   gradeLevels: ["8"],

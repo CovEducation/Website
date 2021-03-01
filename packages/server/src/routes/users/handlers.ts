@@ -23,12 +23,15 @@ export const postMentorHandler = (
 ) => {
   const mentor: IMentor = req.body.mentor;
   mentor.firebaseUID = req.body.decodedToken.uid;
+  console.log("here!");
   UserService.createMentor(mentor)
     .then((newMentor) => {
       req.session.userId = newMentor._id;
       res.send(newMentor);
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
+      console.log(req.body);
       res.status(500).end();
     });
 };

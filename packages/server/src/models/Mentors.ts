@@ -22,7 +22,7 @@ export interface IMentor {
   phone: string;
   pronouns: string;
   avatar: string; // Assumed to be a URL
-  bio: string;
+  introduction: string;
   major: string;
   communicationPreference: CommunicationPreference;
   gradeLevels: string[];
@@ -46,13 +46,13 @@ export class Mentor implements IMentor {
   @prop({ required: true, unique: true })
   public email: string;
 
-  @prop({ required: true })
+  @prop({ required: false })
   public timezone: string;
 
-  @prop({ required: true, unique: true })
+  @prop({ required: false, unique: true })
   public phone: string;
 
-  @prop({ required: true })
+  @prop({ required: false })
   public pronouns: string;
 
   @prop({ required: true })
@@ -71,10 +71,10 @@ export class Mentor implements IMentor {
   })
   public gradeLevels: string[];
 
-  @prop({ required: true })
-  public bio: string;
+  @prop({ required: false })
+  public introduction: string;
 
-  @prop({ required: true })
+  @prop({ required: false })
   public avatar: string;
 }
 
