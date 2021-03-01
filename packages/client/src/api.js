@@ -91,7 +91,7 @@ export const getRequests = async (requestState) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
-  return await post(host + "mentorships/").then((mentorships) =>
+  return await get(host + "mentorships/").then((mentorships) =>
     mentorships.filter((mentorship) => mentorship.state === requestState)
   );
 };
