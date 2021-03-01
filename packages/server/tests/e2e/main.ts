@@ -53,7 +53,7 @@ describe("💾 Server", () => {
       it("POST - creates new user", async () => {
         const res = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body as IMentor).to.deep.contain(testMentor);
@@ -61,34 +61,44 @@ describe("💾 Server", () => {
 
       it("POST - rejects empty requests", async () => {
         const res = await app.post("/users/mentor");
-        expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.equal(401);
       });
 
       it("POST - rejects partial data", async () => {
-        const res = await app
-          .post("/users/mentor")
-          .send({ mentor: { name: "Alyssa P Hacker" } });
+        const res = await app.post("/users/mentor").send({
+          mentor: { name: "Alyssa P Hacker" },
+          token: { uid: testMentor.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid firebaseUID", async () => {
-        const res = await app
-          .post("/users/mentor")
-          .send({ mentor: { name: "Alyssa P Hacker", firebaseUID: "" } });
+        const res = await app.post("/users/mentor").send({
+          mentor: { name: "Alyssa P Hacker", firebaseUID: "" },
+          token: { uid: testMentor.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
-      it("POST - rejects invalid phone number", async () => {
+      it("POST - rejects missing token", async () => {
         const res = await app
           .post("/users/mentor")
-          .send({ mentor: { name: "Alyssa P Hacker", phone: 0 } });
+          .send({ mentor: testMentor });
+        expect(res.status).to.be.equal(401);
+      });
+
+      it("POST - rejects invalid phone number", async () => {
+        const res = await app.post("/users/mentor").send({
+          mentor: { name: "Alyssa P Hacker", phone: 0 },
+          token: { uid: testMentor.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
       it("GET - gets a mentor", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         expect(setup.status).to.be.equal(200);
         const res = await app
           .get("/users/mentor")
@@ -99,7 +109,7 @@ describe("💾 Server", () => {
       it("GET - rejects invalid id", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         expect(setup.status).to.be.equal(200);
 
         const res = await app
@@ -112,7 +122,7 @@ describe("💾 Server", () => {
       it("GET - rejects non-existent id", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         expect(setup.status).to.be.equal(200);
         const res = await app
           .get("/users/mentor")
@@ -124,7 +134,7 @@ describe("💾 Server", () => {
       it("DELETE - deletes a mentor", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         const res = await app
           .delete("/users/mentor")
           .send({ _id: setup.body._id })
@@ -135,7 +145,7 @@ describe("💾 Server", () => {
       it("DELETE - fails nicely", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         await app.delete("/users/mentor").send({ _id: setup.body._id });
         const res = await app
           .delete("/users/mentor")
@@ -147,7 +157,7 @@ describe("💾 Server", () => {
       it("DELETE - rejects invalid ids", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         const res = await app
           .delete("/users/mentor")
           .send({ _id: mongoose.Types.ObjectId().toHexString() })
@@ -158,7 +168,7 @@ describe("💾 Server", () => {
       it("DELETE - rejects invalid requests", async () => {
         const setup = await app
           .post("/users/mentor")
-          .send({ mentor: testMentor });
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
         const res = await app
           .delete("/users/mentor")
           .send({ _id: 8 })
@@ -171,7 +181,7 @@ describe("💾 Server", () => {
       it("POST - creates new parent", async () => {
         const res = await app
           .post("/users/parent")
-          .send({ parent: testParent });
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body).to.containSubset(testParent);
@@ -179,34 +189,37 @@ describe("💾 Server", () => {
 
       it("POST - rejects empty requests", async () => {
         const res = await app.post("/users/parent");
-        expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.equal(401);
       });
 
       it("POST - rejects partial data", async () => {
-        const res = await app
-          .post("/users/parent")
-          .send({ parent: { name: "Alyssa P Hacker" } });
+        const res = await app.post("/users/parent").send({
+          parent: { name: "Alyssa P Hacker" },
+          token: { uid: testParent.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid firebaseUID", async () => {
-        const res = await app
-          .post("/users/parent")
-          .send({ parent: { name: "Alyssa P Hacker", firebaseUID: "0000" } });
+        const res = await app.post("/users/parent").send({
+          parent: { name: "Alyssa P Hacker", firebaseUID: "0000" },
+          token: { uid: testParent.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
       it("POST - rejects invalid phone number", async () => {
-        const res = await app
-          .post("/users/parent")
-          .send({ parent: { name: "Alyssa P Hacker", phone: 0 } });
+        const res = await app.post("/users/parent").send({
+          parent: { name: "Alyssa P Hacker", phone: 0 },
+          token: { uid: testParent.firebaseUID },
+        });
         expect(res.status).to.be.equal(400);
       });
 
       it("GET - gets a parent", async () => {
         const setup = await app
           .post("/users/parent")
-          .send({ parent: testParent });
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
         expect(setup.status).to.be.equal(200);
 
         const res = await app
@@ -232,7 +245,7 @@ describe("💾 Server", () => {
       it("DELETE - deletes a parent", async () => {
         const setup = await app
           .post("/users/parent")
-          .send({ parent: testParent });
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
         const res = await app
           .delete("/users/parent")
           .send({ _id: setup.body._id });
@@ -242,7 +255,7 @@ describe("💾 Server", () => {
       it("DELETE - fails nicely", async () => {
         const setup = await app
           .post("/users/parent")
-          .send({ parent: testParent });
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
         const del = await app
           .delete("/users/parent")
           .send({ _id: setup.body._id });

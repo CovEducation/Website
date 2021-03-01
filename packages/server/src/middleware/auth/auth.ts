@@ -1,7 +1,7 @@
 import { default as firebase } from "firebase-admin";
 import { NextFunction, Request, Response } from "express";
 
-import ParentModel from "../../models/Parents";
+import ParentModel, { IParent } from "../../models/Parents";
 import MentorModel from "../../models/Mentors";
 
 const verify = (token: string) => {
@@ -9,21 +9,24 @@ const verify = (token: string) => {
 };
 
 const getUser = (user: firebase.auth.DecodedIdToken) => {
-  return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+  return MentorModel.findOne({ firebaseUID: user.uid }).then((doc) => {
     if (doc === null) {
-      return ParentModel.findOne({ firebaseUID: user.sub }).then((doc) => {
-        return { user: doc as any, type: "PARENT", userId: doc?._id };
-      })
+      return ParentModel.findOne({ firebaseUID: user.uid }).then((doc) => {
+        if (doc === null) {
+          return { user: null, type: null, userId: null };
+        }
+        return { user: doc as IParent, type: "PARENT", userId: doc?._id };
+      });
     }
 
-    return { user: doc as any, type: "MENTOR", userId: doc._id};
+    return { user: doc as any, type: "MENTOR", userId: doc._id };
   });
 };
 
 const getUserId = (user: firebase.auth.DecodedIdToken) => {
-  return MentorModel.findOne({ firebaseUID: user.sub }).then((doc) => {
+  return MentorModel.findOne({ firebaseUID: user.uid }).then((doc) => {
     if (doc === null) {
-      return ParentModel.findOne({ firebaseUID: user.sub }).then(
+      return ParentModel.findOne({ firebaseUID: user.uid }).then(
         (doc) => doc?._id
       );
     } else {
@@ -32,13 +35,16 @@ const getUserId = (user: firebase.auth.DecodedIdToken) => {
   });
 };
 
+// TODO(johancc) - For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
 const login = (req: Request, res: Response) => {
   if (req.session.userId !== undefined) {
     res.send(400).send({ err: "Already logged in." });
   } else {
     verify(req.headers.token || req.body.token)
       .then((user) => {
-        if (user === undefined) return;
+        if (user === undefined) {
+          throw new Error("Invalid user.");
+        }
         return getUser(user);
       })
       .then((user) => {
@@ -63,7 +69,6 @@ const logout = (req: Request, res: Response) => {
   }
 };
 
-
 const verifyFirebaseToken = async (
   req: Request,
   res: Response,
@@ -72,16 +77,17 @@ const verifyFirebaseToken = async (
   verify(req.headers.token || req.body.token)
     .then((user) => {
       if (user === undefined) {
-        res.status(401).send({err: "Not logged in."});
+        res.status(401).send({ err: "Not logged in." });
         return;
       }
-      req.decodedToken = user
-      next()
+      // johanc - req.body.decodedToken should only ever be accessed when creating accounts.
+      req.body.decodedToken = user;
+      next();
     })
     .catch(() => {
-      res.status(401).send({ err: "Not logged in." })
-    })
-}
+      res.status(401).send({ err: "Not logged in." });
+    });
+};
 
 // SSY: we could change the verifyFirebaseToken and ensureLoggedIn middlewares
 const ensureLoggedIn = async (
@@ -92,7 +98,7 @@ const ensureLoggedIn = async (
   if (req.session.userId !== undefined) {
     next();
   } else {
-    verify(req.headers.token)
+    verify(req.headers.token || req.body.token)
       .then((user) => {
         if (user === undefined) {
           res.status(401).send({ err: "Not logged in." });

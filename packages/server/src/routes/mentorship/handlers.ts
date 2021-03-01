@@ -40,9 +40,9 @@ export const postAcceptRequestHandler = (
   req: PostAcceptMentorshipRequest,
   res: PostAcceptMentorshipResponse
 ) => {
-  const { mentorship, mentor } = req.body;
-  // TODO(johanc): SECURITY - Any mentor can accept any mentorship, as long as they have the object.
-  if (mentor._id !== mentorship.mentor) {
+  const { mentorship } = req.body;
+  // The user logged in must be the mentor that can accept the request.
+  if (req.session.userId !== mentorship.mentor) {
     res.status(403).send();
   } else {
     MentorshipService.acceptRequest(mentorship)
@@ -57,9 +57,9 @@ export const postRejectRequestHandler = (
   req: PostRejectMentorshipRequest,
   res: PostRejectMentorshipResponse
 ) => {
-  const { mentorship, mentor } = req.body;
-  // TODO(johanc): SECURITY - Any mentor can accept any mentorship, as long as they have the object.
-  if (mentor._id !== mentorship.mentor) {
+  const { mentorship } = req.body;
+  // The user logged in must be the mentor that can reject the request.
+  if (req.session.userId !== mentorship.mentor) {
     res.status(403).send();
   } else {
     MentorshipService.rejectRequest(mentorship)
@@ -74,9 +74,9 @@ export const postArchiveMentorshipHandler = (
   req: PostArchiveMentorshipRequest,
   res: PostArchiveMentorshipResponse
 ) => {
-  const { mentorship, mentor } = req.body;
-  // TODO(johanc): SECURITY - Any mentor can accept any mentorship, as long as they have the object.
-  if (mentor._id !== mentorship.mentor) {
+  const { mentorship } = req.body;
+
+  if (req.session.userId !== mentorship.mentor) {
     res.status(403).send();
   } else {
     MentorshipService.archiveMentorship(mentorship)
@@ -107,5 +107,7 @@ export const getMentorshipHandler = (
     .then((mentorships) => {
       res.send(mentorships);
     })
-    .catch(() => res.status(400));
+    .catch(() => {
+      res.status(400);
+    });
 };

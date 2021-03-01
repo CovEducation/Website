@@ -47,9 +47,7 @@ export const postRequestValidation = mentorRequirementsBody
 
 export const getMentorshipsValidation = [userIdRequirementQuery];
 
-export const acceptMentorshipValidation = mentorRequirementsBody.concat(
-  mentorshipRequirementsBody
-);
+export const acceptMentorshipValidation = mentorshipRequirementsBody;
 
 export const rejectMentorshipValidation = mentorshipRequirementsBody;
 

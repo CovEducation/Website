@@ -24,7 +24,8 @@ export interface GetMentorshipsRequest extends Request {
 export interface GetMentorshipsResponse extends Response<IMentorship[]> {}
 
 export interface PostAcceptMentorshipRequest extends Request {
-  body: { mentor: IMentor; mentorship: IMentorship };
+  body: { mentorship: IMentorship };
+  
 }
 
 export interface PostAcceptMentorshipResponse extends Response {}

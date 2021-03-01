@@ -21,21 +21,16 @@ export const postMentorHandler = (
   req: PostMentorRequest,
   res: PostMentorResponse
 ) => {
-  if (req.decodedToken === undefined) {
-    res.status(400);
-  } else {
-    const mentor: IMentor = req.body.mentor;
-    mentor.firebaseUID = req.decodedToken.uid;
-    UserService.createMentor(mentor)
-      .then((newMentor) => {
-        req.session.userId = newMentor._id;
-        res.send(newMentor);
-      })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).end();
-      });
-  }
+  const mentor: IMentor = req.body.mentor;
+  mentor.firebaseUID = req.body.decodedToken.uid;
+  UserService.createMentor(mentor)
+    .then((newMentor) => {
+      req.session.userId = newMentor._id;
+      res.send(newMentor);
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
 };
 
 export const getMentorHandler = (
@@ -79,21 +74,16 @@ export const postParentHandler = (
   req: PostParentRequest,
   res: PostParentResponse
 ) => {
-  if (req.decodedToken === undefined) {
-    res.status(400).send();
-  } else {
-    const parent: IParent = req.body.parent;
-    parent.firebaseUID = req.decodedToken.uid;
-    UserService.createParent(parent)
-      .then((newParent) => {
-        req.session.userId = newParent._id;
-        res.send(newParent);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-      });
-  }
+  const parent: IParent = req.body.parent;
+  parent.firebaseUID = req.body.decodedToken.uid;
+  UserService.createParent(parent)
+    .then((newParent) => {
+      req.session.userId = newParent._id;
+      res.send(newParent);
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
 };
 
 export const getParentHandler = (

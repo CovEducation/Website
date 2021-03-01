@@ -63,7 +63,10 @@ export const setupMocks = async () => {
     auth: () => {
       return {
         verifyIdToken: (user) => {
-          return Promise.resolve({ sub: user });
+          if (user === undefined) {
+            return Promise.resolve(undefined);
+          }
+          return Promise.resolve({ ...user });
         },
       };
     },

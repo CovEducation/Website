@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import { default as firebase } from "firebase-admin";
 import { IMentor } from "src/models/Mentors";
 import { IParent } from "src/models/Parents";
 
 export interface PostMentorRequest extends Request {
-  body: { mentor: IMentor };
+  body: { mentor: IMentor; decodedToken: firebase.auth.DecodedIdToken };
 }
 
 export interface PostMentorResponse extends Response<IMentor> {}
@@ -21,7 +22,7 @@ export interface DeleteMentorRequest extends Request {
 export interface DeleteMentorResponse extends Response {}
 
 export interface PostParentRequest extends Request {
-  body: { parent: IParent };
+  body: { parent: IParent; decodedToken: firebase.auth.DecodedIdToken };
 }
 
 export interface PostParentResponse extends Response<IParent> {}
