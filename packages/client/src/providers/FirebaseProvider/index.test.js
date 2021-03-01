@@ -1,6 +1,5 @@
-import { Auth, Db} from './index';
+import { Auth } from "./index";
 
-test('module exports', () => {
-    expect(Auth).toBeTruthy();
-    expect(Db).toBeTruthy();
-})
+test("module exports", () => {
+  expect(Auth).toBeTruthy();
+});
