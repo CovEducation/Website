@@ -37,7 +37,17 @@ const createUserWithEmail = async (email, password, data, role) => {
     token = await Auth.currentUser.getIdToken();
 
     if (role === Roles.MENTOR) {
-      await post(host + "users/mentor", { mentor: data, token });
+      await post(host + "users/mentor", {
+        mentor: {
+          ...data,
+          // TODO: johanc - Validation should not happen here. This is a hot fix.
+          gradeLevels: Object.keys(data.gradeLevels).map(
+            (k) => data.gradeLevels[k]
+          ),
+          subjects: Object.keys(data.subjects).map((k) => data.subjects[k]),
+        },
+        token,
+      });
     } else if (role === Roles.PARENT) {
       await post(host + "users/parent", { parent: data, token });
     } else {
@@ -70,6 +80,7 @@ export const saveProfileData = async (uid, data) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
+  // TODO: Not implemented yet.
   var res = await post(host + `users/updateProfile/${uid}`, {
     update: JSON.stringify(data),
   });

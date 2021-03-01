@@ -37,28 +37,23 @@ const getUserId = (user: firebase.auth.DecodedIdToken) => {
 
 // TODO(johancc) - For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
 const login = (req: Request, res: Response) => {
-  if (req.session.userId !== undefined) {
-    res.status(400).send({ err: "Already logged in." });
-    return;
-  } else {
-    verify(req.headers.token || req.body.token)
-      .then((user) => {
-        if (user === undefined) {
-          throw new Error("Invalid user.");
-        }
-        return getUser(user);
-      })
-      .then((user) => {
-        if (user?.user === null || user?.userId === undefined) {
-          throw new Error("Unable to retrieve user.");
-        }
-        req.session.userId = user.userId;
-        res.send({ user });
-      })
-      .catch((err) => {
-        res.status(401).send({ err });
-      });
-  }
+  verify(req.headers.token || req.body.token)
+    .then((user) => {
+      if (user === undefined) {
+        throw new Error("Invalid user.");
+      }
+      return getUser(user);
+    })
+    .then((user) => {
+      if (user?.user === null || user?.userId === undefined) {
+        throw new Error("Unable to retrieve user.");
+      }
+      req.session.userId = user.userId;
+      res.send({ user });
+    })
+    .catch((err) => {
+      res.status(401).send({ err });
+    });
 };
 
 const logout = (req: Request, res: Response) => {

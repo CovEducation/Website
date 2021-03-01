@@ -101,13 +101,6 @@ const useAuthProvider = () => {
     });
   };
 
-  /**
-   * Gets the current user if possible
-   *
-   * @return {Promise<Mentor|Parent>} the current logged in user
-   */
-  const getCurrentUser = async () => {};
-
   const sendRequestToMentor = async (
     email,
     studentID,

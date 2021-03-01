@@ -56,7 +56,7 @@ describe("🔒 Auth", () => {
       expect(login.status).to.be.equal(200);
     });
 
-    it("cannot login twice", async () => {
+    it("can login twice", async () => {
       const setup = await app
         .post("/users/parent")
         .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
@@ -71,7 +71,7 @@ describe("🔒 Auth", () => {
       const double = await app
         .post("/login")
         .send({ token: { uid: testParent.firebaseUID } });
-      expect(double.status).to.be.equal(400);
+      expect(double.status).to.be.equal(200);
     });
   });
 
