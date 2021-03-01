@@ -4,6 +4,7 @@ import logger from "morgan";
 import cors from "cors";
 import compression from "compression";
 import http from "http";
+import fs from "fs";
 import path from "path";
 import express from "express";
 import session from "express-session";
@@ -15,6 +16,12 @@ import findUp from "find-up";
 const envPath = find.sync(".env");
 dotenv.config({ path: envPath });
 
+const speakerSeriesPath = find.sync("speakerSeries.json");
+const ourTeamPath = find.sync("ourTeam.json");
+
+if (speakerSeriesPath === undefined || ourTeamPath === undefined) {
+  throw new Error("Initialization error: Missing static data.");
+}
 const validateEnv = () => {
   if (process.env.MONGO_URI === undefined) {
     throw new Error("Missing environment key: MONGO_URI");
@@ -38,6 +45,12 @@ const appBundleDirectory = path.resolve(
 const createHttpServer = async (): Promise<http.Server> => {
   validateEnv();
   const app = express();
+  const speakerSeries = JSON.parse(
+    fs.readFileSync(speakerSeriesPath, { encoding: "utf-8" })
+  );
+  const ourTeam = JSON.parse(
+    fs.readFileSync(ourTeamPath, { encoding: "utf-8" })
+  );
   app.use(logger("dev", { skip: () => process.env.NODE_ENV === "test" }));
   app.use(express.json({}));
   app.use(express.urlencoded({ extended: true }));
@@ -50,7 +63,14 @@ const createHttpServer = async (): Promise<http.Server> => {
       saveUninitialized: false,
     })
   );
+  app.get("/speakerSeries", (_, res) => {
+    res.send(speakerSeries);
+  });
+  app.get("/ourTeam", (_, res) => {
+    res.send(ourTeam);
+  });
   app.use("/", MainRouter);
+
   app.use(express.static(appBundleDirectory));
   const {
     MONGO_URI = "",

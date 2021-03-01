@@ -18,7 +18,6 @@ class MainRouter {
   private _userSubRouter = UserRouter;
   private _mentorshipSubRouter = MentorshipRouter;
   private _algoliaClient: SearchClient;
-
   constructor() {
     this.configure();
   }
@@ -29,6 +28,7 @@ class MainRouter {
 
   private configure() {
     this._algoliaClient = algolia(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
+
     this.configureAuthRoutes();
     this.configurePublicRoutes();
   }

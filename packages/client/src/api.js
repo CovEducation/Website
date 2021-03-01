@@ -177,16 +177,16 @@ export const getSpeakerSeriesList = async () => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
-  return await post(host + "static/speakerSeries");
+  return await get(host + "speakerSeries");
 };
 
 export const getTeamDataList = async () => {
-  return await post(host + "static/teamData");
+  return await get(host + "ourTeam");
 };
 
 export const getAlgoliaCredentials = async () => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Cannot retrieve algolia credentials when logged out. ");
   }
-  return await get(host + "/algolia/credentials");
+  return await get(host + "algolia/credentials");
 };

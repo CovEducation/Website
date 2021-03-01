@@ -1,7 +1,5 @@
 import React from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import styled from "styled-components";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -13,12 +11,6 @@ import {
   Timezones,
   SharedIntialValues,
 } from "./constants";
-
-// const Form = styled.form`
-//     & .MuiTextField-root {
-//         margin: 1em
-//     }
-// `
 
 const FormikField = (props) => {
   const { name, label, formik, type, select, values } = props;
