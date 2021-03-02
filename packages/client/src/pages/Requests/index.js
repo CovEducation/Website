@@ -113,7 +113,6 @@ const RequestsPage = ({ request, requestOther }) => {
     archiveRequest,
     updateRatings,
   } = useAuth();
-  const [serverError, setServerError] = useState(false);
   const [sessionHours, setsessionHours] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [toastOpen, setToastOpen] = useState(false);
@@ -218,9 +217,9 @@ const RequestsPage = ({ request, requestOther }) => {
 
   const pendingRequestsList =
     request &&
-    request.result.map(
+    request.map(
       (item) =>
-        item.requestStatus === "Pending" && (
+        item.state === "PENDING" && (
           <RequestsWrapperPending>
             <UserPicture
               src="http://via.placeholder.com/115"
@@ -250,8 +249,8 @@ const RequestsPage = ({ request, requestOther }) => {
               <p>
                 {" "}
                 <b>Status: </b>
-                {item.requestStatus === "PENDING" && (
-                  <BlueColor>{item.requestStatus}</BlueColor>
+                {item.state === "PENDING" && (
+                  <BlueColor>{item.state}</BlueColor>
                 )}
               </p>
             </div>
@@ -311,13 +310,13 @@ const RequestsPage = ({ request, requestOther }) => {
 
   const otherRequestsList =
     request &&
-    request.result.map(
+    request.map(
       (item) =>
-        (item.requestStatus === "ACTIVE" ||
-          item.requestStatus === "ARCHIVED" ||
-          item.requestStatus === "REJECTED") && (
+        (item.state === "ACTIVE" ||
+          item.state === "ARCHIVED" ||
+          item.state === "REJECTED") && (
           <RequestsWrapper>
-            {user.role === "PARENT" && item.requestStatus === "ACTIVE" && (
+            {user.role === "PARENT" && item.state === "ACTIVE" && (
               <FlexClass1>
                 <UserPicture
                   src="http://via.placeholder.com/115"
@@ -346,7 +345,7 @@ const RequestsPage = ({ request, requestOther }) => {
                 </Button>
               </FlexClass1>
             )}
-            {user.role === "MENTOR" && item.requestStatus === "ACTIVE" && (
+            {user.role === "MENTOR" && item.state === "ACTIVE" && (
               <FlexClass>
                 <UserPicture
                   src="http://via.placeholder.com/115"
@@ -355,7 +354,7 @@ const RequestsPage = ({ request, requestOther }) => {
               </FlexClass>
             )}
             {(user.role === "PARENT" || user.role === "MENTOR") &&
-              item.requestStatus !== "ACTIVE" && (
+              item.state !== "ACTIVE" && (
                 <FlexClass>
                   <UserPicture
                     src="http://via.placeholder.com/115"
@@ -376,9 +375,9 @@ const RequestsPage = ({ request, requestOther }) => {
               <p>
                 <b>Date: </b>{" "}
                 {getDate(
-                  item.requestStatus == "ACTIVE"
+                  item.state == "ACTIVE"
                     ? item.acceptedDate
-                    : item.requestStatus == "ARCHIVED"
+                    : item.state == "ARCHIVED"
                     ? item.archivedDate
                     : item.rejectedDate
                 )}
@@ -386,15 +385,13 @@ const RequestsPage = ({ request, requestOther }) => {
               <p>
                 {" "}
                 <b>Status: </b>
-                {item.requestStatus === "ACTIVE" && (
-                  <GreenColor>{item.requestStatus}</GreenColor>
+                {item.state === "ACTIVE" && (
+                  <GreenColor>{item.state}</GreenColor>
                 )}
-                {item.requestStatus === "ARCHIVED" && (
-                  <YellowColor>{item.requestStatus}</YellowColor>
+                {item.state === "ARCHIVED" && (
+                  <YellowColor>{item.state}</YellowColor>
                 )}
-                {item.requestStatus === "REJECTED" && (
-                  <RedColor>{item.requestStatus}</RedColor>
-                )}
+                {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
               </p>
               <p>
                 <b>Session Hours: </b>
@@ -416,7 +413,7 @@ const RequestsPage = ({ request, requestOther }) => {
                   <span>{getRatingsFixed(item.mentorDetails.avgRatings)}</span>
                 </p>
               )}
-              {user.role === "MENTOR" && item.requestStatus === "ACTIVE" && (
+              {user.role === "MENTOR" && item.state === "ACTIVE" && (
                 <div>
                   <p>
                     <b>Session Hours: </b>
@@ -441,7 +438,7 @@ const RequestsPage = ({ request, requestOther }) => {
                   </Button>
                 </div>
               )}
-              {user.role === "PARENT" && item.requestStatus === "ACTIVE" && (
+              {user.role === "PARENT" && item.state === "ACTIVE" && (
                 <div>
                   <p>
                     <b>Rate my last session: </b>

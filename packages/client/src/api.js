@@ -27,7 +27,18 @@ export const getUser = async () => {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
   const token = await Auth.currentUser.getIdToken();
-  return await get(host + "login", {}, { token });
+  return await post(host + "login", { token }).then((resp) => {
+    // johanc - This is a hotfix.
+    console.log(resp);
+    const { user } = resp;
+    if (user === undefined || user.type === undefined) {
+      return Promise.reject("Invalid user data retrieved from server.");
+    }
+    // This is a hotfix for the response schema: { user: { type: 'PARENT', user: IParent }}
+    const data = user.user;
+    data.role = user.type;
+    return data;
+  });
 };
 
 const createUserWithEmail = async (email, password, data, role) => {
@@ -91,7 +102,8 @@ export const getRequests = async (requestState) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
-  return await get(host + "mentorships/").then((mentorships) =>
+  const token = await Auth.currentUser.getIdToken();
+  return await get(host + "mentorships", { token }).then((mentorships) =>
     mentorships.filter((mentorship) => mentorship.state === requestState)
   );
 };

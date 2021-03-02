@@ -825,11 +825,6 @@ describe("💾 Server", async () => {
           .set({ token: parent.firebaseUID });
 
         expect(resp.status).to.be.equal(200);
-
-        const existingMentorshipsStudent = await app
-          .get("/mentorships")
-          .query({ user: { _id: 12345 } });
-        expect(existingMentorshipsStudent.status).to.be.equal(400);
       });
     });
   });

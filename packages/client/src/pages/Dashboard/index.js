@@ -1,12 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import FindAMentorPage from '../FindAMentor';
-import { COLORS } from '../../constants';
-import { Route, Link, useRouteMatch, useLocation, Redirect } from 'react-router-dom';
-import ProfilePage from '../Profile';
-import RequestsPage from '../Requests';
+import React from "react";
+import styled from "styled-components";
+import FindAMentorPage from "../FindAMentor";
+import { COLORS } from "../../constants";
+import {
+  Route,
+  Link,
+  useRouteMatch,
+  useLocation,
+  Redirect,
+} from "react-router-dom";
+import ProfilePage from "../Profile";
+import RequestsPage from "../Requests";
 import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
-import SpeakerSeriesPage from '../SpeakerSeries';
+import SpeakerSeriesPage from "../SpeakerSeries";
 
 const DashboardWrapper = styled.div`
   height: calc(100vh - 64px); // subtract heights for navbar and footer
@@ -53,13 +59,13 @@ const DashboardSidenav = styled.div`
 
 const SidenavLink = styled(Link)`
   text-decoration: none;
-  color: ${({ active = false }) => active ? COLORS.blue : 'black'};
+  color: ${({ active = false }) => (active ? COLORS.blue : "black")};
   font-size: 20px;
   margin-bottom: 25px;
-  opacity: ${({ active = false }) => active ? 1 : 0.75};
+  opacity: ${({ active = false }) => (active ? 1 : 0.75)};
 
   &:visited {
-    color: ${({ active = false }) => active ? COLORS.blue : 'black'};
+    color: ${({ active = false }) => (active ? COLORS.blue : "black")};
   }
 
   &:hover {
@@ -77,14 +83,14 @@ const DashboardPage = () => {
   const location = useLocation();
 
   // TODO move this logic to a dedicated component
-  if ( authState === AUTH_STATES.UNINITIALIZED
-    || (authState === AUTH_STATES.LOGGED_IN && !user)) return <>loading</>
+  if (
+    authState === AUTH_STATES.UNINITIALIZED ||
+    (authState === AUTH_STATES.LOGGED_IN && !user)
+  )
+    return <>loading</>;
+  else if (authState !== AUTH_STATES.LOGGED_IN) return <> not logged in </>;
 
-  else if (authState !== AUTH_STATES.LOGGED_IN) return <> not logged in </>
-
-  const userType = user.role === "PARENT" ? "Parent "
-    : user.role === "MENTOR" ? "Mentor " : "";
-
+  const userType = user.role;
   return (
     <DashboardWrapper>
       <DashboardHeader>
@@ -95,12 +101,32 @@ const DashboardPage = () => {
         </div>
       </DashboardHeader>
       <DashboardSidenav>
-        <SidenavLink to={`${url}/profile`} active={location.pathname.endsWith('profile')}>My Profile</SidenavLink>
+        <SidenavLink
+          to={`${url}/profile`}
+          active={location.pathname.endsWith("profile")}
+        >
+          My Profile
+        </SidenavLink>
         {/* {user.role === "PARENT" &&  */}
-          <SidenavLink to={`${url}/mentors`} active={location.pathname.endsWith('mentors')}>Find a Mentor</SidenavLink>
+        <SidenavLink
+          to={`${url}/mentors`}
+          active={location.pathname.endsWith("mentors")}
+        >
+          Find a Mentor
+        </SidenavLink>
         {/* } */}
-        <SidenavLink to={`${url}/speaker-series`} active={location.pathname.endsWith('speaker-series')}>Speaker Series</SidenavLink>
-        <SidenavLink to={`${url}/requests`} active={location.pathname.endsWith('requests')}>Requests</SidenavLink>
+        <SidenavLink
+          to={`${url}/speaker-series`}
+          active={location.pathname.endsWith("speaker-series")}
+        >
+          Speaker Series
+        </SidenavLink>
+        <SidenavLink
+          to={`${url}/requests`}
+          active={location.pathname.endsWith("requests")}
+        >
+          Requests
+        </SidenavLink>
       </DashboardSidenav>
       <DashboardContent>
         <Route path={`${path}/profile`} exact>
@@ -110,14 +136,14 @@ const DashboardPage = () => {
           <FindAMentorPage />
         </Route>
         <Route path={`${path}/speaker-series`}>
-        <SpeakerSeriesPage speakerSeries={speakerSeries}/>
+          <SpeakerSeriesPage speakerSeries={speakerSeries} />
         </Route>
         <Route path={`${path}/requests`} exact>
-          <RequestsPage request={request}/>
+          <RequestsPage request={request} />
         </Route>
       </DashboardContent>
     </DashboardWrapper>
-  )
-}
+  );
+};
 
 export default DashboardPage;

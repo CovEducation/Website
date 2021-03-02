@@ -1,37 +1,35 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Modal from '../../components/Modal';
-import Button from '../../components/Button';
-import ParentEditForm from '../../pages/EditProfile/parentForm';
-import ParentChildForm from '../../pages/EditProfile/parentChildForm';
-import { Auth } from '../../providers/FirebaseProvider';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Modal from "../../components/Modal";
+import Button from "../../components/Button";
+import ParentEditForm from "../../pages/EditProfile/parentForm";
+import ParentChildForm from "../../pages/EditProfile/parentChildForm";
+import { Auth } from "../../providers/FirebaseProvider";
 import useAuth from "../../providers/AuthProvider";
-import MentorStep2 from '../SignUp/wizards/MentorWizard/forms/MentorStep2.js';
-import MentorStep3 from '../SignUp/wizards/MentorWizard/forms/MentorStep3.js';
-
+import MentorStep2 from "../SignUp/wizards/MentorWizard/forms/MentorStep2.js";
+import MentorStep3 from "../SignUp/wizards/MentorWizard/forms/MentorStep3.js";
 
 const SignUpChildWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: white;
-    max-width: calc(700px - 4em);
-    min-width: calc(400px - 4em);
-    padding: 2em;
-    color: black;
-    button {
-      width: 100%;
-      margin: 0px 0px 20px 0px;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  max-width: calc(700px - 4em);
+  min-width: calc(400px - 4em);
+  padding: 2em;
+  color: black;
+  button {
+    width: 100%;
+    margin: 0px 0px 20px 0px;
+  }
 `;
 
 const ChildSignUpButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
-
 
 const ProfilePageWrapper = styled.div`
   padding: 100px;
@@ -45,7 +43,7 @@ const ProfileHeaderWrapper = styled.div`
   align-items: center;
   margin-bottom: 30px;
 
-  p{
+  p {
     margin-block-start: 10px;
     margin-block-end: 10px;
   }
@@ -98,322 +96,343 @@ const ButtonBlock = styled.div`
   }
 `;
 
-
-const MOCK_PROFILE_DATA = {
-  subjects: ['AP World History', 'AP Psychology'],
-  grade: 'High School',
-  languages: ['English', 'Spanish'],
-  location: 'Los Angeles, California',
-  timezone: 'Pacific Standard Time (GMT -08:00)',
-  email: 'sallystudent@gmail.com'
-}
-
 const ProfileDetailItem = ({ header, value }) => {
   let valueParsed = value;
   if (value instanceof Array) {
-    valueParsed = value.join(', ');
+    valueParsed = value.join(", ");
   }
 
-    return (
-      <>
-      {valueParsed &&
-      <div>
-        <p><b>{header}</b></p>
-        <p>{valueParsed}</p>
-
-      </div>
-      }
-      </>
-    )
-  }
-
+  return (
+    <>
+      {valueParsed && (
+        <div>
+          <p>
+            <b>{header}</b>
+          </p>
+          <p>{valueParsed}</p>
+        </div>
+      )}
+    </>
+  );
+};
 
 const StudentDetailItem = ({ name, gradeLevel, subjects }) => {
   let subjectsList = subjects;
   if (subjects instanceof Array) {
-    subjectsList = subjects.join(', ');
+    subjectsList = subjects.join(", ");
   }
   return (
     <div>
-      <p><b>Name : {name}</b></p>
-      {gradeLevel && <p><b>Gradelevel</b> : {gradeLevel}</p> }
-      {subjectsList.length > 0  && <p><b>Subjects</b> : {subjectsList}</p> }
+      <p>
+        <b>Name : {name}</b>
+      </p>
+      {gradeLevel && (
+        <p>
+          <b>Gradelevel</b> : {gradeLevel}
+        </p>
+      )}
+      {subjectsList.length > 0 && (
+        <p>
+          <b>Subjects</b> : {subjectsList}
+        </p>
+      )}
     </div>
-  )
-}
-
+  );
+};
 
 const ProfilePage = ({ user }) => {
-
-  const { saveProfileDetails, setUserData } = useAuth();
+  const { saveProfileDetails } = useAuth();
 
   let parentWizardSignUpData = {
-
     //Page 2
     parentPronouns: user.pronouns,
     parentName: user.name,
     parentEmail: user.email,
     parentPhoneNumber: user.phone,
     timeZone: user.timezone,
-    communicationPreference: user.communicationPreference?user.communicationPreference:"SMS",
+    communicationPreference: user.communicationPreference || "EMAIL",
 
     // Page 3
     registeredChildren: user.students,
-
-
   };
-
-
 
   const updateParentWizardSignUpData = (data) => {
     parentWizardSignUpData = { ...parentWizardSignUpData, ...data };
-  }
+  };
 
   const updateRegisteredChild = (index, data) => {
-    let childRegistrationInfo = parentWizardSignUpData.registeredChildren[index];
+    let childRegistrationInfo =
+      parentWizardSignUpData.registeredChildren[index];
     let mergedChildRegistration = { ...childRegistrationInfo, ...data };
     parentWizardSignUpData.registeredChildren[index] = mergedChildRegistration;
-  }
+  };
 
   const SecondPage = () => {
-
     const [state, setState] = useState({});
 
     const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.value });
-        console.log(event.target.value);
-        updateParentWizardSignUpData({ [event.target.name]: event.target.value });
+      setState({ ...state, [event.target.name]: event.target.value });
+      console.log(event.target.value);
+      updateParentWizardSignUpData({ [event.target.name]: event.target.value });
     };
 
     return (
-        <SignUpChildWrapper>
-            <ParentEditForm data={parentWizardSignUpData} handleChange={handleChange} />
-        </SignUpChildWrapper>
+      <SignUpChildWrapper>
+        <ParentEditForm
+          data={parentWizardSignUpData}
+          handleChange={handleChange}
+        />
+      </SignUpChildWrapper>
     );
-  }
+  };
 
   const ThirdPage = () => {
-
     const [state, setState] = useState({});
 
     const updateRegisteredChild = (index, data) => {
-      let childRegistrationInfo = parentWizardSignUpData.registeredChildren[index];
+      let childRegistrationInfo =
+        parentWizardSignUpData.registeredChildren[index];
       let mergedChildRegistration = { ...childRegistrationInfo, ...data };
-      parentWizardSignUpData.registeredChildren[index] = mergedChildRegistration;
-    }
+      parentWizardSignUpData.registeredChildren[
+        index
+      ] = mergedChildRegistration;
+    };
 
     const handleAddClick = (event) => {
       event.preventDefault();
       parentWizardSignUpData.registeredChildren.push({
         subjects: [],
-        gradeLevel: '',
-        newStudent: 1
+        gradeLevel: "",
+        newStudent: 1,
       });
       setState({ ...state });
-    }
+    };
 
     const handleRemoveClick = (event, data) => {
-        event.preventDefault();
-        //console.log(event.target.dataset);
-        //const { index } = event.target.dataset;
-        //console.log(data);
-        delete parentWizardSignUpData.registeredChildren[data];
-        //parentWizardSignUpData.registeredChildren.pop();
-        setState({ ...state });
-    }
+      event.preventDefault();
+      delete parentWizardSignUpData.registeredChildren[data];
+      setState({ ...state });
+    };
 
-    let children = parentWizardSignUpData.registeredChildren.map((item, index) => {
-      if(typeof item.newStudent !== "undefined")
-      {
-        if(item.newStudent)
-        {
-          return (
-            <StudentChildDiv>
-              <ParentChildForm key={index} index={index} data={parentWizardSignUpData} updateRegisteredChild={updateRegisteredChild} newStudent={true}/>
-              <Button onClick={(e) => handleRemoveClick(e, index)} data-index={index}>
+    let children = parentWizardSignUpData.registeredChildren.map(
+      (item, index) => {
+        if (item.newStudent !== undefined) {
+          if (item.newStudent) {
+            return (
+              <StudentChildDiv>
+                <ParentChildForm
+                  key={index}
+                  index={index}
+                  data={parentWizardSignUpData}
+                  updateRegisteredChild={updateRegisteredChild}
+                  newStudent={true}
+                />
+                <Button
+                  onClick={(e) => handleRemoveClick(e, index)}
+                  data-index={index}
+                >
                   Remove Student
-              </Button>
-            </StudentChildDiv>
-          )
-        }
-      }
-      return (
-        <StudentChildDiv>
-          <ParentChildForm key={index} index={index} data={parentWizardSignUpData} updateRegisteredChild={updateRegisteredChild} newStudent={false}/>
-        </StudentChildDiv>
-      )
-    });
-
-
-
-
-
-    //const showRemoveChildButton = parentWizardSignUpData.registeredChildren.length > 1;
-
-    return (
-        <SignUpChildWrapper>
-            {children}
-            <ChildSignUpButtonWrapper>
-                <Button onClick={handleAddClick}>
-                  Add Student
                 </Button>
-            </ChildSignUpButtonWrapper>
-        </SignUpChildWrapper>
+              </StudentChildDiv>
+            );
+          }
+        }
+        return (
+          <StudentChildDiv>
+            <ParentChildForm
+              key={index}
+              index={index}
+              data={parentWizardSignUpData}
+              updateRegisteredChild={updateRegisteredChild}
+              newStudent={false}
+            />
+          </StudentChildDiv>
+        );
+      }
     );
-  }
+    return (
+      <SignUpChildWrapper>
+        {children}
+        <ChildSignUpButtonWrapper>
+          <Button onClick={handleAddClick}>Add Student</Button>
+        </ChildSignUpButtonWrapper>
+      </SignUpChildWrapper>
+    );
+  };
+
   let mentorWizardSignUpData = {
     mentorName: user.name,
     mentorEmail: user.email,
-    selectedGradeLevels: user.gradeLevels?user.gradeLevels:[],
-    selectedSubjects: user.subjects,
-    communicationPreference: user.communicationPreference?user.communicationPreference:"SMS",
+    selectedGradeLevels: user.gradeLevels || [],
+    selectedSubjects: user.subjects || [],
+    communicationPreference: user.communicationPreference || "EMAIL",
     major: user.major,
-    introduction: user.bio,
-    pronouns: user.pronouns
+    introduction: user.introduction,
+    pronouns: user.pronouns,
   };
 
   const updateMentorWizardSignUpData = (data) => {
-
-      mentorWizardSignUpData = { ...mentorWizardSignUpData, ...data };
-  }
+    mentorWizardSignUpData = { ...mentorWizardSignUpData, ...data };
+  };
 
   const SecondPageMentor = () => {
+    const [state, setState] = useState({});
 
-      const [state, setState] = useState({});
+    const handleChange = (event) => {
+      setState({ ...state, [event.target.name]: event.target.value });
+      updateMentorWizardSignUpData({
+        ...state,
+        [event.target.name]: event.target.value,
+      });
+    };
 
-      const handleChange = (event) => {
-          setState({ ...state, [event.target.name]: event.target.value });
-          updateMentorWizardSignUpData({ ...state, [event.target.name]: event.target.value });
-      }
-
-      return (
-        <SignUpChildWrapper>
-          <MentorStep2 data={mentorWizardSignUpData} handleChange={handleChange} />
-        </SignUpChildWrapper>
-      );
-  }
+    return (
+      <SignUpChildWrapper>
+        <MentorStep2
+          data={mentorWizardSignUpData}
+          handleChange={handleChange}
+        />
+      </SignUpChildWrapper>
+    );
+  };
 
   const ThirdPageMentor = () => {
-
-      const [state, setState] = useState({
-          selectedGradeLevels: mentorWizardSignUpData.selectedGradeLevels ?? [],
-          selectedSubjects: mentorWizardSignUpData.selectedSubjects ?? [],
-      });
-
-      const { selectedGradeLevels, selectedSubjects } = state;
-
-      const handleChange = (event) => {
-          setState({ ...state, [event.target.name]: event.target.value });
-          updateMentorWizardSignUpData({ [event.target.name]: event.target.value });
-      };
-
-      return (
-        <SignUpChildWrapper>
-          <MentorStep3 data={mentorWizardSignUpData} handleChange={handleChange} selectedGradeLevels={selectedGradeLevels} selectedSubjects={selectedSubjects} />
-          </SignUpChildWrapper>
-      );
-  }
-
-  const handleSaveProfile = async() => {
-    var currentLoggedInUserId = (Auth.currentUser.uid);
-
-    if(user.role === "MENTOR")
-    {
-      var dataToSave = mentorWizardSignUpData;
-    }
-    else {
-      var dataToSave = parentWizardSignUpData;
-    }
-    var a = await saveProfileDetails(currentLoggedInUserId,dataToSave)
-    .then((data) => {
-        //setUserData(data);
-        document.getElementById("modalCloseButtons").click();
-    })
-    .catch((err) => {
-        console.log(`Error saving profile: ${err}`);
+    const [state, setState] = useState({
+      selectedGradeLevels: mentorWizardSignUpData.selectedGradeLevels ?? [],
+      selectedSubjects: mentorWizardSignUpData.selectedSubjects ?? [],
     });
-    console.log(a);
+
+    const { selectedGradeLevels, selectedSubjects } = state;
+
+    const handleChange = (event) => {
+      setState({ ...state, [event.target.name]: event.target.value });
+      updateMentorWizardSignUpData({ [event.target.name]: event.target.value });
+    };
+
+    return (
+      <SignUpChildWrapper>
+        <MentorStep3
+          data={mentorWizardSignUpData}
+          handleChange={handleChange}
+          selectedGradeLevels={selectedGradeLevels}
+          selectedSubjects={selectedSubjects}
+        />
+      </SignUpChildWrapper>
+    );
+  };
+
+  const handleSaveProfile = async () => {
+    var currentLoggedInUserId = Auth.currentUser.uid;
+    const dataToSave =
+      user.role === "MENTOR" ? mentorWizardSignUpData : parentWizardSignUpData;
+    await saveProfileDetails(currentLoggedInUserId, dataToSave)
+      .then((data) => {
+        document.getElementById("modalCloseButtons").click();
+      })
+      .catch((err) => {
+        console.log(`Error saving profile: ${err}`);
+      });
   };
 
   const editUserButton = (
     <>
       <Modal
-            title="Edit Profile"
-            trigger={
-              <Button size='sm'> Edit Profile </Button>}
-        >
-          {user.role === "PARENT" &&
-            <div>
-              <SecondPage/>
-              <ThirdPage/>
-              <ButtonBlock>
-                <Button theme="accent" onClick={handleSaveProfile}>Save Profile</Button>
-              </ButtonBlock>
-            </div>
-          }
+        title="Edit Profile"
+        trigger={<Button size="sm"> Edit Profile </Button>}
+      >
+        {user.role === "PARENT" && (
+          <div>
+            <SecondPage />
+            <ThirdPage />
+            <ButtonBlock>
+              <Button theme="accent" onClick={handleSaveProfile}>
+                Save Profile
+              </Button>
+            </ButtonBlock>
+          </div>
+        )}
 
-          {user.role === "MENTOR" &&
-            <div>
-              <SecondPageMentor />
-              <ThirdPageMentor />
-              <ButtonBlock>
-                <Button theme="accent" onClick={handleSaveProfile}>Save Profile</Button>
-              </ButtonBlock>
-            </div>
-          }
+        {user.role === "MENTOR" && (
+          <div>
+            <SecondPageMentor />
+            <ThirdPageMentor />
+            <ButtonBlock>
+              <Button theme="accent" onClick={handleSaveProfile}>
+                Save Profile
+              </Button>
+            </ButtonBlock>
+          </div>
+        )}
       </Modal>
     </>
   );
 
   const capitalize = (s) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
 
   return (
     <ProfilePageWrapper>
       <ProfileHeaderWrapper>
-        <ProfilePicture src="https://via.placeholder.com/115" alt="profile pic" />
+        <ProfilePicture
+          src="https://via.placeholder.com/115"
+          alt="profile pic"
+        />
         <div>
-          <p><b>{ user.name }</b></p>
-          <p>{ user.email }</p>
-          <p>{ user.phone }</p>
+          <p>
+            <b>{user.name}</b>
+          </p>
+          <p>{user.email}</p>
+          <p>{user.phone}</p>
           <p>{editUserButton}</p>
         </div>
       </ProfileHeaderWrapper>
       {user.role === "PARENT" ? (
-      <ProfileDetailsGrid>
+        <ProfileDetailsGrid>
           <ProfileDetailItem header="Location" value={user.timezone} />
-          <ProfileDetailItem header="Notification Preference" value={capitalize(user.communicationPreference)} />
+          <ProfileDetailItem
+            header="Notification Preference"
+            value={capitalize(user.communicationPreference)}
+          />
         </ProfileDetailsGrid>
       ) : (
         <MentorProfileDetailsGrid>
-        <ProfileDetailItem header="Subjects" value={user.subjects} />
-        <ProfileDetailItem header="Grade Level" value={MOCK_PROFILE_DATA.grade} />
-        <ProfileDetailItem header="Languages" value={MOCK_PROFILE_DATA.languages} />
-        <ProfileDetailItem header="Location" value={MOCK_PROFILE_DATA.location} />
-        <ProfileDetailItem header="Time Zone" value={user.timezone} />
+          <ProfileDetailItem header="Subjects" value={user.subjects} />
+          <ProfileDetailItem header="Grade Level" value={user.gradeLevels} />
+          <ProfileDetailItem
+            header="Languages"
+            value={user.languages || ["English"]}
+          />
+          <ProfileDetailItem
+            header="Location"
+            value={user.region || "US-EAST"}
+          />
+          <ProfileDetailItem header="Time Zone" value={user.timezone} />
         </MentorProfileDetailsGrid>
       )}
 
       {user.role === "PARENT" && (
         <>
-        { user.students.length > 0 &&
-        <>
-        <h2>STUDENTS</h2>
-        <StudentListGrid>
-          { user.students.map((student,index) =>
-             <StudentDetailItem key={index} name={student.name} gradeLevel={student.gradeLevel} subjects={student.subjects}/>
+          {user.students.length > 0 && (
+            <>
+              <h2>STUDENTS</h2>
+              <StudentListGrid>
+                {user.students.map((student, index) => (
+                  <StudentDetailItem
+                    key={index}
+                    name={student.name}
+                    gradeLevel={student.gradeLevel}
+                    subjects={student.subjects}
+                  />
+                ))}
+              </StudentListGrid>
+            </>
           )}
-        </StudentListGrid>
-        </>
-        }
         </>
       )}
-
-
     </ProfilePageWrapper>
-  )
-}
+  );
+};
 
 export default ProfilePage;

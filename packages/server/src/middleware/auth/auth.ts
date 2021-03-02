@@ -37,7 +37,7 @@ const getUserId = (user: firebase.auth.DecodedIdToken) => {
 
 // TODO(johancc) - For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
 const login = (req: Request, res: Response) => {
-  verify(req.headers.token || req.body.token)
+  verify(req.headers.token || req.body.token || req.query.token)
     .then((user) => {
       if (user === undefined) {
         throw new Error("Invalid user.");
@@ -94,7 +94,7 @@ const ensureLoggedIn = async (
   if (req.session.userId !== undefined) {
     next();
   } else {
-    verify(req.headers.token || req.body.token)
+    verify(req.headers.token || req.body.token || req.query.token)
       .then((user) => {
         if (user === undefined) {
           res.status(401).send({ err: "Not logged in." });

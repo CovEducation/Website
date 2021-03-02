@@ -50,8 +50,8 @@ class MainRouter {
 
   private configurePublicRoutes() {
     this.router.get("/heartbeat", (_, res) => res.send({ msg: "alive" }));
-    this.router.use("/login", login);
-    this.router.use("/logout", logout);
+    this.router.post("/login", login);
+    this.router.post("/logout", logout);
     this.router.use("/users", this._userSubRouter);
     this.router.use("/mentorships", this._mentorshipSubRouter);
   }

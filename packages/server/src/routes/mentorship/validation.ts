@@ -1,4 +1,4 @@
-import { body, query, checkSchema } from "express-validator";
+import { body, checkSchema } from "express-validator";
 
 import {
   mentorRequirementsBody,
@@ -37,7 +37,6 @@ const sessionRequirementBody = body("session")
       value.rating <= 1;
     return valid;
   });
-const userIdRequirementQuery = query("user._id").exists().isMongoId();
 
 export const postRequestValidation = mentorRequirementsBody
   .concat(parentRequirementsBody)
@@ -45,7 +44,7 @@ export const postRequestValidation = mentorRequirementsBody
   .concat(requestIdsRequirement)
   .concat([messageRequirementBody]);
 
-export const getMentorshipsValidation = [userIdRequirementQuery];
+export const getMentorshipsValidation = [];
 
 export const acceptMentorshipValidation = mentorshipRequirementsBody;
 

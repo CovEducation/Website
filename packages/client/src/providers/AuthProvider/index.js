@@ -117,7 +117,7 @@ const useAuthProvider = () => {
   };
 
   const getRequestList = async () => {
-    await getRequests(["Pending"])
+    await getRequests("Pending")
       .then((request) => {
         setRequest(request);
       })
@@ -128,7 +128,7 @@ const useAuthProvider = () => {
   };
 
   const getPendingRequestList = async () => {
-    await getRequests(["Pending"])
+    await getRequests("Pending")
       .then((request) => setRequestOther(request))
       .catch((err) => {
         console.log(`Error fetching Request: ${err}`);
@@ -139,7 +139,7 @@ const useAuthProvider = () => {
   const acceptRequest = async (messageID, status, studentName) => {
     await acceptStudentRequest(messageID, status, studentName)
       .then(() => {
-        var a = getRequests(["Pending"])
+        var a = getRequests("Pending")
           .then((request) => setRequest(request))
           .catch((err) => {
             console.log(`Error fetching Request: ${err}`);
@@ -155,7 +155,7 @@ const useAuthProvider = () => {
     await acceptStudentRequest(messageID, status, studentName)
       .then(() => {
         console.log("request Archived");
-        var a = getRequests(["Pending"])
+        var a = getRequests("Pending")
           .then((request) => setRequest(request))
           .catch((err) => {
             console.log(`Error fetching Request: ${err}`);
@@ -171,7 +171,7 @@ const useAuthProvider = () => {
     await acceptStudentRequest(messageID, status, studentName)
       .then(() => {
         console.log("request Rejected");
-        var a = getRequests(["Pending"])
+        getRequests("Pending")
           .then((request) => setRequest(request))
           .catch((err) => {
             console.log(`Error fetching Request: ${err}`);
@@ -187,7 +187,7 @@ const useAuthProvider = () => {
     await updateSessionHours(messageID, hours, studentName)
       .then(() => {
         console.log("session hours updated");
-        var a = getRequests(["Pending"])
+        getRequests("Pending")
           .then((request) => setRequest(request))
           .catch((err) => {
             console.log(`Error fetching Request: ${err}`);
@@ -203,7 +203,7 @@ const useAuthProvider = () => {
     await updateRatingss(messageID, ratings, studentName)
       .then(() => {
         console.log("ratings updated");
-        var a = getRequests(["Pending"])
+        getRequests("Pending")
           .then((request) => setRequest(request))
           .catch((err) => {
             console.log(`Error fetching Request: ${err}`);
@@ -281,7 +281,9 @@ const useAuthProvider = () => {
       setUser(null);
     } else {
       getUser()
-        .then((user) => setUser(user))
+        .then((user) => {
+          setUser(user);
+        })
         .catch((err) => {
           console.log(`Error fetching user: ${err}`);
           setUser(null);
