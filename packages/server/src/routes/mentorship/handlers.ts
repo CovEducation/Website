@@ -1,3 +1,4 @@
+import { mongoose } from "@typegoose/typegoose";
 import MentorshipService from "../../services/MentorshipService";
 import {
   GetMentorshipsRequest,
@@ -100,7 +101,7 @@ export const getMentorshipHandler = (
   req: GetMentorshipsRequest,
   res: GetMentorshipsResponse
 ) => {
-  const _id = req.session.userId;
+  const _id = mongoose.Types.ObjectId(req.query.user._id) || req.session.userId;
   if (_id === undefined) {
     res.status(400).end();
     return;
