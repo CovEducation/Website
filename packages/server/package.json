@@ -77,6 +77,6 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.17",
     "nodemailer-mandrill-transport": "^1.2.0",
-    "twilio": "^3.55.1"
+    "twilio": "^3.57.0"
   }
 }
