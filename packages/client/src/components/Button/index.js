@@ -53,7 +53,7 @@ const ButtonStyled = styled.button`
   min-height: ${(props) => ButtonThemes.height[props.size]}px;
   font-size: ${(props) => ButtonThemes.fontSize[props.size]}px;
   margin: 10px;
-  border: 1px solid ${(props) => 
+  border: 1px solid ${(props) =>
     props.disabled
       ? COLORS.grey
       : ButtonThemes.backgroundColor[props.theme]
@@ -92,10 +92,10 @@ const Button = ({
   type = 'submit',
   round = false,
   disabled = false,
-
+  name=''
 }) => {
   return (
-    <ButtonStyled theme={theme} size={size} basic={basic} onClick={onClick} round={round} disabled={disabled} type={type}>
+    <ButtonStyled name={name} theme={theme} size={size} basic={basic} onClick={onClick} round={round} disabled={disabled} type={type}>
       {children}
     </ButtonStyled>
   );
