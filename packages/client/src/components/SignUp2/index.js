@@ -20,17 +20,18 @@ import {
   TermsConditions,
 } from "./sections";
 
-import {
-  SharedInitialValues
-} from "./constants";
+import { SharedInitialValues } from "./constants";
 
+import useAuth from "../../providers/AuthProvider";
 
 const SignUp = () => {
+  const { signup } = useAuth();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [userType, setUserType] = React.useState(undefined);
 
   const [formSections, setForm] = React.useState([]);
-  const [formData, setFormData] = React.useState({...SharedInitialValues});
+  const [formData, setFormData] = React.useState({ ...SharedInitialValues });
 
   const MentorForm = [
     { label: "Account Details", Form: AccountDetails },
@@ -48,26 +49,33 @@ const SignUp = () => {
 
   const formSteps = {
     Mentor: MentorForm,
-    Parent: ParentForm
-  }
+    Parent: ParentForm,
+  };
 
   const selectUserType = (event) => {
     setUserType(event.target.name);
-    setForm(formSteps[event.target.name])
+    setForm(formSteps[event.target.name]);
     setActiveStep(1);
   };
 
   const onNext = (values) => {
     setFormData(Object.assign(formData, values));
     if (activeStep == formSteps[userType].length) {
-      console.log(formData)
+      formData.role = userType.toUpperCase();
+      console.log(formData);
+      signup(formData.email, formData.password, formData)
+        .then((res) => {
+          console.log(res);
+          setActiveStep(activeStep + 1);
+        })
+        .catch((err) => console.log(err));
     }
     setActiveStep(activeStep + 1);
   };
 
   const back = () => {
     setActiveStep(activeStep - 1);
-    if (activeStep - 1 == 0){
+    if (activeStep - 1 == 0) {
       setUserType(null);
       setForm([]);
     }
@@ -103,7 +111,11 @@ const SignUp = () => {
                 </CButton>
               </Grid>
               <Grid item xs={12}>
-                <CButton name="Mentor" onClick={selectUserType} intialValues={formData}>
+                <CButton
+                  name="Mentor"
+                  onClick={selectUserType}
+                  intialValues={formData}
+                >
                   Click here if you are mentor!
                 </CButton>
               </Grid>
@@ -115,17 +127,21 @@ const SignUp = () => {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              <Form onSubmit={onNext} stepperControls={stepperControls} initialValues={formData}/>
+              <Form
+                onSubmit={onNext}
+                stepperControls={stepperControls}
+                initialValues={formData}
+              />
             </StepContent>
           </Step>
         ))}
-        { formSections.length > 0 && (
+        {formSections.length > 0 && (
           <Step key="submitting">
             <StepLabel>Submitting</StepLabel>
             <StepContent>
-            <LinearProgress />
+              <LinearProgress />
             </StepContent>
-           </Step>
+          </Step>
         )}
       </Stepper>
     </Container>
