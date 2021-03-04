@@ -7,7 +7,7 @@ import DashboardPage from './pages/Dashboard';
 import HomePage from './pages/Home';
 import FAQsPage from './pages/FAQs';
 import ProfilePage from './pages/Profile';
-import SignUpPage from './pages/SignUp';
+import SignUpPage from './components/SignUp2';
 import MeetOurTeam from './pages/MeetOurTeam';
 import NavBar from './components/NavBar';
 import ForMentors from './pages/HowItWorks/ForMentors';
@@ -66,9 +66,6 @@ function App() {
               </Route>
               <Route path="/forgot-password">
                 <br/>
-              </Route>
-              <Route path="/sanjay">
-                <SignUp></SignUp>
               </Route>
             </Switch>
           </Router>

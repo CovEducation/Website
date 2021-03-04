@@ -11,7 +11,7 @@ import Button from '../Button';
 import styled from 'styled-components';
 import Signin from '../SignIn/index';
 import { FONTS, COLORS } from '../../constants';
-import SignUp from '../../pages/SignUp';
+import SignUp from '../SignUp2';
 import MobileNav from './MobileNav';
 
 import useAuth, {AUTH_STATES} from '../../providers/AuthProvider';

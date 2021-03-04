@@ -266,8 +266,6 @@ const StudentDetails = (props) => {
 
   const validationFunc = (i, field) => {
     return (f) => {
-      console.log(f, field);
-
       return [
         f.values.students[i][field],
         f.touched.students &&
@@ -285,8 +283,6 @@ const StudentDetails = (props) => {
       ];
     };
   };
-
-  console.log(formik);
 
   return (
     <div>
