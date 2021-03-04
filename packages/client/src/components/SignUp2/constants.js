@@ -2,29 +2,7 @@ import * as Yup from "yup";
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 
-const mentorSchema = Yup.object({
-  email: Yup.string().email().required("Email Required"),
-  password: Yup.string("Enter your password")
-    .min(8, "Password should be a minimum 8 characters length")
-    .required("Password Required"),
-  passwordConfirmation: Yup.string().oneOf(
-    [Yup.ref("password"), null],
-    "Passwords much match"
-  ),
-  name: Yup.string().required("Name Required"),
-  region: Yup.string().required("Region Required"),
-  phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
-  pronouns: Yup.string(),
-  college: Yup.string(),
-  // avatar: Yup.string().required("Avatar Required"),
-  bio: Yup.string().required("Bio Required"),
-  major: Yup.string(),
-  subjects: Yup.array().required("Subjects Required"),
-  // gradeLevels: Yup.array().required("Grade Levels Required"),
-  communicationPreference: Yup.string(),
-});
-
-const SharedIntialValues = {
+const SharedInitialValues = {
   email: "",
   password: "",
   name: "",
@@ -33,10 +11,9 @@ const SharedIntialValues = {
   pronouns: "",
   communicationPreference: "",
   subjects: [],
-  students: [{name: "", subjects: []}]
+  gradeLevels: [],
+  students: [{name: "", subjects: [], gradeLevel: ""}]
 };
-
-
 
 const CommunicationPreferences = [
   { value: "EMAIL", label: "Email" },
@@ -63,14 +40,18 @@ const Subjects = [
   { value: "english", label: "English" },
   { value: "science", label: "Science" },
 ];
-const GradeLevels = [];
+const GradeLevels = [
+  { value: "elementary", label: "Elementary School"},
+  { value: "middle", label: "Middle School"},
+  { value: "high", label: "High School" },
+];
 
 export {
-  mentorSchema,
+  SharedInitialValues,
   CommunicationPreferences,
   Pronouns,
   Subjects,
   GradeLevels,
   Timezones,
-  SharedIntialValues,
+  phoneRegex,
 };

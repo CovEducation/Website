@@ -24,8 +24,17 @@ const FormikField = (props) => {
     multiline,
     xs,
     rows,
-    value
+    validationFunc
   } = props;
+
+  let value, error, helperText;
+  if (!validationFunc) {
+    value = formik.values[name];
+    error = formik.touched[name] && Boolean(formik.errors[name])
+    helperText = formik.touched[name] && formik.errors[name]
+  } else {
+    ([value, error, helperText] = validationFunc(formik));
+  }
 
   return (
     <Grid item xs={xs}>
@@ -37,9 +46,9 @@ const FormikField = (props) => {
           label={label}
           type={type}
           onChange={formik.handleChange}
-          value={!value ? formik.values[name] : value}
-          error={formik.touched[name] && Boolean(formik.errors[name])}
-          helperText={formik.touched[name] && formik.errors[name]}
+          value={value}
+          error={error}
+          helperText={helperText}
           variant="filled"
           select={select}
           rows={rows}
@@ -90,7 +99,16 @@ const FormikRadio = (props) => {
 };
 
 const FormikSelect = (props) => {
-  const { name, label, formik, values, isMulti, xs, value } = props;
+  const { name, label, formik, values, isMulti, xs, validationFunc } = props;
+
+  let value, error, helperText;
+  if (!validationFunc) {
+    value = formik.values[name];
+    error = formik.touched[name] && Boolean(formik.errors[name])
+    helperText = formik.touched[name] && formik.errors[name]
+  } else {
+    ([value, error, helperText] = validationFunc(formik));
+  }
 
   return (
     <Grid item xs={xs}>
@@ -100,7 +118,7 @@ const FormikSelect = (props) => {
           labelId={name}
           name={name}
           multiple={isMulti}
-          value={!value ? formik.values[name] : value}
+          value={value}
           onChange={formik.handleChange}
           size="small"
         >
