@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import MenuIcon from '@material-ui/icons/Menu';
-import { COLORS } from '../../constants';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import MenuIcon from "@material-ui/icons/Menu";
+import { COLORS } from "../../constants";
+import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
 
 const MobileMenuIconWrapper = styled.div`
   position: absolute;
@@ -41,8 +42,35 @@ const UserLinksWrapper = styled.div`
   margin-top: auto;
 `;
 
-const MobileNav = ({ links }) => {
+const MobileNav = ({ links, loggedIn }) => {
   const [open, setOpen] = useState(false);
+  const { signout } = useAuth();
+  const loggedInLinks = (
+    <>
+      <MobileNavLink to="/dashboard/profile" onClick={() => setOpen(false)}>
+        <StyledListItem>Dashboard</StyledListItem>
+      </MobileNavLink>
+      <MobileNavLink to="/signup" onClick={() => setOpen(false)}>
+        <StyledListItem>Sign Out</StyledListItem>
+      </MobileNavLink>
+    </>
+  );
+
+  const loggedOutLinks = (
+    <>
+      <MobileNavLink to="/signin" onClick={() => setOpen(false)}>
+        <StyledListItem>Login</StyledListItem>
+      </MobileNavLink>
+      <MobileNavLink
+        onClick={() => {
+          signout();
+          setOpen(false);
+        }}
+      >
+        <StyledListItem>Register</StyledListItem>
+      </MobileNavLink>
+    </>
+  );
 
   return (
     <>
@@ -53,39 +81,27 @@ const MobileNav = ({ links }) => {
           }}
         />
       </MobileMenuIconWrapper>
-      <Drawer
-        open={open}
-        onClose={() => setOpen(false)}
-      >
+      <Drawer open={open} onClose={() => setOpen(false)}>
         <StyledList>
-          <MobileNavLink to='/' onClick={() => setOpen(false)}>
-            <StyledListItem>
-              Home
-            </StyledListItem>
+          <MobileNavLink to="/" onClick={() => setOpen(false)}>
+            <StyledListItem>Home</StyledListItem>
           </MobileNavLink>
           {links.map((link) => (
-            <MobileNavLink key={link.link} to={link.link} onClick={() => setOpen(false)}>
-              <StyledListItem>
-                {link.title}
-              </StyledListItem>
+            <MobileNavLink
+              key={link.link}
+              to={link.link}
+              onClick={() => setOpen(false)}
+            >
+              <StyledListItem>{link.title}</StyledListItem>
             </MobileNavLink>
           ))}
           <UserLinksWrapper>
-            <MobileNavLink to='/signin' onClick={() => setOpen(false)}>
-              <StyledListItem>
-                Login
-              </StyledListItem>
-            </MobileNavLink>
-            <MobileNavLink to='/signup' onClick={() => setOpen(false)}>
-              <StyledListItem>
-                Register
-              </StyledListItem>
-            </MobileNavLink>
+            {loggedIn ? loggedInLinks : loggedOutLinks}
           </UserLinksWrapper>
         </StyledList>
       </Drawer>
     </>
-  )
-}
+  );
+};
 
 export default MobileNav;

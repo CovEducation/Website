@@ -29,7 +29,6 @@ export const getUser = async () => {
   const token = await Auth.currentUser.getIdToken();
   return await post(host + "login", { token }).then((resp) => {
     // johanc - This is a hotfix.
-    console.log(resp);
     const { user } = resp;
     if (user === undefined || user.type === undefined) {
       return Promise.reject("Invalid user data retrieved from server.");
@@ -62,13 +61,13 @@ const createUserWithEmail = async (email, password, data, role) => {
     } else if (role === Roles.PARENT) {
       await post(host + "users/parent", { parent: data, token });
     } else {
-      throw new Error("unexpected user type");
+      throw new Error("Unexpected user type");
     }
     await Auth.currentUser.sendEmailVerification();
-    return { success: 1, message: "User Created Successfully." };
+    return { success: true, message: "User Created Successfully." };
   } catch (err) {
     if (token) await Auth.currentUser.delete();
-    return { success: 0, message: err };
+    return { success: false, message: err };
   }
 };
 

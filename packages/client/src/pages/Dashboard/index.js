@@ -79,16 +79,18 @@ const DashboardContent = styled.div`
 
 const DashboardPage = () => {
   const { url, path } = useRouteMatch();
-  const { user, authState, request, speakerSeries } = useAuth();
+  const { user, authState, request } = useAuth();
   const location = useLocation();
 
   // TODO move this logic to a dedicated component
   if (
     authState === AUTH_STATES.UNINITIALIZED ||
     (authState === AUTH_STATES.LOGGED_IN && !user)
-  )
-    return <>loading</>;
-  else if (authState !== AUTH_STATES.LOGGED_IN) return <> not logged in </>;
+  ) {
+    return <>Loading..</>;
+  } else if (authState !== AUTH_STATES.LOGGED_IN) {
+    return <>(How did you make it here? You're not logged in!)</>;
+  }
 
   const userType = user.role;
   return (
@@ -136,7 +138,7 @@ const DashboardPage = () => {
           <FindAMentorPage />
         </Route>
         <Route path={`${path}/speaker-series`}>
-          <SpeakerSeriesPage speakerSeries={speakerSeries} />
+          <SpeakerSeriesPage />
         </Route>
         <Route path={`${path}/requests`} exact>
           <RequestsPage request={request} />

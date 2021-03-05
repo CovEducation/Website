@@ -38,7 +38,9 @@ export const UserDetails = ({ values }) => {
 
   return (
     <Grid container spacing={SPACING}>
-      <Grid item sm={12}><h2>User Details</h2></Grid>
+      <Grid item sm={12}>
+        <h2>User Details</h2>
+      </Grid>
       <ProfileRow label={"Name"} value={name} />
       <ProfileRow label={"Pronouns"} value={PronounsVM[pronouns]} />
       <ProfileRow label={"Email"} value={email} />
@@ -55,23 +57,45 @@ export const UserDetails = ({ values }) => {
 export const MentorDetails = ({ values }) => {
   const { college, major, bio, subjects, gradeLevels } = values;
 
-  //   const subjectsJoined = subjects.map(sub => SubjectsVM[sub]).join(", ");
+  const subjectsJoined = subjects.map((sub) => SubjectsVM[sub]).join(", ");
   const gradeLevelsJoined = gradeLevels
     .map((gl) => GradeLevelsVM[gl])
     .join(", ");
 
   return (
     <Grid container spacing={SPACING}>
-      <Grid item sm={12}><h2>Mentor Details</h2></Grid>
+      <Grid item sm={12}>
+        <h2>Mentor Details</h2>
+      </Grid>
       <ProfileRow label={"College"} value={college} />
       <ProfileRow label={"Major"} value={major} />
       <ProfileRow label={"Bio"} value={bio} />
-      {/* <ProfileRow label={"Subjects"} value={subjectsJoined} /> */}
+      <ProfileRow label={"Subjects"} value={subjectsJoined} />
       <ProfileRow label={"Grade Levels"} value={gradeLevelsJoined} />
     </Grid>
   );
 };
 
-export const StudentDetails = ({ values }) => {
-  const { students } = values;
+const StudentDetail = ({ student }) => {
+  const subjects = student.subjects.map((sub) => SubjectsVM[sub]).join(", ");
+  return (
+    <>
+      <ProfileRow label="Name" value={student.name} />
+      <ProfileRow label="Grade level" value={student.gradeLevel} />
+      <ProfileRow label="Subjects" value={subjects} />
+    </>
+  );
+};
+
+export const ParentStudentDetails = ({ values }) => {
+  return (
+    <Grid container spacing={SPACING}>
+      <Grid item sm={12}>
+        <h2>Student Details</h2>
+      </Grid>
+      {values.students.map((student) => (
+        <StudentDetail student={student} />
+      ))}
+    </Grid>
+  );
 };

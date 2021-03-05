@@ -141,7 +141,7 @@ const SignUpPage = () => {
     const handleChange = (event) => {
       a = event.target.value;
       setState({ ...state, [event.target.name]: event.target.value });
-      if (userTypes == "MENTOR") {
+      if (userTypes === "MENTOR") {
         updateMentorWizardSignUpData({
           [event.target.name]: event.target.value,
         });
@@ -233,15 +233,19 @@ const SignUpPage = () => {
           data={parentWizardSignUpData}
           handleCheck={handleCheck}
           onClick={async () => {
-            var res = await signup(
+            const res = await signup(
               parentWizardSignUpData.parentEmail,
               parentWizardSignUpData.password1,
               createParentModel(parentWizardSignUpData)
             );
+            console.log('Here!');
             if (res.success) {
-              // alert('Signed in! Redirecting to dashboard...');
+              console.log("Successfully created user.");
               history.push("/dashboard/profile");
             } else {
+              console.log("Failed to create user");
+              console.log(res.success);
+              console.log(res.message);
               alert(res.message);
             }
           }}

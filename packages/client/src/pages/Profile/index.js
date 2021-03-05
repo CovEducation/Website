@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Auth } from "../../providers/FirebaseProvider";
-import useAuth from "../../providers/AuthProvider";
-
-import { MentorDetails, StudentDetails, UserDetails } from "./sections";
+import { MentorDetails, ParentStudentDetails, UserDetails } from "./sections";
 import { MENTOR, PARENT } from "../../constants";
 import { Container } from "@material-ui/core";
 
@@ -114,37 +111,9 @@ const ProfileDetailItem = ({ header, value }) => {
   );
 };
 
-const StudentDetailItem = ({ name, gradeLevel, subjects }) => {
-  let subjectsList = subjects;
-  if (subjects instanceof Array) {
-    subjectsList = subjects.join(", ");
-  }
-  return (
-    <div>
-      <p>
-        <b>Name : {name}</b>
-      </p>
-      {gradeLevel && (
-        <p>
-          <b>Gradelevel</b> : {gradeLevel}
-        </p>
-      )}
-      {subjectsList.length > 0 && (
-        <p>
-          <b>Subjects</b> : {subjectsList}
-        </p>
-      )}
-    </div>
-  );
-};
-
 const ProfilePage = ({ user }) => {
-  const { saveProfileDetails } = useAuth();
-
   const MentorProfile = [UserDetails, MentorDetails];
-  const ParentProfile = [UserDetails, StudentDetails];
-
-  console.log(user);
+  const ParentProfile = [UserDetails, ParentStudentDetails];
 
   const profileComponents =
     user.role === MENTOR ? MentorProfile : ParentProfile;

@@ -81,7 +81,8 @@ export const postParentHandler = (
       req.session.userId = newParent._id;
       res.send(newParent);
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).end();
     });
 };

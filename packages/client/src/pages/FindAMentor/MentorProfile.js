@@ -70,7 +70,7 @@ const ButtonBlock = styled.div`
 const MentorProfile = ({ mentor, onSubmit, disable }) => {
   const { user } = useAuth();
   const { students } = user;
-  const [userMessage, setUserMessage] = useState("Hi New Parent Request");
+  const [userMessage, setUserMessage] = useState("");
   const [studentName, setStudentName] = useState("");
   const [studentID, setStudentID] = useState("");
   const [validation, setValidation] = useState(true);
@@ -97,7 +97,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     await onSubmit(email, studentID, studentName, userMessage);
   };
 
-  const stundetsList =
+  const studentList =
     students &&
     students.map((item) => {
       return (
@@ -152,7 +152,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
               Please Select Student
             </InputLabel>
             <Select
-              children={stundetsList}
+              children={studentList}
               fullWidth
               labelId="wizard-pronoun"
               MenuProps={SelectMenuProps}
