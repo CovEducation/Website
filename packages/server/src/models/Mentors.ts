@@ -19,6 +19,7 @@ export interface IMentor {
   name: string;
   email: string;
   timezone?: string;
+  college: string;
   phone?: string;
   pronouns?: string;
   avatar?: string; // Assumed to be a URL
@@ -26,6 +27,7 @@ export interface IMentor {
   major: string;
   communicationPreference: CommunicationPreference;
   gradeLevels: string[];
+  subjects: string[];
   mentorships?: Ref<Mentorship>;
 }
 
@@ -55,6 +57,12 @@ export class Mentor implements IMentor {
 
   @prop({ required: false })
   public pronouns?: string;
+
+  @prop({ required: true })
+  public college: string;
+
+  @prop({ required: true })
+  public subjects: string[];
 
   @prop({ required: true })
   public major: string;

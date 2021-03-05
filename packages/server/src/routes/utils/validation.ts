@@ -21,6 +21,7 @@ export const mentorRequirementsBody = [
   body("mentor.name").exists().isString(),
   body("mentor.major").exists().isString(),
   body("mentor.gradeLevels").exists().isArray({ min: 1 }),
+  body("mentor.subjects").exists().isArray({ min: 1 }),
   body("mentor.mentorships.*._id").optional().isMongoId(),
   body("mentor.phone").optional({ checkFalsy: true }).isString(),
   body("mentor.avatar").optional().exists().isURL(),

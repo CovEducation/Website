@@ -15,6 +15,13 @@ export const testMentor: IMentor = {
   major: "Testing",
   communicationPreference: CommunicationPreference.EMAIL,
   gradeLevels: ["8"],
+  subjects: [
+    "AP Computer Science",
+    "English",
+    "19th Century Literature",
+    "Differential Equations",
+  ],
+  college: "MIT",
   timezone: "EST",
 };
 
