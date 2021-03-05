@@ -27,7 +27,6 @@ export const testMentor: IMentor = {
 
 export const testStudent: IStudent = {
   name: "Pork Bun",
-  email: "pork@bun.com",
   gradeLevel: "5",
   subjects: ["Algebra", "English"],
 };

@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 export interface IStudent {
   _id?: mongoose.Types.ObjectId;
   name: string;
-  email: string;
   subjects: string[];
   gradeLevel: string;
 }
@@ -14,9 +13,6 @@ export class Student implements IStudent {
 
   @prop({ required: true })
   public name: string;
-
-  @prop({ required: true, unique: true })
-  public email: string;
 
   @prop({ required: true })
   public gradeLevel: string;

@@ -112,7 +112,7 @@ let mentorWizardSignUpData = {
   agreePrivacyPolicy: undefined,
 };
 
-const SignUpPage = (props) => {
+const SignUpPage = () => {
   const [userTypes, setUserTypes] = useState("MENTOR");
   const history = useHistory();
   const updateParentWizardSignUpData = (data) => {
