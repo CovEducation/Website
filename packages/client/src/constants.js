@@ -351,3 +351,6 @@ export const tags = ["Early Childhood Learning", "Preschool", "Elementary School
       pronoun: "Er."
     },
   ]
+
+export const MENTOR = "MENTOR";
+export const PARENT = "PARENT";

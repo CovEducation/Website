@@ -1,5 +1,3 @@
-import * as Yup from "yup";
-
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 
 const SharedInitialValues = {
@@ -12,7 +10,20 @@ const SharedInitialValues = {
   communicationPreference: "",
   subjects: [],
   gradeLevels: [],
-  students: [{name: "", subjects: [], gradeLevel: ""}]
+  students: [{ name: "", subjects: [], gradeLevel: "" }],
+};
+
+// this helper function will tranform the option lists into a mapping from value to label
+// useful for displaying fields back to the user.
+// Note: if this could be done at compile that would be great.
+const transformValueMap = (optionList) => {
+  const valueMap = {};
+
+  optionList.forEach((option) => {
+    valueMap[option.value] = option.label;
+  });
+
+  return valueMap;
 };
 
 const CommunicationPreferences = [
@@ -41,10 +52,16 @@ const Subjects = [
   { value: "science", label: "Science" },
 ];
 const GradeLevels = [
-  { value: "elementary", label: "Elementary School"},
-  { value: "middle", label: "Middle School"},
+  { value: "elementary", label: "Elementary School" },
+  { value: "middle", label: "Middle School" },
   { value: "high", label: "High School" },
 ];
+
+const CommunicationPreferencesVM = transformValueMap(CommunicationPreferences);
+const PronounsVM = transformValueMap(Pronouns);
+const TimezonesVM = transformValueMap(Timezones);
+const SubjectsVM = transformValueMap(Subjects);
+const GradeLevelsVM = transformValueMap(GradeLevels);
 
 export {
   SharedInitialValues,
@@ -54,4 +71,9 @@ export {
   GradeLevels,
   Timezones,
   phoneRegex,
+  CommunicationPreferencesVM,
+  PronounsVM,
+  TimezonesVM,
+  SubjectsVM,
+  GradeLevelsVM,
 };
