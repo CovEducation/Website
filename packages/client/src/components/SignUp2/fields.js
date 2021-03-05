@@ -37,7 +37,7 @@ const FormikField = (props) => {
   }
 
   return (
-    <Grid item xs={xs}>
+    <Grid item sm={xs}>
       <FormControl component="fieldset" fullWidth>
         <TextField
           fullWidth
@@ -111,7 +111,7 @@ const FormikSelect = (props) => {
   }
 
   return (
-    <Grid item xs={xs}>
+    <Grid item sm={xs}>
       <FormControl variant="filled" fullWidth>
         <InputLabel id={name}> {label} </InputLabel>
         <Select

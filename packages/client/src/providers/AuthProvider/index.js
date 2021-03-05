@@ -54,8 +54,6 @@ const useAuthProvider = () => {
   const [user, setUser] = useState(null);
   const [request, setRequest] = useState(null);
   const [requestOther, setRequestOther] = useState(null);
-  const [speakerSeries, setSpeakerSeries] = useState(null);
-  const [teamData, setTeamData] = useState(null);
   /**
    * Signs a user in. This triggers pulling the correct user information.
    * @param {string} email
@@ -226,56 +224,35 @@ const useAuthProvider = () => {
       });
   };
 
-  //
-  const getSpeakerSeries = async () => {
-    await getSpeakerSeriesList()
-      .then((data) => setSpeakerSeries(data))
-      .catch((err) => {
-        console.log(`Error fetching Speaker Series: ${err}`);
-        setSpeakerSeries(null);
-      });
-  };
-
   const setUserData = async (data) => {
     setUser(data);
   };
 
-  const getTeamData = async () => {
-    await getTeamDataList()
-      .then((data) => setTeamData(data))
-      .catch((err) => {
-        console.log(`Error fetching Team Data: ${err}`);
-        setTeamData(null);
-      });
-  };
   // TODO this may have to be done synchronously
   // Register firebase state handler
   // Note that this only gets called once on mount
   useEffect(() => {
-    const unsubscribe = Auth.onAuthStateChanged(async (auth) => {
+    const unsubscribe = Auth.onAuthStateChanged((auth) => {
       if (authState === AUTH_STATES.CREATING_USER) {
         // Avoids race-condition between firebase and firestore user creation.
-        return;
-      }
-      if (auth != null) {
-        setAuth(auth);
-        setAuthState(AUTH_STATES.LOGGED_IN);
       } else {
-        setAuthState(AUTH_STATES.LOGGED_OUT);
+        if (auth != null) {
+          setAuth(auth);
+          setAuthState(AUTH_STATES.LOGGED_IN);
+        } else {
+          setAuthState(AUTH_STATES.LOGGED_OUT);
+          setUser(null);
+        }
       }
     });
-    return () => unsubscribe();
+    return unsubscribe;
   }, [authState]);
 
   // Attempt to fetch the user on update
   useEffect(() => {
-    getRequestList();
-    getPendingRequestList();
-    getSpeakerSeries();
-
     // Query for the user if not cached.
     if (user) {
-      return Promise.resolve(user);
+      // no-op
     } else if (authState !== AUTH_STATES.LOGGED_IN) {
       console.log("User not currently logged in.");
       setUser(null);
@@ -290,9 +267,7 @@ const useAuthProvider = () => {
         });
     }
   }, [authState, user, auth]);
-  useEffect(() => {
-    getTeamData();
-  }, []);
+
   return {
     auth,
     authState,
@@ -302,8 +277,6 @@ const useAuthProvider = () => {
     signout,
     request,
     requestOther,
-    speakerSeries,
-    teamData,
     sendRequestToMentor,
     getRequestList,
     acceptRequest,
@@ -312,8 +285,6 @@ const useAuthProvider = () => {
     updateRatings,
     updateSessionHoursss,
     getPendingRequestList,
-    getSpeakerSeries,
-    getTeamData,
     saveProfileDetails,
     setUserData,
   };
