@@ -74,15 +74,15 @@ const createUserWithEmail = async (email, password, data, role) => {
 /**
  * Note: Assumes that the parent is the one requesting a mentorship.
  */
-export const sendRequest = async (mentorID, studentID, message) => {
+export const sendRequest = async (parentID, mentorID, studentID, message) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
   return await post(host + "mentorships/request", {
     message: message,
-    parent: Auth.currentUser.uid,
-    student: studentID,
-    mentor: mentorID,
+    parentID: parentID,
+    studentID: studentID,
+    mentorID: mentorID,
   });
 };
 

@@ -1,4 +1,5 @@
 import { mongoose } from "@typegoose/typegoose";
+import UserService from "../../services/UserService";
 import MentorshipService from "../../services/MentorshipService";
 import {
   GetMentorshipsRequest,
@@ -15,12 +16,41 @@ import {
   PostSessionResponse,
 } from "./interfaces";
 
-export const postRequestHandler = (
+export const postRequestHandler = async (
   req: PostReqRequest,
   res: PostReqResponse
 ) => {
-  const { mentor, parent, message, student } = req.body;
-
+  const { mentorID, parentID, message, studentID } = req.body;
+  const mentor = await UserService.findMentor(
+    new mongoose.Types.ObjectId(mentorID)
+  ).catch((err) => {
+    res.status(400).send({ err });
+    return;
+  });
+  if (mentor === undefined) {
+    res.status(400).send({ err: "Invalid parentID" });
+    return;
+  }
+  const parent = await UserService.findParent(
+    new mongoose.Types.ObjectId(parentID)
+  ).catch((err) => {
+    res.status(400).send({ err });
+    return;
+  });
+  if (parent === undefined) {
+    res.status(400).send({ err: "Invalid parentID" });
+    return;
+  }
+  let student;
+  parent.students.forEach((stud) => {
+    if (stud._id?.toHexString() === studentID) {
+      student = stud;
+    }
+  });
+  if (student === undefined) {
+    res.status(400).send({ err: "Invalid studentID" });
+    return;
+  }
   const request = {
     mentor,
     parent,

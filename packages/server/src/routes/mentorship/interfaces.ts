@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
 import { IMentorship } from "../../models/Mentorships";
 import { IMentor } from "../../models/Mentors";
-import { IParent } from "../../models/Parents";
-import { IStudent } from "../../models/Students";
 import { ISession } from "../../models/Sessions";
 export interface PostReqRequest extends Request {
   body: {
-    mentor: IMentor;
-    parent: IParent;
-    student: IStudent;
+    mentorID: string;
+    parentID: string;
+    studentID: string;
     message: string;
   };
 }

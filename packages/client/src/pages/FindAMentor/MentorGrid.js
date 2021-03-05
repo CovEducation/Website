@@ -67,10 +67,10 @@ const MentorGrid = ({ hits }) => {
     setSelectedMentor({ open: false });
   };
 
-  const sendRequest = async (email, studentID, studentName, message) => {
+  const sendRequest = async (parentID, mentorID, studentID, message) => {
     setDisable(true);
     try {
-      await sendRequestToMentor(email, studentID, studentName, message);
+      await sendRequestToMentor(parentID, mentorID, studentID, message);
       setToastOpen(true);
       handleClose();
       setTimeout(() => {

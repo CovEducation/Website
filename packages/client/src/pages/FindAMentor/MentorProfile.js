@@ -79,43 +79,46 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   const relevantInformationMentor = [
     ["subjects", "Subjects"],
     ["location", "Location"],
-    ["grade_levels_to_mentor", "Grades"],
+    ["gradeLevels", "Grades"],
     ["timezone", "Timezone"],
     ["languages_spoken", "Languages"],
-    ["email", "Email"],
   ];
 
   const relevantInformationParent = [
     ["subjects", "Subjects"],
     ["location", "Location"],
-    ["grade_levels_to_mentor", "Grades"],
+    ["gradeLevels", "Grades"],
     ["timezone", "Timezone"],
     ["languages_spoken", "Languages"],
   ];
 
-  const sendRequest = async (email) => {
-    await onSubmit(email, studentID, studentName, userMessage);
+  const sendRequest = async (mentorID) => {
+    await onSubmit(user._id, mentorID, studentID, userMessage);
   };
 
   const studentList =
     students &&
     students.map((item) => {
       return (
-        <MenuItem key={item.id} value={item.name} data-id={item.id}>
+        <MenuItem key={item._id} value={item.name} data-id={item._id}>
           {item.name}
         </MenuItem>
       );
     });
 
   const handleChange = (event) => {
-    const { id } = event.currentTarget.dataset;
     setStudentName(event.target.value);
+    // Efficiency.
+    let id = students.filter((stud) => stud.name === event.target.value)[0]._id;
     setStudentID(id);
     setValidation(false);
   };
 
+  // Note:
+  // Algolia stores the mongoID as "id" not "_id"
+
   return (
-    <MentorProfileContainer key={mentor.objectID}>
+    <MentorProfileContainer key={mentor.id}>
       <MentorProfileHeader>
         <MentorProfilePicture
           src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}
@@ -128,12 +131,12 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
         </MentorDetailsBlock>
         <div></div>
       </MentorProfileHeader>
-      {mentor.bio !== null && (
+      {mentor.introduction !== null && (
         <div>
           <p>
-            <b>Bio</b>
+            <b>Introduction</b>
           </p>
-          <p>{mentor.bio}</p>
+          <p>{mentor.introduction}</p>
         </div>
       )}
       <MentorProfileInformation>
@@ -179,7 +182,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
               disabled={disable || validation}
               theme="accent"
               size="md"
-              onClick={() => sendRequest(mentor.email)}
+              onClick={() => sendRequest(mentor.id)}
             >
               Send Request
             </Button>

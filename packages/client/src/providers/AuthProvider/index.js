@@ -100,14 +100,14 @@ const useAuthProvider = () => {
   };
 
   const sendRequestToMentor = async (
-    email,
+    parentID,
+    mentorID,
     studentID,
-    studentName,
     message
   ) => {
-    await sendRequest(email, studentID, studentName, message)
+    await sendRequest(parentID, mentorID, studentID, message)
       .then(() => {
-        console.log("Request Send successfully.");
+        console.log("Request Sent successfully.");
       })
       .catch((err) => {
         console.log(`Error Sending Request: ${err}`);

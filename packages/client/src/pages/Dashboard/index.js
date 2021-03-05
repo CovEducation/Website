@@ -2,13 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import FindAMentorPage from "../FindAMentor";
 import { COLORS } from "../../constants";
-import {
-  Route,
-  Link,
-  useRouteMatch,
-  useLocation,
-  Redirect,
-} from "react-router-dom";
+import { Route, Link, useRouteMatch, useLocation } from "react-router-dom";
 import ProfilePage from "../Profile";
 import RequestsPage from "../Requests";
 import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";

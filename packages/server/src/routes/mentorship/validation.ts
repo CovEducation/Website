@@ -1,11 +1,5 @@
 import { body, query, checkSchema } from "express-validator";
 
-import {
-  mentorRequirementsBody,
-  parentRequirementsBody,
-  studentRequirementsBody,
-} from "../utils/validation";
-
 const mentorshipRequirementsBody = [
   body("mentorship._id").exists().isMongoId(),
   body("mentorship.sessions").exists().isArray(),
@@ -14,15 +8,15 @@ const mentorshipRequirementsBody = [
 
 const messageRequirementBody = body("message").exists().isString();
 const requestIdsRequirement = checkSchema({
-  "parent._id": {
+  parentID: {
     exists: true,
     isMongoId: true,
   },
-  "parent.students.*._id": {
+  studentID: {
     exists: true,
     isMongoId: true,
   },
-  "mentor._id": {
+  mentorID: {
     exists: true,
     isMongoId: true,
   },
@@ -39,11 +33,9 @@ const sessionRequirementBody = body("session")
   });
 const userIdRequirementQuery = query("token").optional().isMongoId();
 
-export const postRequestValidation = mentorRequirementsBody
-  .concat(parentRequirementsBody)
-  .concat(studentRequirementsBody)
-  .concat(requestIdsRequirement)
-  .concat([messageRequirementBody]);
+export const postRequestValidation = requestIdsRequirement.concat([
+  messageRequirementBody,
+]);
 
 export const getMentorshipsValidation = [userIdRequirementQuery];
 

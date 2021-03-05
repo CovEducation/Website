@@ -58,12 +58,12 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
-
+        console.log(resp);
         expect(resp.status).to.be.equal(200);
         const existingMentorships = await app
           .get("/mentorships")
@@ -76,9 +76,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
 
@@ -100,18 +100,18 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
 
         expect(resp.status).to.be.equal(200);
         const other = {
           message: "In case the other one doesn't respond",
-          mentor: otherMentor,
-          parent,
-          student,
+          mentorID: otherMentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const repeat = await app.post("/mentorships/request").send(other);
         expect(repeat.status).to.be.equal(200);
@@ -127,10 +127,11 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          parent: { ...parent, _id: undefined },
-          mentor,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
+        request.parentID = undefined;
         const resp = await app.post("/mentorships/request").send(request);
 
         expect(resp.status).to.be.equal(400);
@@ -142,9 +143,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -166,9 +167,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -201,9 +202,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -226,9 +227,9 @@ describe("💾 Server", async () => {
         expect(loginParent.status).to.be.equal(200);
         const otherRequest = {
           message: "Hello! I want one mentorship please.",
-          mentor: otherMentor,
-          parent,
-          student,
+          mentorID: otherMentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const newReq = await app
           .post("/mentorships/request")
@@ -250,9 +251,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         expect(resp.status).to.be.equal(400);
@@ -270,9 +271,9 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -296,9 +297,9 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -320,9 +321,9 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -351,15 +352,15 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const otherRequest = {
           message: "Hello! I want one mentorship please.",
-          parent: otherParent,
-          student: otherParent.students[0],
-          mentor,
+          parentID: otherParent._id,
+          studentID: otherParent.students[0]._id,
+          mentorID: mentor._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -397,9 +398,9 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app
           .post("/mentorships/request")
@@ -433,9 +434,9 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app
           .post("/mentorships/request")
@@ -461,9 +462,9 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -497,9 +498,9 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -535,15 +536,15 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const otherRequest = {
           message: "Hello! I want one mentorship please.",
-          mentor: otherMentor,
-          parent,
-          student,
+          mentorID: otherMentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -594,9 +595,9 @@ describe("💾 Server", async () => {
         });
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -618,9 +619,9 @@ describe("💾 Server", async () => {
 
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
         const mentorship = resp.body;
@@ -647,9 +648,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app
           .post("/mentorships/request")
@@ -691,9 +692,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app
           .post("/mentorships/request")
@@ -737,9 +738,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
 
@@ -776,18 +777,18 @@ describe("💾 Server", async () => {
         const parent = createParent.body;
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student: parent.students[0],
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: parent.students[0]._id,
         };
         const resp = await app.post("/mentorships/request").send(request);
 
         expect(resp.status).to.be.equal(200);
         const otherRequest = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student: parent.students[1],
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: parent.students[1]._id,
         };
         const otherResp = await app
           .post("/mentorships/request")
@@ -815,9 +816,9 @@ describe("💾 Server", async () => {
         const [parent, mentor, student] = await createUsers();
         const request = {
           message: "Hello! I want one mentorship please.",
-          mentor,
-          parent,
-          student,
+          mentorID: mentor._id,
+          parentID: parent._id,
+          studentID: student._id,
         };
         const resp = await app
           .post("/mentorships/request")
