@@ -4,12 +4,9 @@ import MentorRequestFrame from "./MentorRequestFrame.js";
 import GridList from "@material-ui/core/GridList";
 import { connectHits } from "react-instantsearch-dom";
 import ModalNew from "../../components/ModalNew";
-import MentorCard from "./MentorCard.js";
-import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import Button from "@material-ui/core/Button";
-import useAuth from "../../providers/AuthProvider";
 import Toast from "../../components/Toast/index.js";
+import { sendRequest } from "../../api";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -50,7 +47,6 @@ const MentorCardText = styled.p`
 `;
 
 const MentorGrid = ({ hits }) => {
-  const { sendRequestToMentor } = useAuth();
   const [toastOpen, setToastOpen] = useState(false);
   const [disable, setDisable] = useState(false);
 
@@ -67,10 +63,10 @@ const MentorGrid = ({ hits }) => {
     setSelectedMentor({ open: false });
   };
 
-  const sendRequest = async (parentID, mentorID, studentID, message) => {
+  const onRequest = async (parentID, mentorID, studentID, message) => {
     setDisable(true);
     try {
-      await sendRequestToMentor(parentID, mentorID, studentID, message);
+      await sendRequest(parentID, mentorID, studentID, message);
       setToastOpen(true);
       handleClose();
       setTimeout(() => {
@@ -120,7 +116,7 @@ const MentorGrid = ({ hits }) => {
       >
         <MentorRequestFrame
           mentor={selectedMentor.mentor}
-          onSendRequest={sendRequest}
+          onSendRequest={onRequest}
           disable={disable}
         />
       </ModalNew>

@@ -92,7 +92,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     ["languages_spoken", "Languages"],
   ];
 
-  const sendRequest = async (mentorID) => {
+  const sendRequest = async () => {
     await onSubmit(user._id, mentorID, studentID, userMessage);
   };
 
@@ -118,7 +118,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   // Algolia stores the mongoID as "id" not "_id"
 
   return (
-    <MentorProfileContainer key={mentor.id}>
+    <MentorProfileContainer key={mentor._id}>
       <MentorProfileHeader>
         <MentorProfilePicture
           src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}
@@ -182,7 +182,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
               disabled={disable || validation}
               theme="accent"
               size="md"
-              onClick={() => sendRequest(mentor.id)}
+              onClick={() => sendRequest()}
             >
               Send Request
             </Button>

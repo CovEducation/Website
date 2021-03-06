@@ -26,7 +26,6 @@ export const postRequestHandler = async (
 ) => {
   const { mentorID, parentID, message, studentID } = req.body;
   const userID = req.session.userId;
-
   if (userID === undefined || !ensureIDsAreEqual(parentID, userID)) {
     res
       .status(403)
