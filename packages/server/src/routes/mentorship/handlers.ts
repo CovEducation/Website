@@ -19,6 +19,7 @@ import {
 } from "./interfaces";
 import { ensureIDsAreEqual } from "../utils";
 import { Mentor } from "../../models/Mentors";
+import { Parent } from "src/models/Parents";
 
 export const postRequestHandler = async (
   req: PostReqRequest,
@@ -130,10 +131,19 @@ export const postRejectRequestHandler = (
   res: PostRejectMentorshipResponse
 ) => {
   const { mentorship } = req.body;
-  // The user logged in must be the mentor that can reject the request.
-  if (req.session.userId !== mentorship.mentor) {
-    res.status(403).send();
+
+  let mentorID;
+
+  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+    mentorID = mentorship.mentor;
   } else {
+    mentorID = (mentorship.mentor as Mentor)._id;
+  }
+
+  if (
+    req.session.userId === undefined ||
+    !ensureIDsAreEqual(mentorID, req.session.userId)
+  ) {
     MentorshipService.rejectRequest(mentorship)
       .then(() => res.send({}))
       .catch((err) => {
@@ -148,7 +158,27 @@ export const postArchiveMentorshipHandler = (
 ) => {
   const { mentorship } = req.body;
 
-  if (req.session.userId !== mentorship.mentor) {
+  let parentID;
+
+  if (mentorship.parent instanceof mongoose.Types.ObjectId) {
+    parentID = mentorship.parent;
+  } else {
+    parentID = (mentorship.parent as Parent)._id;
+  }
+
+  let mentorID;
+
+  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+    mentorID = mentorship.mentor;
+  } else {
+    mentorID = (mentorship.mentor as Mentor)._id;
+  }
+
+  if (
+    req.session.userId === undefined ||
+    (!ensureIDsAreEqual(mentorID, req.session.userId) &&
+      !ensureIDsAreEqual(parentID, req.session.userId))
+  ) {
     res.status(403).send();
   } else {
     MentorshipService.archiveMentorship(mentorship)

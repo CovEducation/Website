@@ -177,7 +177,7 @@ const RequestsPage = () => {
             theme="accent"
             size="sm"
             onClick={() =>
-              acceptRequest(item._id).then(() => {
+              acceptRequest(item).then(() => {
                 setMessage("Request Accepted");
                 setToastOpen(true);
                 setTimeout(() => {
@@ -198,7 +198,7 @@ const RequestsPage = () => {
             theme="danger"
             size="sm"
             onClick={() =>
-              rejectRequest(item._id).then(() => {
+              rejectRequest(item).then(() => {
                 setMessage("Request Rejected");
                 setToastOpen(true);
                 setTimeout(() => {
@@ -235,7 +235,7 @@ const RequestsPage = () => {
                 theme="danger"
                 size="sm"
                 onClick={() =>
-                  archiveRequest(item._id).then(() => {
+                  archiveRequest(item).then(() => {
                     setMessage("Request Archived");
                     setToastOpen(true);
                     setTimeout(() => {
@@ -306,13 +306,11 @@ const RequestsPage = () => {
             </p>
             <p>
               <b>Session Hours: </b>
-              <span>
-                {Math.floor(
-                  item.sessions
-                    .map((session) => session.durationMinutes)
-                    .reduce((a, b) => a + b, 0) / 60
-                )}
-              </span>
+              {Math.floor(
+                item.sessions
+                  .map((session) => session.durationMinutes)
+                  .reduce((a, b) => a + b, 0) / 60
+              )}
             </p>
             {user.role === "MENTOR" && (
               <p>
