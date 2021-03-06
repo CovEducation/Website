@@ -60,12 +60,10 @@ const SignUp = () => {
 
   const onNext = (values) => {
     setFormData(Object.assign(formData, values));
-    if (activeStep == formSteps[userType].length) {
+    if (activeStep === formSteps[userType].length) {
       formData.role = userType.toUpperCase();
-      console.log(formData);
       signup(formData.email, formData.password, formData)
         .then((res) => {
-          console.log(res);
           setActiveStep(activeStep + 1);
         })
         .catch((err) => console.log(err));

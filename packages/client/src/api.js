@@ -95,19 +95,22 @@ export const sendRequest = async (parentID, mentorID, studentID, message) => {
 // Can only be called by the mentor
 export const acceptRequest = async (requestID) => {
   throwIfNotLoggedIn();
-  return await post(host + "mentorships/accept", { _id: requestID });
+  const body = { mentorship: { _id: requestID } };
+  return await post(host + "mentorships/accept", body);
 };
 
 // can only be called by the mentor
 export const rejectRequest = async (requestID) => {
   throwIfNotLoggedIn();
-  return await post(host + "mentorships/reject", { _id: requestID });
+  const body = { mentorship: { _id: requestID } };
+  return await post(host + "mentorships/reject", body);
 };
 
 // To be called when the mentorship has ended.
 export const archiveRequest = async (requestID) => {
   throwIfNotLoggedIn();
-  return await post(host + "mentorships/archive", { _id: requestID });
+  const body = { mentorship: { _id: requestID } };
+  return await post(host + "mentorships/archive", body);
 };
 
 export const saveProfileData = async (uid, data) => {

@@ -38,6 +38,7 @@ export const dataGenerators = {
     return {
       mentorFirst: mentor.name,
       parentName: parent.name,
+      parentEmail: parent.email,
       studentName: student.name,
       message,
     };
@@ -83,9 +84,10 @@ const smsGenerator = {
     mentorFirst: string;
     parentName: string;
     studentName: string;
+    parentEmail: string;
     message: string;
   }) => {
-    return `Hello ${data.mentorFirst}, you have been request by ${data.parentName} to tutor ${data.studentName}. Here is their message: ${data.message}`;
+    return `Hello ${data.mentorFirst}, you have been request by ${data.parentName} to tutor ${data.studentName}. You can contact the parent at ${data.parentEmail}. Here is their message: ${data.message}`;
   },
 };
 

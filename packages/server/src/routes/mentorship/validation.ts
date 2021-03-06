@@ -29,7 +29,7 @@ const sessionRequirementBody = body("session")
       value.rating <= 1;
     return valid;
   });
-const userIdRequirementQuery = query("token").optional().isMongoId();
+const userIdRequirementQuery = query("_id").optional().isMongoId();
 
 export const postRequestValidation = requestIdsRequirement.concat([
   messageRequirementBody,

@@ -238,14 +238,9 @@ const SignUpPage = () => {
               parentWizardSignUpData.password1,
               createParentModel(parentWizardSignUpData)
             );
-            console.log('Here!');
             if (res.success) {
-              console.log("Successfully created user.");
               history.push("/dashboard/profile");
             } else {
-              console.log("Failed to create user");
-              console.log(res.success);
-              console.log(res.message);
               alert(res.message);
             }
           }}

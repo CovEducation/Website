@@ -45,8 +45,7 @@ const useAuthProvider = () => {
   const [authState, setAuthState] = useState(AUTH_STATES.UNINITIALIZED);
   const [auth, setAuth] = useState(null);
   const [user, setUser] = useState(null);
-  const [request, setRequest] = useState(null);
-  const [requestOther, setRequestOther] = useState(null);
+
   /**
    * Signs a user in. This triggers pulling the correct user information.
    * @param {string} email
@@ -133,7 +132,6 @@ const useAuthProvider = () => {
     if (user) {
       // no-op
     } else if (authState !== AUTH_STATES.LOGGED_IN) {
-      console.log("User not currently logged in.");
       setUser(null);
     } else {
       getUser()
@@ -154,8 +152,6 @@ const useAuthProvider = () => {
     signin,
     signup,
     signout,
-    request,
-    requestOther,
     saveProfileDetails,
     setUserData,
   };

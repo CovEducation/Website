@@ -93,7 +93,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   ];
 
   const sendRequest = async () => {
-    await onSubmit(user._id, mentorID, studentID, userMessage);
+    await onSubmit(user._id, mentor.id, studentID, userMessage);
   };
 
   const studentList =
@@ -118,7 +118,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   // Algolia stores the mongoID as "id" not "_id"
 
   return (
-    <MentorProfileContainer key={mentor._id}>
+    <MentorProfileContainer key={mentor.id}>
       <MentorProfileHeader>
         <MentorProfilePicture
           src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}
@@ -131,7 +131,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
         </MentorDetailsBlock>
         <div></div>
       </MentorProfileHeader>
-      {mentor.introduction !== null && (
+      {mentor.introduction !== null && mentor.introduction !== undefined && (
         <div>
           <p>
             <b>Introduction</b>

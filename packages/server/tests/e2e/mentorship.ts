@@ -131,7 +131,7 @@ describe("💾 Server", async () => {
         request.parentID = undefined;
         const resp = await app.post("/mentorships/request").send(request);
 
-        expect(resp.status).to.be.equal(400);
+        expect(resp.status).to.be.equal(403);
       });
     });
 

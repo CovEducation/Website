@@ -86,17 +86,6 @@ const UserPicture = styled.img`
   margin-right: 50px;
 `;
 
-const NoRequest = styled.p`
-  text-align: center;
-`;
-
-const RequestsDetailsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 300px 300px;
-  grid-template-rows: 60px 60px 60px;
-  gap: 20px 100px;
-`;
-
 const BlueColor = styled.span`
   color: blue;
 `;
@@ -115,7 +104,7 @@ const RequestsPage = () => {
   // { durationMinutes: int, date: Date, rating: int }
   const [session, setSession] = useState({});
   const [toastOpen, setToastOpen] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status] = useState("");
   const [message, setMessage] = useState("");
   const [pendingReqs, setPendingReqs] = useState([]);
   const [activeMentorships, setActiveMentorships] = useState([]);
@@ -130,15 +119,9 @@ const RequestsPage = () => {
       setActiveMentorships(requests);
     });
   }, []);
+
   const getDate = (d) => {
-    var a = new Date(d);
-    return (
-      ("0" + a.getDate()).slice(-2) +
-      "/" +
-      ("0" + a.getMonth() + 1).slice(-2) +
-      "/" +
-      a.getFullYear()
-    );
+    return d.toDateString();
   };
 
   const hasRequests = () => {
@@ -157,70 +140,75 @@ const RequestsPage = () => {
     <RequestsWrapperPending>
       <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
       <div>
-        <p>
-          {" "}
-          <b>Student: </b>
-          {item.student.name}{" "}
-        </p>
         {user.role === "MENTOR" ? (
           <p>
             <b>Parent: </b>
             {item.parent.name}
+            <br />
+            <b>Student: </b>
+            {item.student.name}
+            <br />
+            <b>Message: </b>
+            {item.message}
           </p>
         ) : (
           <p>
+            <b>Student: </b>
+            {item.student.name}
+            <br />
             <b>Mentor: </b>
             {item.mentor.name}
           </p>
         )}
         <p>
           {" "}
-          <b>Date Requested: </b> {getDate(item.startDate)}
-        </p>
-        <p>
-          {" "}
           <b>Status: </b>
-          {item.state === "PENDING" && <BlueColor>{item.state}</BlueColor>}
+          <BlueColor>{item.state}</BlueColor>
         </p>
       </div>
       {user.role === "MENTOR" && (
         <RequestDetailsBlock>
-          {!item.state === "ACTIVE" && (
-            <Button
-              theme="accent"
-              size="sm"
-              onClick={() =>
-                acceptRequest(item._id).then(() => {
-                  setMessage("Request Accepted");
-                  setToastOpen(true);
-                  setTimeout(() => {
-                    setToastOpen(false);
-                  }, 3000);
-                })
-              }
-            >
-              {" "}
-              Accept{" "}
-            </Button>
-          )}
-          {!item.accepted && (
-            <Button
-              theme="danger"
-              size="sm"
-              onClick={() =>
-                rejectRequest(item._id).then(() => {
-                  setMessage("Request Rejected");
-                  setToastOpen(true);
-                  setTimeout(() => {
-                    setToastOpen(false);
-                  }, 3000);
-                })
-              }
-            >
-              {" "}
-              Reject{" "}
-            </Button>
-          )}
+          <Button
+            theme="accent"
+            size="sm"
+            onClick={() =>
+              acceptRequest(item._id).then(() => {
+                setMessage("Request Accepted");
+                setToastOpen(true);
+                setTimeout(() => {
+                  setToastOpen(false);
+                }, 3000);
+
+                // Update the state:
+                getRequests("ACTIVE").then((requests) => {
+                  setActiveMentorships(requests);
+                });
+              })
+            }
+          >
+            {" "}
+            Accept{" "}
+          </Button>
+          <Button
+            theme="danger"
+            size="sm"
+            onClick={() =>
+              rejectRequest(item._id).then(() => {
+                setMessage("Request Rejected");
+                setToastOpen(true);
+                setTimeout(() => {
+                  setToastOpen(false);
+                }, 3000);
+                // Update the state:
+                getRequests("ACTIVE").then((requests) => {
+                  setActiveMentorships(requests);
+                });
+              })
+            }
+          >
+            {" "}
+            Reject{" "}
+          </Button>
         </RequestDetailsBlock>
       )}
     </RequestsWrapperPending>
@@ -232,7 +220,7 @@ const RequestsPage = () => {
         item.state === "ARCHIVED" ||
         item.state === "REJECTED") && (
         <RequestsWrapper>
-          {user.role === "PARENT" && item.state === "ACTIVE" && (
+          {item.state === "ACTIVE" && (
             <FlexClass1>
               <UserPicture
                 src="http://via.placeholder.com/115"
@@ -248,6 +236,11 @@ const RequestsPage = () => {
                     setTimeout(() => {
                       setToastOpen(false);
                     }, 3000);
+
+                    // Update the state:
+                    getRequests("ACTIVE").then((requests) => {
+                      setActiveMentorships(requests);
+                    });
                   })
                 }
               >

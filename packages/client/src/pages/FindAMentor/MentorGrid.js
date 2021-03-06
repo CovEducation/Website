@@ -4,12 +4,8 @@ import MentorRequestFrame from "./MentorRequestFrame.js";
 import GridList from "@material-ui/core/GridList";
 import { connectHits } from "react-instantsearch-dom";
 import ModalNew from "../../components/ModalNew";
-import MuiAlert from "@material-ui/lab/Alert";
 import Toast from "../../components/Toast/index.js";
 import { sendRequest } from "../../api";
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const GridListContainer = styled.div`
   display: flex;
@@ -77,7 +73,6 @@ const MentorGrid = ({ hits }) => {
     }
     setDisable(false);
   };
-  console.log(hits);
   // A grid of mentor components.
   return (
     <GridListContainer>
