@@ -5,13 +5,6 @@ import {
   getUser,
   createMentorWithEmail,
   createParentWithEmail,
-  sendRequest,
-  getRequests,
-  acceptStudentRequest,
-  updateSessionHours,
-  updateRatingss,
-  getSpeakerSeriesList,
-  getTeamDataList,
   saveProfileData,
 } from "../../api";
 import "firebase/auth";
@@ -99,120 +92,6 @@ const useAuthProvider = () => {
     });
   };
 
-  const sendRequestToMentor = async (
-    parentID,
-    mentorID,
-    studentID,
-    message
-  ) => {
-    await sendRequest(parentID, mentorID, studentID, message)
-      .then(() => {
-        console.log("Request Sent successfully.");
-      })
-      .catch((err) => {
-        console.log(`Error Sending Request: ${err}`);
-      });
-  };
-
-  const getRequestList = async () => {
-    await getRequests("Pending")
-      .then((request) => {
-        setRequest(request);
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-        setRequest(null);
-      });
-  };
-
-  const getPendingRequestList = async () => {
-    await getRequests("Pending")
-      .then((request) => setRequestOther(request))
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-        setRequestOther(null);
-      });
-  };
-
-  const acceptRequest = async (messageID, status, studentName) => {
-    await acceptStudentRequest(messageID, status, studentName)
-      .then(() => {
-        var a = getRequests("Pending")
-          .then((request) => setRequest(request))
-          .catch((err) => {
-            console.log(`Error fetching Request: ${err}`);
-            setRequest(null);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-      });
-  };
-
-  const archiveRequest = async (messageID, status, studentName) => {
-    await acceptStudentRequest(messageID, status, studentName)
-      .then(() => {
-        console.log("request Archived");
-        var a = getRequests("Pending")
-          .then((request) => setRequest(request))
-          .catch((err) => {
-            console.log(`Error fetching Request: ${err}`);
-            setRequest(null);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-      });
-  };
-
-  const rejectRequest = async (messageID, status, studentName) => {
-    await acceptStudentRequest(messageID, status, studentName)
-      .then(() => {
-        console.log("request Rejected");
-        getRequests("Pending")
-          .then((request) => setRequest(request))
-          .catch((err) => {
-            console.log(`Error fetching Request: ${err}`);
-            setRequest(null);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-      });
-  };
-
-  const updateSessionHoursss = async (messageID, hours, studentName) => {
-    await updateSessionHours(messageID, hours, studentName)
-      .then(() => {
-        console.log("session hours updated");
-        getRequests("Pending")
-          .then((request) => setRequest(request))
-          .catch((err) => {
-            console.log(`Error fetching Request: ${err}`);
-            setRequest(null);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-      });
-  };
-
-  const updateRatings = async (messageID, ratings, studentName) => {
-    await updateRatingss(messageID, ratings, studentName)
-      .then(() => {
-        console.log("ratings updated");
-        getRequests("Pending")
-          .then((request) => setRequest(request))
-          .catch((err) => {
-            console.log(`Error fetching Request: ${err}`);
-            setRequest(null);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error fetching Request: ${err}`);
-      });
-  };
-
   const saveProfileDetails = async (uid, data) => {
     await saveProfileData(uid, data)
       .then((data) => {
@@ -277,14 +156,6 @@ const useAuthProvider = () => {
     signout,
     request,
     requestOther,
-    sendRequestToMentor,
-    getRequestList,
-    acceptRequest,
-    rejectRequest,
-    archiveRequest,
-    updateRatings,
-    updateSessionHoursss,
-    getPendingRequestList,
     saveProfileDetails,
     setUserData,
   };

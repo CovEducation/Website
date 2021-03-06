@@ -153,18 +153,6 @@ describe("💾 Server", () => {
           .set({ token: setup.body._id });
         expect(res.status).to.be.equal(401);
       });
-
-      it("DELETE - rejects invalid ids", async () => {
-        const setup = await app
-          .post("/users/mentor")
-          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
-        const res = await app
-          .delete("/users/mentor")
-          .send({ _id: mongoose.Types.ObjectId().toHexString() })
-          .set({ token: setup.body._id });
-        expect(res.status).to.be.equal(403);
-      });
-
       it("DELETE - rejects invalid requests", async () => {
         const setup = await app
           .post("/users/mentor")

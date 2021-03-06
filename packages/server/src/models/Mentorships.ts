@@ -51,10 +51,10 @@ export class Mentorship implements IMentorship {
   @prop({ required: false })
   public endDate?: Date;
 
-  @prop({ ref: "Mentor", required: true })
+  @prop({ ref: "Mentor", autopulate: true, required: true })
   public mentor: Ref<Mentor>;
 
-  @prop({ ref: "Parent", required: true })
+  @prop({ ref: "Parent", autopulate: true, required: true })
   public parent: Ref<Parent>;
 
   @prop({ ref: "Student", required: true })

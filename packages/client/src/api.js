@@ -9,7 +9,13 @@ const Roles = {
   PARENT: "PARENT",
 };
 
+const throwIfNotLoggedIn = () => {
+  if (Auth.currentUser === undefined || Auth.currentUser === null) {
+    throw Error("Unable to retrieve user data with uninitilized Auth user.");
+  }
+};
 const host = window.location.origin + "/";
+
 export const getMentor = async () => await getUser(Roles.MENTOR);
 
 export const getParent = async () => await getUser(Roles.PARENT);
@@ -86,6 +92,24 @@ export const sendRequest = async (parentID, mentorID, studentID, message) => {
   });
 };
 
+// Can only be called by the mentor
+export const acceptRequest = async (requestID) => {
+  throwIfNotLoggedIn();
+  return await post(host + "mentorships/accept", { _id: requestID });
+};
+
+// can only be called by the mentor
+export const rejectRequest = async (requestID) => {
+  throwIfNotLoggedIn();
+  return await post(host + "mentorships/reject", { _id: requestID });
+};
+
+// To be called when the mentorship has ended.
+export const archiveRequest = async (requestID) => {
+  throwIfNotLoggedIn();
+  return await post(host + "mentorships/archive", { _id: requestID });
+};
+
 export const saveProfileData = async (uid, data) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
@@ -106,42 +130,6 @@ export const getRequests = async (requestState) => {
     mentorships.filter((mentorship) => mentorship.state === requestState)
   );
 };
-
-/**
- * Mentorship must be the same mentorship object given from the server:
- * {
- *   mentor: $MENTOR_UID
- *   parent: $PARENT_UID
- *   student: $STUDENT_UID
- *   _id : $MENTORSHIP_UID
- * }
- * @param {Object} mentorship
- */
-export const acceptStudentRequest = async (mentorship) => {
-  if (Auth.currentUser === undefined || Auth.currentUser === null) {
-    throw Error("Unable to retrieve user data with uninitilized Auth user.");
-  }
-  return await post(host + "request/accept", { mentorship });
-};
-
-/**
- * Mentorship must be the same mentorship object given from the server:
- * {
- *   mentor: $MENTOR_UID
- *   parent: $PARENT_UID
- *   student: $STUDENT_UID
- *   _id : $MENTORSHIP_UID
- * }
- *
- *
- * @param {Object} mentorship
- * @param {Number} hours
- */
-export const updateSessionHours = async (mentorship, hours) => {
-  // johanc: The backend doesn't support htis yet.
-  throw new Error("Unimplemented.");
-};
-
 /**
  * Mentorship must be the same mentorship object given from the server:
  * {
@@ -171,17 +159,18 @@ export const updateRatingss = async (messageID, ratings, studentName) => {
   if (Auth.currentUser === undefined || Auth.currentUser === null) {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
-  const token = await Auth.currentUser.getIdToken();
-  return await post(
-    host + "request/updateRatings",
-    {
-      mentorUID: Auth.currentUser.uid,
-      messageID: messageID,
-      ratings: ratings,
-      studentName: studentName,
-    },
-    { token }
-  );
+  throw Error("Not implemented yet.");
+  // const token = await Auth.currentUser.getIdToken();
+  // return await post(
+  //   host + "request/updateRatings",
+  //   {
+  //     mentorUID: Auth.currentUser.uid,
+  //     messageID: messageID,
+  //     ratings: ratings,
+  //     studentName: studentName,
+  //   },
+  //   { token }
+  // );
 };
 
 export const getSpeakerSeriesList = async () => {

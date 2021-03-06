@@ -4,6 +4,13 @@ import { COLORS } from "../../constants";
 import Button from "../../components/Button";
 import useAuth from "../../providers/AuthProvider";
 import Toast from "../../components/Toast/index.js";
+import {
+  getRequests,
+  acceptRequest,
+  rejectRequest,
+  archiveRequest,
+  addSession,
+} from "../../api";
 
 const RequestsPageWrapper = styled.div`
   padding: 100px;
@@ -103,28 +110,26 @@ const RedColor = styled.span`
   color: red;
 `;
 
-const RequestsPage = ({ request, requestOther }) => {
-  const {
-    getRequestList,
-    user,
-    acceptRequest,
-    rejectRequest,
-    updateSessionHoursss: updateSessionHours,
-    archiveRequest,
-    updateRatings,
-  } = useAuth();
-  const [sessionHours, setsessionHours] = useState([]);
-  const [ratings, setRatings] = useState([]);
+const RequestsPage = () => {
+  const { user } = useAuth();
+  // { durationMinutes: int, date: Date, rating: int }
+  const [session, setSession] = useState({});
   const [toastOpen, setToastOpen] = useState(false);
-  const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
-  useEffect(() => {
-    getRequestList();
-  }, []);
+  const [message, setMessage] = useState("");
+  const [pendingReqs, setPendingReqs] = useState([]);
+  const [activeMentorships, setActiveMentorships] = useState([]);
 
-  const onPressAccept = (messageId) => {
-    acceptRequest(messageId, "Active");
-  };
+  useEffect(() => {
+    getRequests("PENDING").then((requests) => {
+      setPendingReqs(requests);
+    });
+  }, []);
+  useEffect(() => {
+    getRequests("ACTIVE").then((requests) => {
+      setActiveMentorships(requests);
+    });
+  }, []);
   const getDate = (d) => {
     var a = new Date(d);
     return (
@@ -137,74 +142,7 @@ const RequestsPage = ({ request, requestOther }) => {
   };
 
   const hasRequests = () => {
-    return request.result.length > 0;
-  };
-
-  const updateSessionHourss = () => {
-    var sessionVal = sessionHours;
-    if (sessionVal.length === 0) {
-      setStatus("error");
-      setMessage("Please add session hours to continue.");
-      setToastOpen(true);
-      setTimeout(() => {
-        setToastOpen(false);
-      }, 3000);
-      // alert("Please add session hours to continue.");
-      return;
-    } else {
-      var rec = sessionVal;
-      if (rec.val === "") {
-        setStatus("error");
-        setMessage("Please add session hours to continue.");
-        setToastOpen(true);
-        setTimeout(() => {
-          setToastOpen(false);
-        }, 3000);
-        return;
-      } else {
-        updateSessionHours(rec.messageId, rec.val, rec.student).then(() => {
-          setStatus("success");
-          setMessage("Session Hours Updated.");
-          setToastOpen(true);
-          setTimeout(() => {
-            setToastOpen(false);
-          }, 3000);
-        });
-      }
-    }
-  };
-
-  const addRatings = () => {
-    var ratingsVal = ratings;
-    if (ratingsVal.length == 0) {
-      setStatus("error");
-      setMessage("Please add ratings to continue.");
-      setToastOpen(true);
-      setTimeout(() => {
-        setToastOpen(false);
-      }, 3000);
-      return;
-    } else {
-      var rec = ratingsVal;
-      if (rec.val == "") {
-        setStatus("error");
-        setMessage("Please add ratings to continue.");
-        setToastOpen(true);
-        setTimeout(() => {
-          setToastOpen(false);
-        }, 3000);
-        return;
-      } else {
-        updateRatings(rec.messageId, rec.val, rec.student).then(() => {
-          setStatus("success");
-          setMessage("Rating Updated.");
-          setToastOpen(true);
-          setTimeout(() => {
-            setToastOpen(false);
-          }, 3000);
-        });
-      }
-    }
+    return pendingReqs.length + activeMentorships.length > 0;
   };
 
   const getRatingsFixed = (d) => {
@@ -215,137 +153,119 @@ const RequestsPage = ({ request, requestOther }) => {
     return a.toFixed(1);
   };
 
-  const pendingRequestsList =
-    request &&
-    request.map(
-      (item) =>
-        item.state === "PENDING" && (
-          <RequestsWrapperPending>
-            <UserPicture
-              src="http://via.placeholder.com/115"
-              alt="profile pic"
-            />
-            <div>
-              <p>
-                {" "}
-                <b>Student: </b>
-                {item.studentDetails.name}{" "}
-              </p>
-              {user.role === "MENTOR" ? (
-                <p>
-                  <b>Parent: </b>
-                  {item.parentDetails.name}
-                </p>
-              ) : (
-                <p>
-                  <b>Mentor: </b>
-                  {item.mentorDetails.name}
-                </p>
-              )}
-              <p>
-                {" "}
-                <b>Date Requested: </b> {getDate(item.requestedDate)}
-              </p>
-              <p>
-                {" "}
-                <b>Status: </b>
-                {item.state === "PENDING" && (
-                  <BlueColor>{item.state}</BlueColor>
-                )}
-              </p>
-            </div>
-            {user.role === "MENTOR" && (
-              <RequestDetailsBlock>
-                {!item.accepted && (
-                  <Button
-                    theme="accent"
-                    size="sm"
-                    onClick={() =>
-                      acceptRequest(
-                        item.messageId,
-                        "ACTIVE",
-                        item.studentDetails.name
-                      ).then(() => {
-                        setStatus("success");
-                        setMessage("Request Accepted");
-                        setToastOpen(true);
-                        setTimeout(() => {
-                          setToastOpen(false);
-                        }, 3000);
-                      })
-                    }
-                  >
-                    {" "}
-                    Accept{" "}
-                  </Button>
-                )}
-                {!item.accepted && (
-                  <Button
-                    theme="danger"
-                    size="sm"
-                    onClick={() =>
-                      rejectRequest(
-                        item.messageId,
-                        "REJECTED",
-                        item.studentDetails.name
-                      ).then(() => {
-                        setStatus("success");
-                        setMessage("Request Rejected");
-                        setToastOpen(true);
-                        setTimeout(() => {
-                          setToastOpen(false);
-                        }, 3000);
-                      })
-                    }
-                  >
-                    {" "}
-                    Reject{" "}
-                  </Button>
-                )}
-              </RequestDetailsBlock>
-            )}
-          </RequestsWrapperPending>
-        )
-    );
+  const pendingRequestsList = pendingReqs.map((item) => (
+    <RequestsWrapperPending>
+      <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
+      <div>
+        <p>
+          {" "}
+          <b>Student: </b>
+          {item.student.name}{" "}
+        </p>
+        {user.role === "MENTOR" ? (
+          <p>
+            <b>Parent: </b>
+            {item.parent.name}
+          </p>
+        ) : (
+          <p>
+            <b>Mentor: </b>
+            {item.mentor.name}
+          </p>
+        )}
+        <p>
+          {" "}
+          <b>Date Requested: </b> {getDate(item.startDate)}
+        </p>
+        <p>
+          {" "}
+          <b>Status: </b>
+          {item.state === "PENDING" && <BlueColor>{item.state}</BlueColor>}
+        </p>
+      </div>
+      {user.role === "MENTOR" && (
+        <RequestDetailsBlock>
+          {!item.state === "ACTIVE" && (
+            <Button
+              theme="accent"
+              size="sm"
+              onClick={() =>
+                acceptRequest(item._id).then(() => {
+                  setMessage("Request Accepted");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+                })
+              }
+            >
+              {" "}
+              Accept{" "}
+            </Button>
+          )}
+          {!item.accepted && (
+            <Button
+              theme="danger"
+              size="sm"
+              onClick={() =>
+                rejectRequest(item._id).then(() => {
+                  setMessage("Request Rejected");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+                })
+              }
+            >
+              {" "}
+              Reject{" "}
+            </Button>
+          )}
+        </RequestDetailsBlock>
+      )}
+    </RequestsWrapperPending>
+  ));
 
-  const otherRequestsList =
-    request &&
-    request.map(
-      (item) =>
-        (item.state === "ACTIVE" ||
-          item.state === "ARCHIVED" ||
-          item.state === "REJECTED") && (
-          <RequestsWrapper>
-            {user.role === "PARENT" && item.state === "ACTIVE" && (
-              <FlexClass1>
-                <UserPicture
-                  src="http://via.placeholder.com/115"
-                  alt="profile pic"
-                />
-                <Button
-                  theme="danger"
-                  size="sm"
-                  onClick={() =>
-                    archiveRequest(
-                      item.messageId,
-                      "ARCHIVED",
-                      item.studentDetails.name
-                    ).then(() => {
-                      setStatus("success");
-                      setMessage("Request Archived");
-                      setToastOpen(true);
-                      setTimeout(() => {
-                        setToastOpen(false);
-                      }, 3000);
-                    })
-                  }
-                >
-                  {" "}
-                  End Membership{" "}
-                </Button>
-              </FlexClass1>
-            )}
-            {user.role === "MENTOR" && item.state === "ACTIVE" && (
+  const otherRequestsList = activeMentorships.map(
+    (item) =>
+      (item.state === "ACTIVE" ||
+        item.state === "ARCHIVED" ||
+        item.state === "REJECTED") && (
+        <RequestsWrapper>
+          {user.role === "PARENT" && item.state === "ACTIVE" && (
+            <FlexClass1>
+              <UserPicture
+                src="http://via.placeholder.com/115"
+                alt="profile pic"
+              />
+              <Button
+                theme="danger"
+                size="sm"
+                onClick={() =>
+                  archiveRequest(item._id).then(() => {
+                    setMessage("Request Archived");
+                    setToastOpen(true);
+                    setTimeout(() => {
+                      setToastOpen(false);
+                    }, 3000);
+                  })
+                }
+              >
+                {" "}
+                End Membership{" "}
+              </Button>
+            </FlexClass1>
+          )}
+          {user.role === "MENTOR" && item.state === "ACTIVE" && (
+            <FlexClass>
+              <UserPicture
+                src="http://via.placeholder.com/115"
+                alt="profile pic"
+              />
+            </FlexClass>
+          )}
+          {(user.role === "PARENT" || user.role === "MENTOR") &&
+            item.state !== "ACTIVE" && (
               <FlexClass>
                 <UserPicture
                   src="http://via.placeholder.com/115"
@@ -353,117 +273,115 @@ const RequestsPage = ({ request, requestOther }) => {
                 />
               </FlexClass>
             )}
-            {(user.role === "PARENT" || user.role === "MENTOR") &&
-              item.state !== "ACTIVE" && (
-                <FlexClass>
-                  <UserPicture
-                    src="http://via.placeholder.com/115"
-                    alt="profile pic"
-                  />
-                </FlexClass>
+          <div>
+            <p>
+              {" "}
+              <b>Student: </b>
+              {item.student.name}{" "}
+            </p>
+            <p>
+              {" "}
+              <b>Mentor: </b> {item.student.name}{" "}
+            </p>
+            <p>
+              {item.startDate && <>Start date: {getDate(item.startDate)}</>}
+            </p>
+            <p>{item.endDate && <>End date: {getDate(item.endDate)}</>}</p>
+            <p>
+              {" "}
+              <b>Status: </b>
+              {item.state === "ACTIVE" && <GreenColor>{item.state}</GreenColor>}
+              {item.state === "ARCHIVED" && (
+                <YellowColor>{item.state}</YellowColor>
               )}
-            <div>
-              <p>
-                {" "}
-                <b>Student: </b>
-                {item.studentDetails.name}{" "}
-              </p>
-              <p>
-                {" "}
-                <b>Mentor: </b> {item.mentorDetails.name}{" "}
-              </p>
-              <p>
-                <b>Date: </b>{" "}
-                {getDate(
-                  item.state == "ACTIVE"
-                    ? item.acceptedDate
-                    : item.state == "ARCHIVED"
-                    ? item.archivedDate
-                    : item.rejectedDate
+              {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
+            </p>
+            <p>
+              <b>Session Hours: </b>
+              <span>
+                {Math.floor(
+                  item.sessions
+                    .map((session) => session.durationMinutes)
+                    .reduce((a, b) => a + b, 0) / 60
                 )}
-              </p>
+              </span>
+            </p>
+            {user.role === "MENTOR" && (
               <p>
-                {" "}
-                <b>Status: </b>
-                {item.state === "ACTIVE" && (
-                  <GreenColor>{item.state}</GreenColor>
-                )}
-                {item.state === "ARCHIVED" && (
-                  <YellowColor>{item.state}</YellowColor>
-                )}
-                {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
+                <b>Ratings: </b>
+                <span>
+                  {item.sessions && item.sessions.length > 0
+                    ? item.sessions
+                        .map((session) => session.rating)
+                        .map((rating) => getRatingsFixed(rating))
+                    : "No ratings yet."}
+                </span>
               </p>
+            )}
+            {user.role === "PARENT" && (
               <p>
-                <b>Session Hours: </b>
-                <span>{item.requestDetails.sessionHours}</span>
+                <b>Avg. Ratings: </b>
+                <span>
+                  {item.sessions && item.sessions.length > 0
+                    ? getRatingsFixed(
+                        item.sessions
+                          .map((session) => session.rating)
+                          .reduce((a, b) => a + b, 0) / item.sessions.length
+                      )
+                    : "No ratings yet."}
+                </span>
               </p>
-              {user.role === "MENTOR" && (
+            )}
+            {user.role === "MENTOR" && item.state === "ACTIVE" && (
+              <div>
                 <p>
-                  <b>Ratings: </b>
-                  <span>
-                    {item.requestDetails.ratings
-                      ? getRatingsFixed(item.requestDetails.ratings)
-                      : 0}
-                  </span>
+                  <b>Session Hours: </b>
+                  <input
+                    type="number"
+                    id="sessionHours"
+                    onChange={(e) => {
+                      setSession({
+                        ...session,
+                        durationMinutes: Math.floor(
+                          Number(e.target.value) * 60
+                        ),
+                      });
+                    }}
+                  ></input>
                 </p>
-              )}
-              {user.role === "PARENT" && (
+              </div>
+            )}
+            {user.role === "PARENT" && item.state === "ACTIVE" && (
+              <div>
                 <p>
-                  <b>Avg. Ratings: </b>
-                  <span>{getRatingsFixed(item.mentorDetails.avgRatings)}</span>
+                  <b>Rate my last session: </b>
+                  <input
+                    type="number"
+                    id="ratingsInput"
+                    onChange={(e) => {
+                      setSession({
+                        ...session,
+                        rating: Math.floor(Number(e.target.value)),
+                      });
+                    }}
+                    max="5"
+                  ></input>
                 </p>
-              )}
-              {user.role === "MENTOR" && item.state === "ACTIVE" && (
-                <div>
-                  <p>
-                    <b>Session Hours: </b>
-                    <input
-                      type="number"
-                      id="sessionHours"
-                      onChange={(e) => {
-                        setsessionHours({
-                          val: e.target.value,
-                          student: item.studentDetails.name,
-                          messageId: item.messageId,
-                        });
-                      }}
-                    ></input>
-                  </p>
-                  <Button
-                    theme="accent"
-                    size="sm"
-                    onClick={() => updateSessionHourss()}
-                  >
-                    Submit Session Hours
-                  </Button>
-                </div>
-              )}
-              {user.role === "PARENT" && item.state === "ACTIVE" && (
-                <div>
-                  <p>
-                    <b>Rate my last session: </b>
-                    <input
-                      type="number"
-                      id="ratingsInput"
-                      onChange={(e) => {
-                        setRatings({
-                          val: e.target.value,
-                          student: item.studentDetails.name,
-                          messageId: item.messageId,
-                        });
-                      }}
-                      max="5"
-                    ></input>
-                  </p>
-                  <Button theme="accent" size="sm" onClick={() => addRatings()}>
-                    Submit Ratings
-                  </Button>
-                </div>
-              )}
-            </div>
-          </RequestsWrapper>
-        )
-    );
+                <Button
+                  theme="accent"
+                  size="sm"
+                  onClick={() => {
+                    addSession({ _id: item._id }, session);
+                  }}
+                >
+                  Submit Session
+                </Button>
+              </div>
+            )}
+          </div>
+        </RequestsWrapper>
+      )
+  );
 
   return (
     <RequestsPageWrapper>

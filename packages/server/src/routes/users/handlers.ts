@@ -37,7 +37,7 @@ export const getMentorHandler = (
   req: GetMentorRequest,
   res: GetMentorResponse
 ) => {
-  UserService.findMentor(new mongoose.Types.ObjectId(req.query._id))
+  UserService.findMentor(mongoose.Types.ObjectId(req.query._id))
     .then((mentor) => {
       if (mentor === null) {
         res.status(404).end();
@@ -54,20 +54,16 @@ export const deleteMentorHandler = (
   req: DeleteMentorRequest,
   res: DeleteMentorResponse
 ) => {
-  if (req.body._id !== String(req.session.userId)) {
-    res.status(403).send();
-  } else {
-    UserService.deleteMentor(new mongoose.Types.ObjectId(req.body._id)).then(
-      (ok) => {
-        req.session.userId = undefined;
-        if (ok) {
-          res.status(200).end();
-        } else {
-          res.status(400).end();
-        }
-      }
-    );
-  }
+  UserService.deleteMentor(
+    mongoose.Types.ObjectId(String(req.session.userId))
+  ).then((ok) => {
+    req.session.userId = undefined;
+    if (ok) {
+      res.status(200).end();
+    } else {
+      res.status(400).end();
+    }
+  });
 };
 
 export const postParentHandler = (
@@ -81,8 +77,7 @@ export const postParentHandler = (
       req.session.userId = newParent._id;
       res.send(newParent);
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
       res.status(500).end();
     });
 };
@@ -91,7 +86,7 @@ export const getParentHandler = (
   req: GetParentRequest,
   res: GetParentResponse
 ) => {
-  UserService.findParent(new mongoose.Types.ObjectId(req.query._id))
+  UserService.findParent(mongoose.Types.ObjectId(req.query._id))
     .then((parent) => {
       if (parent === null) {
         res.status(404).end();
@@ -108,18 +103,14 @@ export const deleteParentHandler = (
   req: DeleteParentRequest,
   res: DeleteParentResponse
 ) => {
-  if (req.body._id !== String(req.session.userId)) {
-    res.status(403).send();
-  } else {
-    UserService.deleteParent(new mongoose.Types.ObjectId(req.body._id)).then(
-      (ok) => {
-        if (ok) {
-          req.session.userId = undefined;
-          res.status(200).end();
-        } else {
-          res.status(404).end();
-        }
-      }
-    );
-  }
+  UserService.deleteParent(
+    mongoose.Types.ObjectId(String(req.session.userId))
+  ).then((ok) => {
+    if (ok) {
+      req.session.userId = undefined;
+      res.status(200).end();
+    } else {
+      res.status(404).end();
+    }
+  });
 };

@@ -26,9 +26,9 @@ const getUser = (user: firebase.auth.DecodedIdToken) => {
 const getUserId = (user: firebase.auth.DecodedIdToken) => {
   return MentorModel.findOne({ firebaseUID: user.uid }).then((doc) => {
     if (doc === null) {
-      return ParentModel.findOne({ firebaseUID: user.uid }).then(
-        (doc) => doc?._id
-      );
+      return ParentModel.findOne({ firebaseUID: user.uid }).then((doc) => {
+        return doc?._id;
+      });
     } else {
       return doc._id;
     }

@@ -1,6 +1,8 @@
 import { mongoose } from "@typegoose/typegoose";
 import UserService from "../../services/UserService";
-import MentorshipService from "../../services/MentorshipService";
+import MentorshipService, {
+  MentorshipRequest,
+} from "../../services/MentorshipService";
 import {
   GetMentorshipsRequest,
   GetMentorshipsResponse,
@@ -15,24 +17,34 @@ import {
   PostSessionRequest,
   PostSessionResponse,
 } from "./interfaces";
+import { ensureIDsAreEqual } from "../utils";
+import { Mentor } from "../../models/Mentors";
 
 export const postRequestHandler = async (
   req: PostReqRequest,
   res: PostReqResponse
 ) => {
   const { mentorID, parentID, message, studentID } = req.body;
+  const userID = req.session.userId;
+
+  if (userID === undefined || !ensureIDsAreEqual(parentID, userID)) {
+    res
+      .status(403)
+      .send({ err: "Only a parent can send a mentorship request." });
+    return;
+  }
   const mentor = await UserService.findMentor(
-    new mongoose.Types.ObjectId(mentorID)
+    mongoose.Types.ObjectId(mentorID)
   ).catch((err) => {
     res.status(400).send({ err });
     return;
   });
   if (mentor === undefined) {
-    res.status(400).send({ err: "Invalid parentID" });
+    res.status(400).send({ err: "Invalid mentorID" });
     return;
   }
   const parent = await UserService.findParent(
-    new mongoose.Types.ObjectId(parentID)
+    mongoose.Types.ObjectId(parentID)
   ).catch((err) => {
     res.status(400).send({ err });
     return;
@@ -51,7 +63,7 @@ export const postRequestHandler = async (
     res.status(400).send({ err: "Invalid studentID" });
     return;
   }
-  const request = {
+  const request: MentorshipRequest = {
     mentor,
     parent,
     student,
@@ -66,21 +78,52 @@ export const postRequestHandler = async (
     });
 };
 
-export const postAcceptRequestHandler = (
+export const postAcceptRequestHandler = async (
   req: PostAcceptMentorshipRequest,
   res: PostAcceptMentorshipResponse
 ) => {
   const { mentorship } = req.body;
   // The user logged in must be the mentor that can accept the request.
-  if (req.session.userId !== mentorship.mentor) {
-    res.status(403).send();
-  } else {
-    MentorshipService.acceptRequest(mentorship)
-      .then(() => res.send({}))
-      .catch((err) => {
-        res.status(400).send({ err });
-      });
+  const _id = req.session.userId;
+  if (_id === undefined) {
+    res
+      .status(403)
+      .send({ err: "Mentor must be signed in to accept request." });
+    return;
   }
+
+  const userMentorships = await MentorshipService.getCurrentMentorships(
+    mongoose.Types.ObjectId(String(_id))
+  );
+
+  const pendingMentorship = userMentorships.filter((v) =>
+    ensureIDsAreEqual(v._id, mentorship._id || "")
+  );
+  if (pendingMentorship.length != 1) {
+    res.status(400).send({ err: "Invalid mentorship._id" });
+    return;
+  }
+  let mentor = pendingMentorship[0].mentor;
+  let mentorID;
+  if (mentor === undefined) {
+    res.status(500).send();
+    return;
+  }
+
+  if (mentor instanceof mongoose.Types.ObjectId) {
+    mentorID = mentor;
+  } else {
+    mentorID = (mentor as Mentor)._id;
+  }
+  if (!ensureIDsAreEqual(mentorID, _id)) {
+    res.status(403).send({ err: "Only the mentor can accept a mentorship." });
+    return;
+  }
+  MentorshipService.acceptRequest(pendingMentorship[0])
+    .then(() => res.send({}))
+    .catch((err) => {
+      res.status(400).send({ err });
+    });
 };
 
 export const postRejectRequestHandler = (
@@ -131,12 +174,12 @@ export const getMentorshipHandler = (
   req: GetMentorshipsRequest,
   res: GetMentorshipsResponse
 ) => {
-  const _id = mongoose.Types.ObjectId(req.query.user._id) || req.session.userId;
+  const _id = req.query?.user?._id || String(req.session.userId);
   if (_id === undefined) {
     res.status(400).end();
     return;
   }
-  return MentorshipService.getCurrentMentorships(_id)
+  MentorshipService.getCurrentMentorships(mongoose.Types.ObjectId(_id))
     .then((mentorships) => {
       res.send(mentorships);
     })

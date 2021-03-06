@@ -149,10 +149,14 @@ class MentorshipService {
     return this.getCurrentMentorships(student._id);
   }
 
-  public getCurrentMentorships(userId: mongoose.Types.ObjectId) {
-    return MentorshipModel.find({
+  public async getCurrentMentorships(userId: mongoose.Types.ObjectId) {
+    const docs = await MentorshipModel.find({
       $or: [{ student: userId }, { parent: userId }, { mentor: userId }],
-    });
+    })
+      .populate("mentor")
+      .populate("parent")
+      .populate("student");
+    return docs;
   }
   /**
    * Assumes that the mentorship is being accepted by request of the mentor. A mentorship can only be accepted if it is in the PENDING state. A mentorship cannot be accepted more than once - a new mentorship request should be archived before being renewed.
@@ -174,8 +178,6 @@ class MentorshipService {
         }
         doc.startDate = new Date();
         doc.state = MentorshipState.ACTIVE;
-
-        // TODO: Send acceptance message.
         return doc.save();
       })
       .then(() => this.rejectOtherRequestsMadeForStudent(mentorship));

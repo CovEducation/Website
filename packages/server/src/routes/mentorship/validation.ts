@@ -2,8 +2,6 @@ import { body, query, checkSchema } from "express-validator";
 
 const mentorshipRequirementsBody = [
   body("mentorship._id").exists().isMongoId(),
-  body("mentorship.sessions").exists().isArray(),
-  body("mentorship.state").exists(),
 ];
 
 const messageRequirementBody = body("message").exists().isString();
