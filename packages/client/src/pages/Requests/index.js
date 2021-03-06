@@ -121,7 +121,12 @@ const RequestsPage = () => {
   }, []);
 
   const getDate = (d) => {
-    return d.toDateString();
+    try {
+      return new Date(d).toDateString();
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   };
 
   const hasRequests = () => {
@@ -269,17 +274,27 @@ const RequestsPage = () => {
           <div>
             <p>
               {" "}
+              <b>Mentor: </b> {item.mentor.name}{" "}
+            </p>
+            <p>
+              {" "}
               <b>Student: </b>
               {item.student.name}{" "}
             </p>
             <p>
-              {" "}
-              <b>Mentor: </b> {item.student.name}{" "}
+              {item.startDate && (
+                <>
+                  <b>Start date: </b> {getDate(item.startDate)}
+                </>
+              )}
             </p>
             <p>
-              {item.startDate && <>Start date: {getDate(item.startDate)}</>}
+              {item.endDate && (
+                <>
+                  <b>End date: </b> {getDate(item.startDate)}
+                </>
+              )}
             </p>
-            <p>{item.endDate && <>End date: {getDate(item.endDate)}</>}</p>
             <p>
               {" "}
               <b>Status: </b>
