@@ -23,7 +23,7 @@ export const mentorRequirementsBody = [
   body("mentor.gradeLevels").exists().isArray({ min: 1 }),
   body("mentor.subjects").exists().isArray({ min: 1 }),
   body("mentor.mentorships.*._id").optional().isMongoId(),
-  body("mentor.phone").optional({ checkFalsy: true }).isString(),
+  body("mentor.phone").optional({ checkFalsy: true }).isMobilePhone("en-US"),
   body("mentor.avatar").optional().exists().isURL(),
   body("mentor.communicationPreference")
     .exists()
@@ -34,7 +34,7 @@ export const parentRequirementsBody = [
   body("parent._id").optional().isMongoId(),
   body("parent.email").optional().isEmail(),
   body("parent.name").exists().isString(),
-  body("parent.phone").optional().isString(),
+  body("parent.phone").optional({ checkFalsy: true }).isMobilePhone("en-US"),
   body("parent.avatar").optional().isURL(),
   body("parent.communicationPreference")
     .exists()
