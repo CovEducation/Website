@@ -18,8 +18,10 @@ dotenv.config({ path: envPath });
 
 const speakerSeriesPath = find.sync("speakerSeries.json");
 const ourTeamPath = find.sync("ourTeam.json");
+const TermsPath = find.sync("terms.pdf");
+const PrivacyPath = find.sync("privacy.pdf");
 
-if (speakerSeriesPath === undefined || ourTeamPath === undefined) {
+if (speakerSeriesPath === undefined || ourTeamPath === undefined || TermsPath === undefined || PrivacyPath === undefined) {
   throw new Error("Initialization error: Missing static data.");
 }
 const validateEnv = () => {
@@ -69,7 +71,12 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.get("/ourTeam", (_, res) => {
     res.send(ourTeam);
   });
-
+  app.get("/terms", (_, res) => {
+    res.sendFile(TermsPath);
+  });
+  app.get("/privacy", (_, res) => {
+    res.sendFile(PrivacyPath);
+  });
   app.use("/", MainRouter);
 
   app.use(express.static(appBundleDirectory));
