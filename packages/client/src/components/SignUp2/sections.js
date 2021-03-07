@@ -165,7 +165,7 @@ const MentorDetails = (props) => {
         />
         <FormikSelect
           name="subjects"
-          label="Subjects"
+          label="Subjects (select multiple)"
           values={Subjects}
           formik={formik}
           isMulti
@@ -173,7 +173,7 @@ const MentorDetails = (props) => {
         />
         <FormikSelect
           name="gradeLevels"
-          label="Grade Level"
+          label="Grade Leve (select multiple)"
           values={GradeLevels}
           formik={formik}
           isMulti
@@ -298,7 +298,7 @@ const StudentDetails = (props) => {
                 />
                 <FormikSelect
                   name={`students[${i}].subjects`}
-                  label="Subjects"
+                  label="Subjects (select multiple)"
                   values={Subjects}
                   formik={formik}
                   validationFunc={validationFunc(i, "subjects")}
