@@ -69,9 +69,15 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.get("/ourTeam", (_, res) => {
     res.send(ourTeam);
   });
+
   app.use("/", MainRouter);
 
   app.use(express.static(appBundleDirectory));
+
+  app.use("*", (_, res) => {
+    res.sendFile(path.resolve(appBundleDirectory, "index.html"));
+  });
+
   const {
     MONGO_URI = "",
     DB_NAME = "",
