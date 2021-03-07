@@ -54,13 +54,13 @@ export const UserDetails = ({ values }) => {
   );
 };
 
+const mapJoin = (list, map) => list.map((e) => map[e]).join(", ");
+
 export const MentorDetails = ({ values }) => {
   const { college, major, bio, subjects, gradeLevels } = values;
 
-  const subjectsJoined = subjects.map((sub) => SubjectsVM[sub]).join(", ");
-  const gradeLevelsJoined = gradeLevels
-    .map((gl) => GradeLevelsVM[gl])
-    .join(", ");
+  const subjectsJoined = mapJoin(subjects, SubjectsVM);
+  const gradeLevelsJoined = mapJoin(gradeLevels, GradeLevelsVM);
 
   return (
     <Grid container spacing={SPACING}>
@@ -77,7 +77,7 @@ export const MentorDetails = ({ values }) => {
 };
 
 const StudentDetail = ({ student }) => {
-  const subjects = student.subjects.map((sub) => SubjectsVM[sub]).join(", ");
+  const subjects = mapJoin(student.subjects, SubjectsVM);
   return (
     <ListItem key={student.name}>
       <Grid container spacing={SPACING}>

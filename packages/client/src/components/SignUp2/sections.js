@@ -89,7 +89,7 @@ const UserDetails = (props) => {
     region: Yup.string().required("Region Required"),
     phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
     pronouns: Yup.string(),
-    communicationPreference: Yup.string(),
+    communicationPreference: Yup.string().required(),
   });
 
   const formik = useFormik({
