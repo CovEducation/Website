@@ -107,7 +107,7 @@ const RequestsPage = () => {
   const [status] = useState("");
   const [message, setMessage] = useState("");
   const [pendingReqs, setPendingReqs] = useState([]);
-  const [activeMentorships, setActiveMentorships] = useState([]);
+  const [mentorships, setMentorships] = useState([]);
 
   useEffect(() => {
     getRequests("PENDING").then((requests) => {
@@ -115,8 +115,8 @@ const RequestsPage = () => {
     });
   }, []);
   useEffect(() => {
-    getRequests("ACTIVE").then((requests) => {
-      setActiveMentorships(requests);
+    getRequests().then((requests) => {
+      setMentorships(requests);
     });
   }, []);
 
@@ -130,7 +130,7 @@ const RequestsPage = () => {
   };
 
   const hasRequests = () => {
-    return pendingReqs.length + activeMentorships.length > 0;
+    return pendingReqs.length + mentorships.length > 0;
   };
 
   const getRatingsFixed = (d) => {
@@ -193,8 +193,8 @@ const RequestsPage = () => {
                   }, 3000);
 
                   // Update the state:
-                  getRequests("ACTIVE").then((requests) => {
-                    setActiveMentorships(requests);
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
                   });
                 })
               }
@@ -213,8 +213,8 @@ const RequestsPage = () => {
                     setToastOpen(false);
                   }, 3000);
                   // Update the state:
-                  getRequests("ACTIVE").then((requests) => {
-                    setActiveMentorships(requests);
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
                   });
                 })
               }
@@ -227,42 +227,49 @@ const RequestsPage = () => {
       </RequestsWrapperPending>
     ));
 
-  const otherRequestsList = activeMentorships.map(
-    (item) =>
-      (item.state === "ACTIVE" ||
-        item.state === "ARCHIVED" ||
-        item.state === "REJECTED") && (
-        <RequestsWrapper>
-          {item.state === "ACTIVE" && (
-            <FlexClass1>
-              <UserPicture
-                src="http://via.placeholder.com/115"
-                alt="profile pic"
-              />
-              <Button
-                theme="danger"
-                size="sm"
-                onClick={() =>
-                  archiveRequest(item).then(() => {
-                    setMessage("Request Archived");
-                    setToastOpen(true);
-                    setTimeout(() => {
-                      setToastOpen(false);
-                    }, 3000);
+  const mentorshipList = mentorships
+    .filter((item) => item.student !== null)
+    .map((item) => (
+      <RequestsWrapper>
+        {item.state === "ACTIVE" && (
+          <FlexClass1>
+            <UserPicture
+              src="http://via.placeholder.com/115"
+              alt="profile pic"
+            />
+            <Button
+              theme="danger"
+              size="sm"
+              onClick={() =>
+                archiveRequest(item).then(() => {
+                  setMessage("Request Archived");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
 
-                    // Update the state:
-                    getRequests("ACTIVE").then((requests) => {
-                      setActiveMentorships(requests);
-                    });
-                  })
-                }
-              >
-                {" "}
-                End Membership{" "}
-              </Button>
-            </FlexClass1>
-          )}
-          {user.role === "MENTOR" && item.state === "ACTIVE" && (
+                  // Update the state:
+                  getRequests("ACTIVE").then((requests) => {
+                    setMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              End Membership{" "}
+            </Button>
+          </FlexClass1>
+        )}
+        {user.role === "MENTOR" && item.state === "ACTIVE" && (
+          <FlexClass>
+            <UserPicture
+              src="http://via.placeholder.com/115"
+              alt="profile pic"
+            />
+          </FlexClass>
+        )}
+        {(user.role === "PARENT" || user.role === "MENTOR") &&
+          item.state !== "ACTIVE" && (
             <FlexClass>
               <UserPicture
                 src="http://via.placeholder.com/115"
@@ -270,132 +277,120 @@ const RequestsPage = () => {
               />
             </FlexClass>
           )}
-          {(user.role === "PARENT" || user.role === "MENTOR") &&
-            item.state !== "ACTIVE" && (
-              <FlexClass>
-                <UserPicture
-                  src="http://via.placeholder.com/115"
-                  alt="profile pic"
-                />
-              </FlexClass>
+        <div>
+          <p>
+            {" "}
+            <b>Mentor: </b> {item.mentor.name}{" "}
+          </p>
+          <p>
+            {" "}
+            <b>Student: </b>
+            {item.student.name}{" "}
+          </p>
+          <p>
+            {item.startDate && (
+              <>
+                <b>Start date: </b> {getDate(item.startDate)}
+              </>
             )}
-          <div>
+          </p>
+          <p>
+            {item.endDate && (
+              <>
+                <b>End date: </b> {getDate(item.startDate)}
+              </>
+            )}
+          </p>
+          <p>
+            {" "}
+            <b>Status: </b>
+            {item.state === "ACTIVE" && <GreenColor>{item.state}</GreenColor>}
+            {item.state === "ARCHIVED" && (
+              <YellowColor>{item.state}</YellowColor>
+            )}
+            {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
+          </p>
+          <p>
+            <b>Session Hours: </b>
+            {Math.floor(
+              item.sessions
+                .map((session) => session.durationMinutes)
+                .reduce((a, b) => a + b, 0) / 60
+            )}
+          </p>
+          {user.role === "MENTOR" && (
             <p>
-              {" "}
-              <b>Mentor: </b> {item.mentor.name}{" "}
+              <b>Ratings: </b>
+              <span>
+                {item.sessions && item.sessions.length > 0
+                  ? item.sessions
+                      .map((session) => session.rating)
+                      .map((rating) => getRatingsFixed(rating))
+                  : "No ratings yet."}
+              </span>
             </p>
+          )}
+          {user.role === "PARENT" && (
             <p>
-              {" "}
-              <b>Student: </b>
-              {item.student.name}{" "}
-            </p>
-            <p>
-              {item.startDate && (
-                <>
-                  <b>Start date: </b> {getDate(item.startDate)}
-                </>
-              )}
-            </p>
-            <p>
-              {item.endDate && (
-                <>
-                  <b>End date: </b> {getDate(item.startDate)}
-                </>
-              )}
-            </p>
-            <p>
-              {" "}
-              <b>Status: </b>
-              {item.state === "ACTIVE" && <GreenColor>{item.state}</GreenColor>}
-              {item.state === "ARCHIVED" && (
-                <YellowColor>{item.state}</YellowColor>
-              )}
-              {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
-            </p>
-            <p>
-              <b>Session Hours: </b>
-              {Math.floor(
-                item.sessions
-                  .map((session) => session.durationMinutes)
-                  .reduce((a, b) => a + b, 0) / 60
-              )}
-            </p>
-            {user.role === "MENTOR" && (
-              <p>
-                <b>Ratings: </b>
-                <span>
-                  {item.sessions && item.sessions.length > 0
-                    ? item.sessions
+              <b>Avg. Ratings: </b>
+              <span>
+                {item.sessions && item.sessions.length > 0
+                  ? getRatingsFixed(
+                      item.sessions
                         .map((session) => session.rating)
-                        .map((rating) => getRatingsFixed(rating))
-                    : "No ratings yet."}
-                </span>
-              </p>
-            )}
-            {user.role === "PARENT" && (
+                        .reduce((a, b) => a + b, 0) / item.sessions.length
+                    )
+                  : "No ratings yet."}
+              </span>
+            </p>
+          )}
+          {user.role === "MENTOR" && item.state === "ACTIVE" && (
+            <div>
               <p>
-                <b>Avg. Ratings: </b>
-                <span>
-                  {item.sessions && item.sessions.length > 0
-                    ? getRatingsFixed(
-                        item.sessions
-                          .map((session) => session.rating)
-                          .reduce((a, b) => a + b, 0) / item.sessions.length
-                      )
-                    : "No ratings yet."}
-                </span>
-              </p>
-            )}
-            {user.role === "MENTOR" && item.state === "ACTIVE" && (
-              <div>
-                <p>
-                  <b>Session Hours: </b>
-                  <input
-                    type="number"
-                    id="sessionHours"
-                    onChange={(e) => {
-                      setSession({
-                        ...session,
-                        durationMinutes: Math.floor(
-                          Number(e.target.value) * 60
-                        ),
-                      });
-                    }}
-                  ></input>
-                </p>
-              </div>
-            )}
-            {user.role === "PARENT" && item.state === "ACTIVE" && (
-              <div>
-                <p>
-                  <b>Rate my last session: </b>
-                  <input
-                    type="number"
-                    id="ratingsInput"
-                    onChange={(e) => {
-                      setSession({
-                        ...session,
-                        rating: Math.floor(Number(e.target.value)),
-                      });
-                    }}
-                    max="5"
-                  ></input>
-                </p>
-                <Button
-                  theme="accent"
-                  size="sm"
-                  onClick={() => {
-                    addSession({ _id: item._id }, session);
+                <b>Session Hours: </b>
+                <input
+                  type="number"
+                  id="sessionHours"
+                  onChange={(e) => {
+                    setSession({
+                      ...session,
+                      durationMinutes: Math.floor(Number(e.target.value) * 60),
+                    });
                   }}
-                >
-                  Submit Session
-                </Button>
-              </div>
-            )}
-          </div>
-        </RequestsWrapper>
-      )
-  );
+                ></input>
+              </p>
+            </div>
+          )}
+          {user.role === "PARENT" && item.state === "ACTIVE" && (
+            <div>
+              <p>
+                <b>Rate my last session: </b>
+                <input
+                  type="number"
+                  id="ratingsInput"
+                  onChange={(e) => {
+                    setSession({
+                      ...session,
+                      rating: Math.floor(Number(e.target.value)),
+                    });
+                  }}
+                  max="5"
+                ></input>
+              </p>
+              <Button
+                theme="accent"
+                size="sm"
+                onClick={() => {
+                  addSession({ _id: item._id }, session);
+                }}
+              >
+                Submit Session
+              </Button>
+            </div>
+          )}
+        </div>
+      </RequestsWrapper>
+    ));
 
   return (
     <RequestsPageWrapper>
@@ -414,7 +409,7 @@ const RequestsPage = () => {
         </div>
       </RequestsHeader>
 
-      {hasRequests && otherRequestsList}
+      {hasRequests && mentorshipList}
     </RequestsPageWrapper>
   );
 };

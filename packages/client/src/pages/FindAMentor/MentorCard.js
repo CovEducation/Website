@@ -7,6 +7,7 @@ import {
   Button,
 } from "@material-ui/core";
 import React from "react";
+import useAuth from "../../providers/AuthProvider";
 import Jdenticon from "react-jdenticon";
 import styled from "styled-components";
 
@@ -41,6 +42,7 @@ const trimIntro = (introduction) => {
 };
 
 const MentorCard = ({ mentor, onClick }) => {
+  const { user } = useAuth();
   return (
     <Grid justify="space-between" item sm={4} style={{ padding: "0.5em" }}>
       <Card justify="space-between" theme="accent">
@@ -71,20 +73,22 @@ const MentorCard = ({ mentor, onClick }) => {
             {mentor.gradeLevels && mentor.gradeLevels.join(", ")}
           </Typography>
         </CardContent>
-        <CardActions>
-          <ButtonBlock>
-            <Button
-              variant="outlined"
-              color="primary"
-              size="sm"
-              theme="accent"
-              onClick={onClick}
-              disableElevation
-            >
-              Request Mentorship
-            </Button>
-          </ButtonBlock>
-        </CardActions>
+        {user.role === "PARENT" && (
+          <CardActions>
+            <ButtonBlock>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="sm"
+                theme="accent"
+                onClick={onClick}
+                disableElevation
+              >
+                Request Mentorship
+              </Button>
+            </ButtonBlock>
+          </CardActions>
+        )}
       </Card>
     </Grid>
   );
