@@ -4,6 +4,10 @@ import { MentorDetails, ParentStudentDetails, UserDetails } from "./sections";
 import { MENTOR, PARENT } from "../../constants";
 import { Container } from "@material-ui/core";
 
+import useAuth from "../../providers/AuthProvider";
+import CheckCircle from "@material-ui/icons/CheckCircle";
+import Toast from "../../components/Toast";
+
 const SignUpChildWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -112,8 +116,28 @@ const ProfileDetailItem = ({ header, value }) => {
 };
 
 const ProfilePage = ({ user }) => {
+  const { auth } = useAuth();
+
   const MentorProfile = [UserDetails, MentorDetails];
   const ParentProfile = [UserDetails, ParentStudentDetails];
+
+  const [verifiedSent, setVerifiedSent] = React.useState(false);
+
+  const sendEmailVerification = () => {
+    auth.sendEmailVerification().then(setVerifiedSent(true));
+  };
+
+  const verified = auth.emailVerified ? (
+    <CheckCircle fontSize="small" />
+  ) : (
+    <p>
+      Please Verify Your Email and refresh the page. (
+      <a href="#resend" onClick={sendEmailVerification}>
+        Resend Verification
+      </a>
+      )
+    </p>
+  );
 
   const profileComponents =
     user.role === MENTOR ? MentorProfile : ParentProfile;
@@ -128,7 +152,10 @@ const ProfilePage = ({ user }) => {
           <p>
             <b>{user.name}</b>
           </p>
-          <p>{user.email}</p>
+
+          <p>
+            {user.email} {verified}
+          </p>
           <p>{user.phone}</p>
         </div>
       </ProfileHeaderWrapper>
@@ -138,6 +165,11 @@ const ProfilePage = ({ user }) => {
           <Section values={user} />
         </Container>
       ))}
+      <Toast
+        message={"Email Verification Sent."}
+        open={verifiedSent}
+        onClose={() => setVerifiedSent(false)}
+      />
     </ProfilePageWrapper>
   );
 };

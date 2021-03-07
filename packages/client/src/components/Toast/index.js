@@ -15,6 +15,7 @@ export default function Toast(props) {
       }}
       open={props.open}
       autoHideDuration={1000}
+      onClose={props.onClose}
     >
       <Alert severity={props.status || "success"}>
         {props.message || "This is a success message!"}
