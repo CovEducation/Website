@@ -93,7 +93,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   ];
 
   const sendRequest = async () => {
-    await onSubmit(user._id, mentor.id, studentID, userMessage);
+    await onSubmit(user._id, mentor.objectID, studentID, userMessage);
   };
 
   const studentList =
@@ -109,6 +109,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   const handleChange = (event) => {
     setStudentName(event.target.value);
     // Efficiency.
+
     let id = students.filter((stud) => stud.name === event.target.value)[0]._id;
     setStudentID(id);
     setValidation(false);

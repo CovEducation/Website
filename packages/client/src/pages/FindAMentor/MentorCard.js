@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardContent,
   Grid,
@@ -17,6 +16,12 @@ const ButtonBlock = styled.div`
     margin-right: 0px;
   }
   float: right;
+`;
+const TitleBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
 `;
 const trimIntro = (introduction) => {
   const sentenceLimit = 2;
@@ -40,15 +45,16 @@ const MentorCard = ({ mentor, onClick }) => {
     <Grid justify="space-between" item sm={4} style={{ padding: "0.5em" }}>
       <Card justify="space-between" theme="accent">
         <CardContent>
-          <span>
-            <Typography variant="h5" component="h2">
+          <TitleBlock>
+            <Typography
+              variant="h5"
+              component="h2"
+              style={{ padding: "0.5em" }}
+            >
               {mentor.name}
             </Typography>
-
-            <Avatar style={{ backgroundColor: "transparent" }}>
-              <Jdenticon size={50} value={mentor.name} background="#fff" />
-            </Avatar>
-          </span>
+            <Jdenticon size={50} value={mentor.name} />
+          </TitleBlock>
 
           <Typography color="textSecondary">{mentor.region}</Typography>
           <Typography variant="body2" component="p">
