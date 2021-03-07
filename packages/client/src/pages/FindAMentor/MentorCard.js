@@ -25,7 +25,7 @@ const MentorCard = ({ mentor }) => {
       <MentorCardText>
         <b>{mentor.name}</b>
       </MentorCardText>
-      <MentorCardText>{mentor.timezone}</MentorCardText>
+      <MentorCardText>{mentor.introduction}</MentorCardText>
       <MentorCardText>{mentor.subjects.join(", ")}</MentorCardText>
       <MentorCardText>{mentor.gradeLevels.join(", ")}</MentorCardText>
     </MentorCardContainer>

@@ -23,10 +23,10 @@ const MentorCardContainer = styled.div`
   align-items: center;
   max-width: 280px;
   min-width: 180px;
-  margin: 0.75rem;
+  margin: 1rem;
   cursor: pointer;
-  height: 280px !important;
-
+  max-height: 750px !important;
+  overflow: hidden;
   img {
     border-radius: 10px;
     width: 70%;
@@ -77,7 +77,7 @@ const MentorGrid = ({ hits }) => {
   return (
     <GridListContainer>
       <Toast open={toastOpen} message="Request Send successfully." />
-      <StyledGridList cellHeight={180} cols={3}>
+      <StyledGridList cellHeight="auto" cols={3}>
         {hits.map((mentor) => {
           if (mentor === null || mentor === undefined) {
             return <></>;
@@ -92,7 +92,7 @@ const MentorGrid = ({ hits }) => {
                 onClick={() => handleOpen(mentor)}
               />
               <MentorCardNameText>{mentor.name}</MentorCardNameText>
-              <MentorCardText>{mentor.timezone}</MentorCardText>
+              <MentorCardText>{mentor.introduction}</MentorCardText>
               {mentor.subjects && mentor.subjects.length > 0 && (
                 <MentorCardText>{mentor.subjects.join(", ")}</MentorCardText>
               )}
