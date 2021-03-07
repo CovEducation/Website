@@ -1,9 +1,12 @@
 import React from "react";
 
-import { Container, Grid, ListItem, List, Divider } from "@material-ui/core";
+import { Container, Grid, ListItem, List, Divider, Button, ButtonGroup } from "@material-ui/core";
 
 import {
-  PronounsVM,
+  Timezones,
+  Subjects,
+  GradeLevels,
+  CommunicationPreferences,
   TimezonesVM,
   SubjectsVM,
   GradeLevelsVM,
@@ -11,24 +14,77 @@ import {
   phoneRegex,
 } from "../../components/SignUp2/constants";
 
+import { FormikField, FormikSelect, FormikRadio } from "../../components/SignUp2/fields";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { setConstantValue } from "typescript";
 
 const SPACING = 1;
 
-const ProfileRow = ({ label, value }) => {
-  return (
-    <>
-      <Grid item sm={6}>
-        {label}
-        {": "}
-      </Grid>
-      <Grid item sm={6}>
-        {value}{" "}
-      </Grid>
-    </>
-  );
+const Fields = {
+  TEXT: "text",
+  SELECT: "select",
+  RADIO: "radio"
+}
+
+const ProfileRow = ({ name, label, value, edit, type, multiline, formik, values, isMulti }) => {
+
+  if (!edit) type = "";
+
+  switch (type) {
+    case Fields.TEXT:
+      return (
+        <FormikField name={name} label={label} formik={formik} xs={12} multiline={multiline} />
+      );
+
+    case Fields.SELECT:
+      return (
+        <FormikSelect name={name} label={label} values={values} formik={formik} isMulti={isMulti} xs={12} />
+      );
+
+    case Fields.RADIO:
+      return (
+        <FormikRadio name={name} label={label} values={values} formik={formik} xs={12} />
+      );
+
+    default:
+      return (
+        <>
+          <Grid item sm={6}>
+            {label}
+            {": "}
+          </Grid>
+          <Grid item sm={6}>
+            {value}{" "}
+          </Grid>
+        </>
+      );
+  }
 };
+
+const EditButton = ({ onClick }) => {
+  return (
+    <h2>
+      <Button variant="outlined" onClick={onClick}>edit</Button>
+    </h2>
+  )
+}
+
+const SubmitButton = ({ onSubmit, onCancel }) => {
+  return (
+    <Grid item xs={12}>
+    <ButtonGroup>
+      <Button type="reset" onClick={onCancel}>
+        Cancel
+      </Button>
+      <Button>
+        Submit
+      </Button>
+    </ButtonGroup>
+    </Grid>
+  )
+}
 
 const submitSection = (onSubmit) => {
   return (values) => {
@@ -53,6 +109,9 @@ export const UserDetails = ({ values, onSubmit }) => {
     onSubmit: submitSection(onSubmit)
   });
 
+
+  const [edit, setEdit] = React.useState(false);
+
   const {
     name,
     pronouns,
@@ -62,20 +121,33 @@ export const UserDetails = ({ values, onSubmit }) => {
     region,
   } = formik.values;
 
+  const onCancel = () => {
+    setEdit(false);
+    // reset the form fields to their previous values
+    formik.resetForm({ values: values });
+  }
+
   return (
     <Grid container spacing={SPACING}>
-      <Grid item sm={12}>
+      <Grid item sm={6}>
         <h2>User Details</h2>
       </Grid>
-      <ProfileRow label={"Name"} value={name} />
-      <ProfileRow label={"Pronouns"} value={pronouns} />
-      <ProfileRow label={"Email"} value={email} />
-      <ProfileRow label={"Phone"} value={phone} />
+      {!edit && <Grid item sm={6}><EditButton onClick={() => setEdit(true)} /></Grid>}
+      <ProfileRow name="name" label="Name" value={name} edit={edit} type={Fields.TEXT} formik={formik} />
+      <ProfileRow name="pronouns" label="Pronouns" value={pronouns} edit={edit} type={Fields.TEXT} formik={formik} />
+      <ProfileRow name="email" label="Email" value={email} edit={edit} type={Fields.TEXT} formik={formik} />
+      <ProfileRow name="phone" label="Phone" value={phone} edit={edit} type={Fields.TEXT} formik={formik} />
       <ProfileRow
-        label={"Communication Preference"}
+        name="communicationPreference"
+        label="Communication Preference"
         value={CommunicationPreferencesVM[communicationPreference]}
+        edit={edit}
+        type={Fields.RADIO}
+        values={CommunicationPreferences}
+        formik={formik}
       />
-      <ProfileRow label={"Regions"} value={TimezonesVM[region]} />
+      <ProfileRow name="region" label="Region" value={TimezonesVM[region]} edit={edit} type={Fields.SELECT} values={Timezones} formik={formik} />
+      {edit && <SubmitButton onCancel={onCancel} />}
     </Grid>
   );
 };
@@ -100,21 +172,31 @@ export const MentorDetails = ({ values, onSubmit }) => {
     onSubmit: submitSection(onSubmit)
   });
 
+  const [edit, setEdit] = React.useState(false);
+
   const { college, major, bio, subjects, gradeLevels } = formik.values;
 
   const subjectsJoined = mapJoin(subjects, SubjectsVM);
   const gradeLevelsJoined = mapJoin(gradeLevels, GradeLevelsVM);
 
+  const onCancel = () => {
+    setEdit(false);
+    // reset the form fields to their previous values
+    formik.resetForm({ values: values });
+  }
+
   return (
     <Grid container spacing={SPACING}>
-      <Grid item sm={12}>
+      <Grid item sm={6}>
         <h2>Mentor Details</h2>
       </Grid>
-      <ProfileRow label={"College"} value={college} />
-      <ProfileRow label={"Major"} value={major} />
-      <ProfileRow label={"Bio"} value={bio} />
-      <ProfileRow label={"Subjects"} value={subjectsJoined} />
-      <ProfileRow label={"Grade Levels"} value={gradeLevelsJoined} />
+      {!edit && <Grid item sm={6}><EditButton onClick={() => setEdit(true)} /></Grid>}
+      <ProfileRow name="college" label="College" value={college} edit={edit} type={Fields.TEXT} formik={formik} />
+      <ProfileRow name="major" label="Major" value={major} edit={edit} type={Fields.TEXT} formik={formik} />
+      <ProfileRow name="bio" label="Bio" value={bio} edit={edit} type={Fields.TEXT} multiline formik={formik} />
+      <ProfileRow name="subjects" label="Subjects" value={subjectsJoined} edit={edit} type={Fields.SELECT} values={Subjects} isMulti formik={formik} />
+      <ProfileRow name="gradeLevels" label="Grade Levels" value={gradeLevelsJoined} edit={edit} type={Fields.SELECT} values={GradeLevels} isMulti formik={formik} />
+      { edit && <SubmitButton onCancel={onCancel} /> }
     </Grid>
   );
 };
@@ -129,7 +211,7 @@ const StudentDetail = ({ student }) => {
         <ProfileRow label="Subjects" value={subjects} />
       </Grid>
       <Divider />
-    </ListItem >
+    </ListItem>
   );
 };
 
