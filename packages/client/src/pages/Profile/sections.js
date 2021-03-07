@@ -8,7 +8,11 @@ import {
   SubjectsVM,
   GradeLevelsVM,
   CommunicationPreferencesVM,
+  phoneRegex,
 } from "../../components/SignUp2/constants";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const SPACING = 1;
 
@@ -26,7 +30,29 @@ const ProfileRow = ({ label, value }) => {
   );
 };
 
-export const UserDetails = ({ values }) => {
+const submitSection = (onSubmit) => {
+  return (values) => {
+    onSubmit(values);
+  };
+};
+
+export const UserDetails = ({ values, onSubmit }) => {
+
+  const UserSchema = Yup.object({
+    email: Yup.string().email().required("Email Required."),
+    name: Yup.string().required("Name Required"),
+    region: Yup.string().required("Region Required"),
+    phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
+    pronouns: Yup.string(),
+    communicationPreference: Yup.string().required()
+  });
+
+  const formik = useFormik({
+    initialValues: values,
+    validationSchema: UserSchema,
+    onSubmit: submitSection(onSubmit)
+  });
+
   const {
     name,
     pronouns,
@@ -34,7 +60,7 @@ export const UserDetails = ({ values }) => {
     phone,
     communicationPreference,
     region,
-  } = values;
+  } = formik.values;
 
   return (
     <Grid container spacing={SPACING}>
@@ -56,8 +82,25 @@ export const UserDetails = ({ values }) => {
 
 const mapJoin = (list, map) => list.map((e) => map[e]).join(", ");
 
-export const MentorDetails = ({ values }) => {
-  const { college, major, bio, subjects, gradeLevels } = values;
+export const MentorDetails = ({ values, onSubmit }) => {
+
+  // this is duplicated code, think about moving...
+  const MentorSchema = Yup.object({
+    college: Yup.string(),
+    gradeLevels: Yup.array().required("Grade Levels Required"),
+    bio: Yup.string().required("Bio required"),
+    major: Yup.string(),
+    subjets: Yup.array().required("Subjects Required")
+  });
+
+
+  const formik = useFormik({
+    initialValues: values,
+    validationSchema: MentorSchema,
+    onSubmit: submitSection(onSubmit)
+  });
+
+  const { college, major, bio, subjects, gradeLevels } = formik.values;
 
   const subjectsJoined = mapJoin(subjects, SubjectsVM);
   const gradeLevelsJoined = mapJoin(gradeLevels, GradeLevelsVM);
