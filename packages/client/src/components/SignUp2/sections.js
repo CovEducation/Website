@@ -103,13 +103,7 @@ const UserDetails = (props) => {
       <Grid container spacing={SPACING}>
         <h2> Personal Details </h2>
         <FormikField name="name" label="Name" formik={formik} xs={12} />
-        <FormikSelect
-          name="pronouns"
-          label="Pronouns"
-          values={Pronouns}
-          formik={formik}
-          xs={12}
-        />
+        <FormikField name="pronouns" label="Pronouns" formik={formik} xs={12} />
         <FormikField
           name="phone"
           label="Phone Number"

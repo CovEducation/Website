@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Container, Grid } from "@material-ui/core";
+import { Container, Grid, ListItem, List, Divider } from "@material-ui/core";
 
 import {
   PronounsVM,
@@ -42,7 +42,7 @@ export const UserDetails = ({ values }) => {
         <h2>User Details</h2>
       </Grid>
       <ProfileRow label={"Name"} value={name} />
-      <ProfileRow label={"Pronouns"} value={PronounsVM[pronouns]} />
+      <ProfileRow label={"Pronouns"} value={pronouns} />
       <ProfileRow label={"Email"} value={email} />
       <ProfileRow label={"Phone"} value={phone} />
       <ProfileRow
@@ -79,11 +79,14 @@ export const MentorDetails = ({ values }) => {
 const StudentDetail = ({ student }) => {
   const subjects = student.subjects.map((sub) => SubjectsVM[sub]).join(", ");
   return (
-    <>
-      <ProfileRow label="Name" value={student.name} />
-      <ProfileRow label="Grade level" value={student.gradeLevel} />
-      <ProfileRow label="Subjects" value={subjects} />
-    </>
+    <ListItem key={student.name}>
+      <Grid container spacing={SPACING}>
+        <ProfileRow label="Name" value={student.name} />
+        <ProfileRow label="Grade level" value={student.gradeLevel} />
+        <ProfileRow label="Subjects" value={subjects} />
+      </Grid>
+      <Divider />
+    </ListItem >
   );
 };
 
@@ -93,9 +96,13 @@ export const ParentStudentDetails = ({ values }) => {
       <Grid item sm={12}>
         <h2>Student Details</h2>
       </Grid>
-      {values.students.map((student) => (
-        <StudentDetail student={student} />
-      ))}
+      <Grid item md={12}>
+        <List>
+          {values.students.map((student) => (
+            <StudentDetail student={student} />
+          ))}
+        </List>
+      </Grid>
     </Grid>
   );
 };
