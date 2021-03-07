@@ -1,4 +1,6 @@
+import { Avatar, Card, CardContent, Grid, Typography } from '@material-ui/core';
 import React from 'react';
+import Jdenticon from 'react-jdenticon';
 import styled from 'styled-components';
 
 const MentorCardContainer = styled.div`
@@ -17,13 +19,26 @@ const MentorCardText = styled.p`
 
 const MentorCard = ({ mentor }) => {
     return (
-        <MentorCardContainer>
-            <img src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}  alt='profile pic'/>
-            <MentorCardText><b>{mentor.name}</b></MentorCardText>
-            <MentorCardText>{mentor.timezone}</MentorCardText>
-            <MentorCardText>{mentor.subjects.join(', ')}</MentorCardText>
-            <MentorCardText>{mentor.gradelevels.join(', ')}</MentorCardText>
-        </MentorCardContainer>
+
+        <Grid item sm={4}>
+            <Card variant="outlined">
+                <CardContent>
+                    <Avatar><Jdenticon size={50} value={mentor.name} /></Avatar>
+                    <Typography variant="h5" component="h2">
+                        {mentor.name}
+                    </Typography>
+                    <Typography color="textSecondary">
+                        {mentor.timezone}
+                </Typography>
+                    <Typography variant="body2" component="p">
+                      {mentor.subjects && mentor.subjects.join(', ')}
+                    <br />
+                        {mentor.gradelevels && mentor.gradelevels.join(', ')}
+                    </Typography>
+                </CardContent>
+
+            </Card>
+        </Grid>
     );
 }
 
