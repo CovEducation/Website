@@ -9,6 +9,11 @@ export interface PostMentorRequest extends Request {
 
 export interface PostMentorResponse extends Response<IMentor> {}
 
+export interface PutMentorRequest extends Request {
+  body: { mentor: IMentor };
+}
+export interface PutMentorResponse extends Response {}
+
 export interface GetMentorRequest extends Request {
   query: { _id: string };
 }
@@ -26,6 +31,12 @@ export interface PostParentRequest extends Request {
 }
 
 export interface PostParentResponse extends Response<IParent> {}
+
+export interface PutParentRequest extends Request {
+  body: { parent: IParent };
+}
+
+export interface PutParentResponse extends Response {}
 
 export interface GetParentRequest extends Request {
   query: { _id: string };

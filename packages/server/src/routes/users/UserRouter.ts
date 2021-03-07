@@ -6,14 +6,18 @@ import {
   getParentValidation,
   postParentValidation,
   deleteParentValidation,
+  putParentValidation,
+  putMentorValidation,
 } from "./validation";
 import {
   getMentorHandler,
   postMentorHandler,
+  putMentorHandler,
   deleteMentorHandler,
   getParentHandler,
   postParentHandler,
   deleteParentHandler,
+  putParentHandler,
 } from "./handlers";
 import validate from "../../middleware/validation";
 import { ensureLoggedIn, verifyFirebaseToken } from "../../middleware/auth";
@@ -41,6 +45,14 @@ class UserRouter {
       validate,
       getMentorHandler
     );
+
+    this.router.put(
+      "/mentor",
+      ensureLoggedIn,
+      putMentorValidation,
+      validate,
+      putMentorHandler
+    );
     this.router.delete(
       "/mentor",
       ensureLoggedIn,
@@ -61,6 +73,13 @@ class UserRouter {
       deleteParentValidation,
       validate,
       deleteParentHandler
+    );
+    this.router.put(
+      "/parent",
+      ensureLoggedIn,
+      putParentValidation,
+      validate,
+      putParentHandler
     );
   }
 

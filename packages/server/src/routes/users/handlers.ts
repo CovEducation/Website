@@ -15,6 +15,10 @@ import {
   GetParentResponse,
   DeleteParentRequest,
   DeleteParentResponse,
+  PutMentorRequest,
+  PutMentorResponse,
+  PutParentResponse,
+  PutParentRequest,
 } from "./interfaces";
 
 export const postMentorHandler = (
@@ -31,6 +35,25 @@ export const postMentorHandler = (
     .catch(() => {
       res.status(500).end();
     });
+};
+
+export const putMentorHandler = (
+  req: PutMentorRequest,
+  res: PutMentorResponse
+) => {
+  const mentor: IMentor = req.body.mentor;
+  const userID = req.session.userId;
+  if (userID === undefined) {
+    res.status(403).send({ err: "User must be logged in." });
+    return;
+  }
+  UserService.updateMentor(userID, mentor).then((ok) => {
+    if (!ok) {
+      res.status(500).send({ err: "Unable to update mentor." });
+    } else {
+      res.status(200).send({});
+    }
+  });
 };
 
 export const getMentorHandler = (
@@ -80,6 +103,25 @@ export const postParentHandler = (
     .catch(() => {
       res.status(500).end();
     });
+};
+
+export const putParentHandler = (
+  req: PutParentRequest,
+  res: PutParentResponse
+) => {
+  const parent: IParent = req.body.parent;
+  const userID = req.session.userId;
+  if (userID === undefined) {
+    res.status(403).send({ err: "User must be logged in." });
+    return;
+  }
+  UserService.updateParent(userID, parent).then((ok) => {
+    if (!ok) {
+      res.status(500).send({ err: "Unable to update parent." });
+    } else {
+      res.status(200).send({});
+    }
+  });
 };
 
 export const getParentHandler = (
