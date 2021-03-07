@@ -237,8 +237,6 @@ const HomePage = () => {
         <div>
           <HomepageTitle>CovEd<span>ucation</span></HomepageTitle>
           <HomepageSubtitle>{t('home.subtitle')}</HomepageSubtitle>
-          <Button theme="accent" size="md" round>{t('home.forMenteesButton')}</Button>
-          <Button theme="accent" size="md" round>{t('home.forMentorsButton')}</Button>
         </div>
       </HomepageSection>
       <HomepageBody>
@@ -273,16 +271,6 @@ const HomePage = () => {
               )
             })}
           </Grid><br /><br />
-          <Button theme="accent" size="md">{t('home.MenteesLearnMoreButton')}</Button>
-          <Button theme="accent" size="md">{t('home.MentorsLearnMoreButton')}</Button>
-        </Section>
-        <Section p="100px">
-          statistics here
-        </Section>
-        <Section backgroundColor='lightblue' p="100px">
-          <span>"{t('home.quote')}"</span>
-          <br />
-          <p>- {t('home.quoteauth')}</p>
         </Section>
         <Section p="100px">
           <h2>{t('home.findTutors')}</h2> <br /><br />
@@ -310,7 +298,7 @@ const HomePage = () => {
             })}
           </Grid>
         </Section>
-        <Section backgroundColor='lightorange' p="100px">
+        <Section backgroundColor='lightblue' p="100px">
           <h2>{t('home.questions')}</h2>
           <p>
             <Trans i18nKey="home.questionsans">
