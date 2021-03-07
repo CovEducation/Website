@@ -110,7 +110,11 @@ export const postAcceptRequestHandler = async (
     return;
   }
 
-  if (mentor instanceof mongoose.Types.ObjectId) {
+  if (
+    mentor instanceof mongoose.Types.ObjectId ||
+    mentor instanceof String ||
+    typeof mentor === "string"
+  ) {
     mentorID = mentor;
   } else {
     mentorID = (mentor as Mentor)._id;
@@ -134,21 +138,27 @@ export const postRejectRequestHandler = (
 
   let mentorID;
 
-  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+  if (
+    mentorship.mentor instanceof mongoose.Types.ObjectId ||
+    mentorship.mentor instanceof String ||
+    typeof mentorship.mentor === "string"
+  ) {
     mentorID = mentorship.mentor;
   } else {
     mentorID = (mentorship.mentor as Mentor)._id;
   }
 
   if (
-    req.session.userId === undefined ||
-    !ensureIDsAreEqual(mentorID, req.session.userId)
+    req.session.userId !== undefined &&
+    ensureIDsAreEqual(mentorID, req.session.userId)
   ) {
     MentorshipService.rejectRequest(mentorship)
       .then(() => res.send({}))
       .catch((err) => {
         res.status(400).send({ err });
       });
+  } else {
+    res.status(403).send({ err: "Invalid user operation." });
   }
 };
 
@@ -157,10 +167,13 @@ export const postArchiveMentorshipHandler = (
   res: PostArchiveMentorshipResponse
 ) => {
   const { mentorship } = req.body;
-
   let parentID;
 
-  if (mentorship.parent instanceof mongoose.Types.ObjectId) {
+  if (
+    mentorship.parent instanceof mongoose.Types.ObjectId ||
+    mentorship.parent instanceof String ||
+    typeof mentorship.parent === "string"
+  ) {
     parentID = mentorship.parent;
   } else {
     parentID = (mentorship.parent as Parent)._id;
@@ -168,12 +181,15 @@ export const postArchiveMentorshipHandler = (
 
   let mentorID;
 
-  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+  if (
+    mentorship.mentor instanceof mongoose.Types.ObjectId ||
+    mentorship.mentor instanceof String ||
+    typeof mentorship.mentor === "string"
+  ) {
     mentorID = mentorship.mentor;
   } else {
     mentorID = (mentorship.mentor as Mentor)._id;
   }
-
   if (
     req.session.userId === undefined ||
     (!ensureIDsAreEqual(mentorID, req.session.userId) &&
@@ -183,7 +199,9 @@ export const postArchiveMentorshipHandler = (
   } else {
     MentorshipService.archiveMentorship(mentorship)
       .then(() => res.send({}))
-      .catch((err) => res.status(400).send({ err }));
+      .catch((err) => {
+        res.status(400).send({ err });
+      });
   }
 };
 

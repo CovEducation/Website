@@ -153,6 +153,7 @@ describe("💾 Server", () => {
           .set({ token: setup.body._id });
         expect(res.status).to.be.equal(401);
       });
+      
       it("DELETE - rejects invalid requests", async () => {
         const setup = await app
           .post("/users/mentor")
