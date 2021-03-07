@@ -41,7 +41,7 @@ class MainRouter {
     // TODO(johancc) - Restructure after launch.
 
     this.router.get("/algolia/credentials", ensureLoggedIn, (_, res) => {
-      res.send({ key: ALGOLIA_SEARCH_API_KEY, appID: ALGOLIA_APP_ID });
+      res.send({ key: ALGOLIA_SEARCH_API_KEY, appId: ALGOLIA_APP_ID });
       // this._algoliaClient
       //   .addApiKey(["search"], {
       //     validity: 30 * 60, // 30 mins per session.
