@@ -12,6 +12,7 @@
   "scripts": {
     "start": "node build/index.js",
     "build": "run-s clean build:tsc",
+    "postinstall": "node postInstall.js",
     "build:tsc": "tsc -b",
     "lint": "prettier --write 'src/**/*.ts'",
     "clean": "rimraf build coverage tsconfig.tsbuildinfo .nyc_output",
