@@ -173,7 +173,7 @@ const MentorDetails = (props) => {
         />
         <FormikSelect
           name="gradeLevels"
-          label="Grade Leve (select multiple)"
+          label="Grade Levels (select multiple)"
           values={GradeLevels}
           formik={formik}
           isMulti

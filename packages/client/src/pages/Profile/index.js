@@ -8,6 +8,8 @@ import useAuth from "../../providers/AuthProvider";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Toast from "../../components/Toast";
 
+import Jdenticon from "react-jdenticon";
+
 const ProfilePageWrapper = styled.div`
   padding: 100px;
   h2 {
@@ -26,9 +28,10 @@ const ProfileHeaderWrapper = styled.div`
   }
 `;
 
-const ProfilePicture = styled.img`
+const ProfilePicture = styled(Jdenticon)`
   border-radius: 50%;
   margin-right: 50px;
+  border
 `;
 
 
@@ -69,10 +72,7 @@ const ProfilePage = ({ user }) => {
   return (
     <ProfilePageWrapper>
       <ProfileHeaderWrapper>
-        <ProfilePicture
-          src="https://via.placeholder.com/115"
-          alt="profile pic"
-        />
+        <Jdenticon size={115} value={user.name} />
         <div>
           <p>
             <b>{user.name}</b>

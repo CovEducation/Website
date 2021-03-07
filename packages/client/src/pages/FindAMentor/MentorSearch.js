@@ -19,7 +19,7 @@ const SearchBox = connectSearchBox(({ currentRefinement, refine }) => {
   return (
     <TextField
       id="search-bar"
-      label="Search"
+      label="Search for Mentors"
       variant="filled"
       value={currentRefinement}
       onChange={(e) => refine(e.currentTarget.value)}
@@ -27,6 +27,7 @@ const SearchBox = connectSearchBox(({ currentRefinement, refine }) => {
         endAdornment: <PoweredBy />,
       }}
       fullWidth
+      autoFocus
     />
   );
 });

@@ -5,7 +5,11 @@ import GridList from "@material-ui/core/GridList";
 import { connectHits } from "react-instantsearch-dom";
 import ModalNew from "../../components/ModalNew";
 import Toast from "../../components/Toast/index.js";
+
+import MentorCard from "./MentorCard";
+
 import { sendRequest } from "../../api";
+import { Container, Grid } from "@material-ui/core";
 
 const GridListContainer = styled.div`
   display: flex;
@@ -75,34 +79,18 @@ const MentorGrid = ({ hits }) => {
   };
   // A grid of mentor components.
   return (
-    <GridListContainer>
+    <Container>
       <Toast open={toastOpen} message="Request Send successfully." />
-      <StyledGridList cellHeight={180} cols={3}>
+      <Grid container spacing={1}>
         {hits.map((mentor) => {
           if (mentor === null || mentor === undefined) {
             return <></>;
           }
           return (
-            <MentorCardContainer key={mentor.objectID}>
-              <img
-                src={
-                  mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`
-                }
-                alt="profile pic"
-                onClick={() => handleOpen(mentor)}
-              />
-              <MentorCardNameText>{mentor.name}</MentorCardNameText>
-              <MentorCardText>{mentor.timezone}</MentorCardText>
-              {mentor.subjects && mentor.subjects.length > 0 && (
-                <MentorCardText>{mentor.subjects.join(", ")}</MentorCardText>
-              )}
-              {mentor.gradeLevels && mentor.gradeLevels.length > 0 && (
-                <MentorCardText>{mentor.gradeLevels.join(", ")}</MentorCardText>
-              )}
-            </MentorCardContainer>
+            <MentorCard mentor={mentor} />
           );
         })}
-      </StyledGridList>
+      </Grid>
       <ModalNew
         title={(selectedMentor.mentor && selectedMentor.mentor.name) || ""}
         open={selectedMentor.open}
@@ -115,7 +103,7 @@ const MentorGrid = ({ hits }) => {
           disable={disable}
         />
       </ModalNew>
-    </GridListContainer>
+    </Container >
   );
 };
 
