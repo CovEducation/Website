@@ -7,8 +7,7 @@ import ProfilePage from "../Profile";
 import RequestsPage from "../Requests";
 import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
 import SpeakerSeriesPage from "../SpeakerSeries";
-import Jdenticon from "react-jdenticon";
-import { Avatar } from "@material-ui/core";
+import ProfilePicture from "../../components/ProfilePicture";
 
 const DashboardWrapper = styled.div`
   height: calc(100vh - 64px); // subtract heights for navbar and footer
@@ -74,11 +73,6 @@ const DashboardContent = styled.div`
 `;
 
 
-const ProfilePicture = styled(Avatar)`
-  width: 100px;
-  height: 100px
-`
-
 const DashboardPage = () => {
   const { url, path } = useRouteMatch();
   const { user, authState, request } = useAuth();
@@ -98,7 +92,7 @@ const DashboardPage = () => {
   return (
     <DashboardWrapper>
       <DashboardHeader>
-        <ProfilePicture><Jdenticon size={100} value={user.name} /></ProfilePicture>
+        <ProfilePicture size={100} value={user.name}></ProfilePicture>
         <div>
           <h1>{user.name}</h1>
           <p>{userType} Dashboard</p>

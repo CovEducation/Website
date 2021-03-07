@@ -2,6 +2,7 @@ import { Avatar, Card, CardContent, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import Jdenticon from 'react-jdenticon';
 import styled from 'styled-components';
+import ProfilePicture from '../../components/ProfilePicture';
 
 const MentorCardContainer = styled.div`
     display: flex;
@@ -23,7 +24,7 @@ const MentorCard = ({ mentor }) => {
         <Grid item sm={4}>
             <Card variant="outlined">
                 <CardContent>
-                    <Avatar><Jdenticon size={50} value={mentor.name} /></Avatar>
+                    <ProfilePicture size={50} value={mentor.name} />
                     <Typography variant="h5" component="h2">
                         {mentor.name}
                     </Typography>
