@@ -73,11 +73,12 @@ const DashboardContent = styled.div`
   grid-area: dashboard-content;
 `;
 
-
 const ProfilePicture = styled(Avatar)`
   width: 100px;
-  height: 100px
-`
+  height: 100px;
+  background-color: ${COLORS.lightorange};
+  margin-right: 2em;
+`;
 
 const DashboardPage = () => {
   const { url, path } = useRouteMatch();
@@ -98,7 +99,9 @@ const DashboardPage = () => {
   return (
     <DashboardWrapper>
       <DashboardHeader>
-        <ProfilePicture><Jdenticon size={100} value={user.name} /></ProfilePicture>
+        <ProfilePicture>
+          <Jdenticon size={100} value={user.name} />
+        </ProfilePicture>
         <div>
           <h1>{user.name}</h1>
           <p>{userType} Dashboard</p>

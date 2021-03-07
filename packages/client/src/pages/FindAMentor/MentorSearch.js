@@ -74,16 +74,20 @@ const MentorSearch = () => {
     return <div>Loading...</div>;
   }
   const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
+  const disabled = true;
+
   return (
     <div className="ais-InstantSearch">
-      <InstantSearch indexName={"mentors"} searchClient={searchClient}>
+      <InstantSearch indexName="mentors" searchClient={searchClient}>
         <Grid container justify="center" spacing={0}>
           <Configure hitsPerPage={12} />
           <SearchBox />
-          <Grid item xs={3}>
-            <MentorFilters attribute="tags" />
-          </Grid>
-          <Grid item xs={9}>
+          {!disabled && (
+            <Grid item xs={3}>
+              <MentorFilters />
+            </Grid>
+          )}
+          <Grid item>
             <MentorHits />
             <PaginationContainer>
               <Pagination showLast={true} />

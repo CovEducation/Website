@@ -7,7 +7,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    padding: "0 2em 0 2em"
+    padding: "0 2em 0 2em",
   },
   formControl: {
     // margin: theme.spacing(3),
@@ -43,11 +43,11 @@ const MentorFilters = () => {
   return (
     <div>
       <Accordion>
-        <AccordionRow title="Tags">
-          <MentorRefinementList attribute="tags" />
+        <AccordionRow title="Student Grade Level">
+          <MentorRefinementList attribute="gradeLevels" />
         </AccordionRow>
-        <AccordionRow title="Languages">
-          <MentorRefinementList attribute="languages_spoken" />
+        <AccordionRow title="Subjects">
+          <MentorRefinementList attribute="subjects" />
         </AccordionRow>
       </Accordion>
     </div>

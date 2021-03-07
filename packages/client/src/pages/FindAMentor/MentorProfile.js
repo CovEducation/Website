@@ -80,7 +80,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     ["subjects", "Subjects"],
     ["location", "Location"],
     ["gradeLevels", "Grades"],
-    ["timezone", "Timezone"],
+    ["region", "Region"],
     ["languages_spoken", "Languages"],
   ];
 
@@ -88,7 +88,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     ["subjects", "Subjects"],
     ["location", "Location"],
     ["gradeLevels", "Grades"],
-    ["timezone", "Timezone"],
+    ["region", "Region"],
     ["languages_spoken", "Languages"],
   ];
 

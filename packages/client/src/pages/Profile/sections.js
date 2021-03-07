@@ -1,6 +1,14 @@
 import React from "react";
 
-import { Container, Grid, ListItem, List, Divider, Button, ButtonGroup } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  ListItem,
+  List,
+  Divider,
+  Button,
+  ButtonGroup,
+} from "@material-ui/core";
 
 import {
   Timezones,
@@ -14,11 +22,14 @@ import {
   phoneRegex,
 } from "../../components/SignUp2/constants";
 
-import { FormikField, FormikSelect, FormikRadio } from "../../components/SignUp2/fields";
+import {
+  FormikField,
+  FormikSelect,
+  FormikRadio,
+} from "../../components/SignUp2/fields";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { setConstantValue } from "typescript";
 
 const SPACING = 1;
 
@@ -26,27 +37,55 @@ const Fields = {
   TEXT: "text",
   SELECT: "select",
   RADIO: "radio",
-  FIELD: "field"
-}
+  FIELD: "field",
+};
 
-const ProfileRow = ({ name, label, value, edit, type, multiline, formik, values, isMulti }) => {
-
+const ProfileRow = ({
+  name,
+  label,
+  value,
+  edit,
+  type,
+  multiline,
+  formik,
+  values,
+  isMulti,
+}) => {
   if (!edit) type = Fields.FIELD; // display default view
 
   switch (type) {
     case Fields.TEXT:
       return (
-        <FormikField name={name} label={label} formik={formik} xs={12} multiline={multiline} />
+        <FormikField
+          name={name}
+          label={label}
+          formik={formik}
+          xs={12}
+          multiline={multiline}
+        />
       );
 
     case Fields.SELECT:
       return (
-        <FormikSelect name={name} label={label} values={values} formik={formik} isMulti={isMulti} xs={12} />
+        <FormikSelect
+          name={name}
+          label={label}
+          values={values}
+          formik={formik}
+          isMulti={isMulti}
+          xs={12}
+        />
       );
 
     case Fields.RADIO:
       return (
-        <FormikRadio name={name} label={label} values={values} formik={formik} xs={12} />
+        <FormikRadio
+          name={name}
+          label={label}
+          values={values}
+          formik={formik}
+          xs={12}
+        />
       );
 
     default:
@@ -67,10 +106,12 @@ const ProfileRow = ({ name, label, value, edit, type, multiline, formik, values,
 const EditButton = ({ onClick }) => {
   return (
     <h2>
-      <Button variant="outlined" onClick={onClick}>edit</Button>
+      <Button variant="outlined" onClick={onClick}>
+        edit
+      </Button>
     </h2>
-  )
-}
+  );
+};
 
 const SubmitButton = ({ onSubmit, onCancel }) => {
   return (
@@ -78,14 +119,12 @@ const SubmitButton = ({ onSubmit, onCancel }) => {
       <ButtonGroup>
         <Button type="reset" onClick={onCancel}>
           Cancel
-      </Button>
-        <Button type="sumbmit">
-          Submit
-      </Button>
+        </Button>
+        <Button type="sumbmit">Submit</Button>
       </ButtonGroup>
     </Grid>
-  )
-}
+  );
+};
 
 const submitSection = (onSubmit) => {
   return (values) => {
@@ -94,32 +133,29 @@ const submitSection = (onSubmit) => {
 };
 
 export const UserDetails = ({ values, updateFields }) => {
-
   const UserSchema = Yup.object({
     email: Yup.string().email().required("Email Required."),
     name: Yup.string().required("Name Required"),
     region: Yup.string().required("Region Required"),
     phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
     pronouns: Yup.string(),
-    communicationPreference: Yup.string().required()
+    communicationPreference: Yup.string().required(),
   });
 
   const onCancel = () => {
     setEdit(false);
     // reset the form fields to their previous values
     formik.resetForm({ values: values });
-  }
+  };
 
   const onSubmit = (values) => {
-    updateFields(values)
-      .then(() => setEdit(false));
-  }
+    updateFields(values).then(() => setEdit(false));
+  };
   const formik = useFormik({
     initialValues: values,
     validationSchema: UserSchema,
-    onSubmit: submitSection(onSubmit)
+    onSubmit: submitSection(onSubmit),
   });
-
 
   const [edit, setEdit] = React.useState(false);
 
@@ -138,11 +174,43 @@ export const UserDetails = ({ values, updateFields }) => {
         <Grid item sm={6}>
           <h2>User Details</h2>
         </Grid>
-        {!edit && <Grid item sm={6}><EditButton onClick={() => setEdit(true)} /></Grid>}
-        <ProfileRow name="name" label="Name" value={name} edit={edit} type={Fields.TEXT} formik={formik} />
-        <ProfileRow name="pronouns" label="Pronouns" value={pronouns} edit={edit} type={Fields.TEXT} formik={formik} />
-        <ProfileRow name="email" label="Email" value={email} edit={edit} type={Fields.TEXT} formik={formik} />
-        <ProfileRow name="phone" label="Phone" value={phone} edit={edit} type={Fields.TEXT} formik={formik} />
+        {!edit && (
+          <Grid item sm={6}>
+            <EditButton onClick={() => setEdit(true)} />
+          </Grid>
+        )}
+        <ProfileRow
+          name="name"
+          label="Name"
+          value={name}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
+        <ProfileRow
+          name="pronouns"
+          label="Pronouns"
+          value={pronouns}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
+        <ProfileRow
+          name="email"
+          label="Email"
+          value={email}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
+        <ProfileRow
+          name="phone"
+          label="Phone"
+          value={phone}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
         <ProfileRow
           name="communicationPreference"
           label="Communication Preference"
@@ -152,7 +220,15 @@ export const UserDetails = ({ values, updateFields }) => {
           values={CommunicationPreferences}
           formik={formik}
         />
-        <ProfileRow name="region" label="Region" value={TimezonesVM[region]} edit={edit} type={Fields.SELECT} values={Timezones} formik={formik} />
+        <ProfileRow
+          name="region"
+          label="Region"
+          value={TimezonesVM[region]}
+          edit={edit}
+          type={Fields.SELECT}
+          values={Timezones}
+          formik={formik}
+        />
         {edit && <SubmitButton onCancel={onCancel} />}
       </Grid>
     </form>
@@ -162,36 +238,34 @@ export const UserDetails = ({ values, updateFields }) => {
 const mapJoin = (list, map) => list.map((e) => map[e]).join(", ");
 
 export const MentorDetails = ({ values, updateFields }) => {
-
   // this is duplicated code, think about moving...
   const MentorSchema = Yup.object({
     college: Yup.string(),
     gradeLevels: Yup.array().required("Grade Levels Required"),
-    bio: Yup.string().required("Bio required"),
+    introduction: Yup.string().required("Bio required"),
     major: Yup.string(),
-    subjets: Yup.array().required("Subjects Required")
+    subjets: Yup.array().required("Subjects Required"),
   });
 
   const onCancel = () => {
     setEdit(false);
     // reset the form fields to their previous values
     formik.resetForm({ values: values });
-  }
+  };
 
   const onSubmit = (values) => {
-    updateFields(values)
-      .then(() => setEdit(false));
-  }
+    updateFields(values).then(() => setEdit(false));
+  };
 
   const formik = useFormik({
     initialValues: values,
     validationSchema: MentorSchema,
-    onSubmit: submitSection(onSubmit)
+    onSubmit: submitSection(onSubmit),
   });
 
   const [edit, setEdit] = React.useState(false);
 
-  const { college, major, bio, subjects, gradeLevels } = formik.values;
+  const { college, major, introduction, subjects, gradeLevels } = formik.values;
 
   const subjectsJoined = mapJoin(subjects, SubjectsVM);
   const gradeLevelsJoined = mapJoin(gradeLevels, GradeLevelsVM);
@@ -202,12 +276,56 @@ export const MentorDetails = ({ values, updateFields }) => {
         <Grid item sm={6}>
           <h2>Mentor Details</h2>
         </Grid>
-        {!edit && <Grid item sm={6}><EditButton onClick={() => setEdit(true)} /></Grid>}
-        <ProfileRow name="college" label="College" value={college} edit={edit} type={Fields.TEXT} formik={formik} />
-        <ProfileRow name="major" label="Major" value={major} edit={edit} type={Fields.TEXT} formik={formik} />
-        <ProfileRow name="bio" label="Bio" value={bio} edit={edit} type={Fields.TEXT} multiline formik={formik} />
-        <ProfileRow name="subjects" label="Subjects" value={subjectsJoined} edit={edit} type={Fields.SELECT} values={Subjects} isMulti formik={formik} />
-        <ProfileRow name="gradeLevels" label="Grade Levels" value={gradeLevelsJoined} edit={edit} type={Fields.SELECT} values={GradeLevels} isMulti formik={formik} />
+        {!edit && (
+          <Grid item sm={6}>
+            <EditButton onClick={() => setEdit(true)} />
+          </Grid>
+        )}
+        <ProfileRow
+          name="college"
+          label="College"
+          value={college}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
+        <ProfileRow
+          name="major"
+          label="Major"
+          value={major}
+          edit={edit}
+          type={Fields.TEXT}
+          formik={formik}
+        />
+        <ProfileRow
+          name="introduction"
+          label="Introduction"
+          value={introduction}
+          edit={edit}
+          type={Fields.TEXT}
+          multiline
+          formik={formik}
+        />
+        <ProfileRow
+          name="subjects"
+          label="Subjects"
+          value={subjectsJoined}
+          edit={edit}
+          type={Fields.SELECT}
+          values={Subjects}
+          isMulti
+          formik={formik}
+        />
+        <ProfileRow
+          name="gradeLevels"
+          label="Grade Levels"
+          value={gradeLevelsJoined}
+          edit={edit}
+          type={Fields.SELECT}
+          values={GradeLevels}
+          isMulti
+          formik={formik}
+        />
         {edit && <SubmitButton onCancel={onCancel} />}
       </Grid>
     </form>

@@ -73,7 +73,7 @@ const SignUp = () => {
 
   const back = () => {
     setActiveStep(activeStep - 1);
-    if (activeStep - 1 == 0) {
+    if (activeStep - 1 === 0) {
       setUserType(null);
       setForm([]);
     }
@@ -103,18 +103,18 @@ const SignUp = () => {
           </StepLabel>
           <StepContent>
             <Grid container>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <CButton name="Parent" theme="accent" onClick={selectUserType}>
-                  Click here if you are a parent or teacher!
+                  I'm a parent or instructor.
                 </CButton>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <CButton
                   name="Mentor"
                   onClick={selectUserType}
                   intialValues={formData}
                 >
-                  Click here if you are mentor!
+                  I'm a college student
                 </CButton>
               </Grid>
             </Grid>
