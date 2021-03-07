@@ -141,83 +141,91 @@ const RequestsPage = () => {
     return a.toFixed(1);
   };
 
-  const pendingRequestsList = pendingReqs.map((item) => (
-    <RequestsWrapperPending>
-      <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
-      <div>
-        {user.role === "MENTOR" ? (
+  const pendingRequestsList = pendingReqs
+    .filter((item) => {
+      return (
+        item.student != null &&
+        item.student !== undefined &&
+        item.student.name !== undefined
+      );
+    })
+    .map((item) => (
+      <RequestsWrapperPending>
+        <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
+        <div>
+          {user.role === "MENTOR" ? (
+            <p>
+              <b>Parent: </b>
+              {item.parent.name}
+              <br />
+              <b>Student: </b>
+              {item.student.name}
+              <br />
+              <b>Message: </b>
+              {item.message}
+            </p>
+          ) : (
+            <p>
+              <b>Student: </b>
+              {item.student.name}
+              <br />
+              <b>Mentor: </b>
+              {item.mentor.name}
+            </p>
+          )}
           <p>
-            <b>Parent: </b>
-            {item.parent.name}
-            <br />
-            <b>Student: </b>
-            {item.student.name}
-            <br />
-            <b>Message: </b>
-            {item.message}
+            {" "}
+            <b>Status: </b>
+            <BlueColor>{item.state}</BlueColor>
           </p>
-        ) : (
-          <p>
-            <b>Student: </b>
-            {item.student.name}
-            <br />
-            <b>Mentor: </b>
-            {item.mentor.name}
-          </p>
-        )}
-        <p>
-          {" "}
-          <b>Status: </b>
-          <BlueColor>{item.state}</BlueColor>
-        </p>
-      </div>
-      {user.role === "MENTOR" && (
-        <RequestDetailsBlock>
-          <Button
-            theme="accent"
-            size="sm"
-            onClick={() =>
-              acceptRequest(item).then(() => {
-                setMessage("Request Accepted");
-                setToastOpen(true);
-                setTimeout(() => {
-                  setToastOpen(false);
-                }, 3000);
+        </div>
+        {user.role === "MENTOR" && (
+          <RequestDetailsBlock>
+            <Button
+              theme="accent"
+              size="sm"
+              onClick={() =>
+                acceptRequest(item).then(() => {
+                  setMessage("Request Accepted");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
 
-                // Update the state:
-                getRequests("ACTIVE").then((requests) => {
-                  setActiveMentorships(requests);
-                });
-              })
-            }
-          >
-            {" "}
-            Accept{" "}
-          </Button>
-          <Button
-            theme="danger"
-            size="sm"
-            onClick={() =>
-              rejectRequest(item).then(() => {
-                setMessage("Request Rejected");
-                setToastOpen(true);
-                setTimeout(() => {
-                  setToastOpen(false);
-                }, 3000);
-                // Update the state:
-                getRequests("ACTIVE").then((requests) => {
-                  setActiveMentorships(requests);
-                });
-              })
-            }
-          >
-            {" "}
-            Reject{" "}
-          </Button>
-        </RequestDetailsBlock>
-      )}
-    </RequestsWrapperPending>
-  ));
+                  // Update the state:
+                  getRequests("ACTIVE").then((requests) => {
+                    setActiveMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              Accept{" "}
+            </Button>
+            <Button
+              theme="danger"
+              size="sm"
+              onClick={() =>
+                rejectRequest(item).then(() => {
+                  setMessage("Request Rejected");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+                  // Update the state:
+                  getRequests("ACTIVE").then((requests) => {
+                    setActiveMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              Reject{" "}
+            </Button>
+          </RequestDetailsBlock>
+        )}
+      </RequestsWrapperPending>
+    ));
 
   const otherRequestsList = activeMentorships.map(
     (item) =>
