@@ -38,3 +38,4 @@ jobs:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+          ALGOLIA_SEARCH_API_KEY: ${{secrets.ALGOLIA_SEARCH_API_KEY}}
