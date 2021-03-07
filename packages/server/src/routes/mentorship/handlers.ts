@@ -134,21 +134,25 @@ export const postRejectRequestHandler = (
 
   let mentorID;
 
-  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+  if (
+    mentorship.mentor instanceof mongoose.Types.ObjectId ||
+    typeof mentorship.mentor === "string"
+  ) {
     mentorID = mentorship.mentor;
   } else {
     mentorID = (mentorship.mentor as Mentor)._id;
   }
-
   if (
-    req.session.userId === undefined ||
-    !ensureIDsAreEqual(mentorID, req.session.userId)
+    req.session.userId !== undefined &&
+    ensureIDsAreEqual(mentorID, req.session.userId)
   ) {
     MentorshipService.rejectRequest(mentorship)
       .then(() => res.send({}))
       .catch((err) => {
         res.status(400).send({ err });
       });
+  } else {
+    res.status(403).end();
   }
 };
 
@@ -168,18 +172,21 @@ export const postArchiveMentorshipHandler = (
 
   let mentorID;
 
-  if (mentorship.mentor instanceof mongoose.Types.ObjectId) {
+  if (
+    mentorship.mentor instanceof mongoose.Types.ObjectId ||
+    typeof mentorship.mentor === "string"
+  ) {
     mentorID = mentorship.mentor;
   } else {
     mentorID = (mentorship.mentor as Mentor)._id;
   }
 
   if (
-    req.session.userId === undefined ||
+    req.session.userId == undefined ||
     (!ensureIDsAreEqual(mentorID, req.session.userId) &&
       !ensureIDsAreEqual(parentID, req.session.userId))
   ) {
-    res.status(403).send();
+    res.status(403).end();
   } else {
     MentorshipService.archiveMentorship(mentorship)
       .then(() => res.send({}))
