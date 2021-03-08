@@ -44,7 +44,7 @@ const MentorGrid = ({ hits }) => {
   return (
     <Container>
       <Toast open={toastOpen} message="Request Send successfully." />
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         {hits.map((mentor) => {
           if (mentor === null || mentor === undefined) {
             return <></>;
