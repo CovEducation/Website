@@ -200,8 +200,8 @@ export const postSessionHandler = (
 ) => {
   const { session, mentorship } = req.body;
   MentorshipService.addSessionToMentorship(session, mentorship)
-    .then((mentorship) => {
-      res.send(mentorship);
+    .then(() => {
+      res.send({});
     })
     .catch((err) => res.status(400).send({ err }));
 };

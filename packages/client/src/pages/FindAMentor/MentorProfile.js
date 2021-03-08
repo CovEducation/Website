@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../../components/Button";
 import TextField from "@material-ui/core/TextField";
+import Jdenticon from "react-jdenticon";
 import useAuth from "../../providers/AuthProvider";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -121,10 +122,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   return (
     <MentorProfileContainer key={mentor.id}>
       <MentorProfileHeader>
-        <MentorProfilePicture
-          src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}
-          alt="Profile"
-        />
+        <Jdenticon size="150" value={mentor.name} />
         <MentorDetailsBlock>
           <h3>{mentor.name}</h3>
           <h4>{mentor.school}</h4>

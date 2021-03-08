@@ -211,8 +211,9 @@ class MentorshipService {
   /**
    * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
    * @param mentorship to be rejected.
+   * @param notify whether to send an email / sms
    */
-  public rejectRequest(mentorship: IMentorship, notify?: boolean) {
+  public rejectRequest(mentorship: IMentorship, notify: boolean = true) {
     if (mentorship._id === undefined) {
       throw new Error(`Cannot reject non-existent mentorship`);
     }

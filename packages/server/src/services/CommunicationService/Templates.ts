@@ -24,7 +24,7 @@ export enum CommunicationTemplates {
 
 export const templateSubjects = {
   [CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR]:
-    "[URGENT][Action-Required]CovED Match!",
+    "[CovEd][URGENT] You’ve been requested!",
   [CommunicationTemplates.MENTORSHIP_REQUEST_PARENT]:
     "[CovEd] Mentor Request Confirmation",
   [CommunicationTemplates.MENTORSHIP_ACCEPTED_PARENT]:
