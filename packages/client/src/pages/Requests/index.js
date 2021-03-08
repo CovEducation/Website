@@ -257,7 +257,7 @@ const RequestsPage = () => {
               }
             >
               {" "}
-              End Membership{" "}
+              End Mentorship{" "}
             </Button>
           </FlexClass1>
         )}
