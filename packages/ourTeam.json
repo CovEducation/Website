@@ -21,7 +21,7 @@
       "designation" : "CTO",
       "position" : "MIT '21",
       "team": "Management, Technology",
-      "photo": "stock-profile.png"
+      "photo": "propics/johanc.jpg"
   },
   {
     "_id" : 3,
@@ -37,7 +37,7 @@
     "designation" : "Chief Outreach Officer",
     "position" : "Harvard '21",
     "team": "Management, Outreach",
-    "photo": "stock-profile.png"
+    "photo": "propics/anne.jpg"
   },
   {
     "_id" : 5,

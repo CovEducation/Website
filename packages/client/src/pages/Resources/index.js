@@ -1,7 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { FONTS } from '../../constants';
-import Section from '../../components/Section';
+import React from "react";
+import styled from "styled-components";
+import { FONTS } from "../../constants";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 
 const Wrapper = styled.div`
   text-align: center;
@@ -12,8 +13,9 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   position: relative;
+  font-size: 4em;
   overflow: hidden;
-  p{
+  p {
     font-family: ${FONTS.font2};
   }
   h2 {
@@ -26,12 +28,14 @@ const Wrapper = styled.div`
 const ResourcesPage = () => {
   return (
     <Wrapper>
-      <Section p="100px">
-        <h2> Resources </h2>
-        Coming Soon! In the coming week, we'll be adding some useful links as well as several handbooks and helpful fliers put together by the CovEd team! 
-      </Section>
+      <Alert severity="warning">
+        <AlertTitle>Resources</AlertTitle>
+        Coming Soon! In the coming week, we'll be adding some useful links as
+        well as several handbooks and helpful fliers put together by the CovEd
+        team!
+      </Alert>
     </Wrapper>
-  )
-}
+  );
+};
 
 export default ResourcesPage;
