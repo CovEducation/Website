@@ -25,9 +25,9 @@ const MeetOurTeam = () => {
       });
   }, []);
 
-  const getFilteredData = (type) => {
-    if (type !== undefined) {
-      const data = teamData && teamData.filter((data) => data.team === type);
+  const getFilteredData = (category) => {
+    if (category !== undefined) {
+      const data = teamData && teamData.filter((data) => data.team.includes(category));
       return data;
     } else {
       return teamData;
@@ -35,7 +35,7 @@ const MeetOurTeam = () => {
   };
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>Meet Our Team </h1>
+      <h2 style={{ textAlign: "center" }}>Meet Our Team </h2>
       <TabsContainer>
         <HTabs
           texts={[
@@ -45,7 +45,7 @@ const MeetOurTeam = () => {
             getFilteredData("Public Relations"),
             getFilteredData("Outreach"),
             getFilteredData("Speaker Series"),
-            getFilteredData("Technology Team"),
+            getFilteredData("Technology"),
           ]}
           labels={[
             "All",

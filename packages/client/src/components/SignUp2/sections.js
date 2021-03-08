@@ -7,7 +7,6 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemText,
 } from "@material-ui/core";
 import {
   FormikField,
@@ -21,7 +20,6 @@ import {
   Timezones,
   phoneRegex,
   Subjects,
-  Pronouns,
   GradeLevels,
 } from "./constants";
 
@@ -89,7 +87,7 @@ const UserDetails = (props) => {
     region: Yup.string().required("Region Required"),
     phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
     pronouns: Yup.string(),
-    communicationPreference: Yup.string(),
+    communicationPreference: Yup.string().required(),
   });
 
   const formik = useFormik({
@@ -138,7 +136,7 @@ const MentorDetails = (props) => {
     college: Yup.string(),
     // avatar: Yup.string().required("Avatar Required"),
     gradeLevels: Yup.array().required("Grade Levels Required"),
-    bio: Yup.string().required("Bio Required"),
+    introduction: Yup.string().required("Introduction Required"),
     major: Yup.string(),
     subjects: Yup.array().required("Subjects Required"),
   });
@@ -156,7 +154,7 @@ const MentorDetails = (props) => {
         <FormikField name="college" label="College" formik={formik} xs={12} />
         <FormikField name="major" label="Major" formik={formik} xs={12} />
         <FormikField
-          name="bio"
+          name="introduction"
           label="Tell us a little about yourself."
           multiline
           formik={formik}
@@ -165,7 +163,7 @@ const MentorDetails = (props) => {
         />
         <FormikSelect
           name="subjects"
-          label="Subjects"
+          label="Subjects (select multiple)"
           values={Subjects}
           formik={formik}
           isMulti
@@ -173,7 +171,7 @@ const MentorDetails = (props) => {
         />
         <FormikSelect
           name="gradeLevels"
-          label="Grade Level"
+          label="Grade Levels (select multiple)"
           values={GradeLevels}
           formik={formik}
           isMulti
@@ -204,13 +202,14 @@ const TermsConditions = (props) => {
       <Grid container spacing={SPACING}>
         <FormikCheckbox
           name="termsOfService"
-          label="I agree to the CovEd Terms of Service."
+          label="I agree to the CovEd Terms of Service. (www.coved.org/terms)"
           formik={formik}
           xs={12}
         />
+
         <FormikCheckbox
           name="privacyPolicy"
-          label="I agree to the CovEd Privacy Policy."
+          label="I agree to the CovEd Privacy Policy. (www.coved.org/privacy)"
           formik={formik}
           xs={12}
         />
@@ -252,7 +251,10 @@ const StudentDetails = (props) => {
 
   const remove = () => {
     // there must be at least one student: maybe we should give a warning when trying to remove last student
-    if (numChildren == 1) return;
+    if (numChildren === 1) {
+      alert("To sign up, include at least one student.");
+      return;
+    }
 
     formik.values.students.pop();
     setNumChildren(formik.values.students.length);
@@ -298,7 +300,7 @@ const StudentDetails = (props) => {
                 />
                 <FormikSelect
                   name={`students[${i}].subjects`}
-                  label="Subjects"
+                  label="Subjects (select multiple)"
                   values={Subjects}
                   formik={formik}
                   validationFunc={validationFunc(i, "subjects")}

@@ -140,14 +140,12 @@ export const postRejectRequestHandler = (
 
   if (
     mentorship.mentor instanceof mongoose.Types.ObjectId ||
-    mentorship.mentor instanceof String ||
     typeof mentorship.mentor === "string"
   ) {
     mentorID = mentorship.mentor;
   } else {
     mentorID = (mentorship.mentor as Mentor)._id;
   }
-
   if (
     req.session.userId !== undefined &&
     ensureIDsAreEqual(mentorID, req.session.userId)
@@ -158,7 +156,7 @@ export const postRejectRequestHandler = (
         res.status(400).send({ err });
       });
   } else {
-    res.status(403).send({ err: "Invalid user operation." });
+    res.status(403).end();
   }
 };
 
@@ -183,7 +181,6 @@ export const postArchiveMentorshipHandler = (
 
   if (
     mentorship.mentor instanceof mongoose.Types.ObjectId ||
-    mentorship.mentor instanceof String ||
     typeof mentorship.mentor === "string"
   ) {
     mentorID = mentorship.mentor;
@@ -191,11 +188,11 @@ export const postArchiveMentorshipHandler = (
     mentorID = (mentorship.mentor as Mentor)._id;
   }
   if (
-    req.session.userId === undefined ||
+    req.session.userId == undefined ||
     (!ensureIDsAreEqual(mentorID, req.session.userId) &&
       !ensureIDsAreEqual(parentID, req.session.userId))
   ) {
-    res.status(403).send();
+    res.status(403).end();
   } else {
     MentorshipService.archiveMentorship(mentorship)
       .then(() => res.send({}))
@@ -211,8 +208,8 @@ export const postSessionHandler = (
 ) => {
   const { session, mentorship } = req.body;
   MentorshipService.addSessionToMentorship(session, mentorship)
-    .then((mentorship) => {
-      res.send(mentorship);
+    .then(() => {
+      res.send({});
     })
     .catch((err) => res.status(400).send({ err }));
 };

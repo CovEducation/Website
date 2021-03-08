@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import AlertTitle from "@material-ui/lab/AlertTitle";
+import Alert from "@material-ui/lab/Alert";
 import { COLORS } from "../../constants";
 import Button from "../../components/Button";
+import Jdenticon from "react-jdenticon";
 import useAuth from "../../providers/AuthProvider";
 import Toast from "../../components/Toast/index.js";
 import {
@@ -65,8 +68,6 @@ const RequestsWrapperPending = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 50px;
-  width: 50%;
-  float: left;
   justify-content: center;
 `;
 const RequestDetailsBlock = styled.div`
@@ -80,10 +81,6 @@ const RequestDetailsBlock = styled.div`
     color: ${COLORS.blue};
     border-bottom: 2px solid;
   }
-`;
-
-const UserPicture = styled.img`
-  margin-right: 50px;
 `;
 
 const BlueColor = styled.span`
@@ -106,17 +103,11 @@ const RequestsPage = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [status] = useState("");
   const [message, setMessage] = useState("");
-  const [pendingReqs, setPendingReqs] = useState([]);
-  const [activeMentorships, setActiveMentorships] = useState([]);
+  const [mentorships, setMentorships] = useState([]);
 
   useEffect(() => {
-    getRequests("PENDING").then((requests) => {
-      setPendingReqs(requests);
-    });
-  }, []);
-  useEffect(() => {
-    getRequests("ACTIVE").then((requests) => {
-      setActiveMentorships(requests);
+    getRequests().then((requests) => {
+      setMentorships(requests);
     });
   }, []);
 
@@ -130,7 +121,7 @@ const RequestsPage = () => {
   };
 
   const hasRequests = () => {
-    return pendingReqs.length + activeMentorships.length > 0;
+    return mentorships.length > 0;
   };
 
   const getRatingsFixed = (d) => {
@@ -141,253 +132,252 @@ const RequestsPage = () => {
     return a.toFixed(1);
   };
 
-  const pendingRequestsList = pendingReqs.map((item) => (
-    <RequestsWrapperPending>
-      <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
-      <div>
-        {user.role === "MENTOR" ? (
-          <p>
-            <b>Parent: </b>
-            {item.parent.name}
-            <br />
-            <b>Student: </b>
-            {item.student.name}
-            <br />
-            <b>Message: </b>
-            {item.message}
-          </p>
-        ) : (
-          <p>
-            <b>Student: </b>
-            {item.student.name}
-            <br />
-            <b>Mentor: </b>
-            {item.mentor.name}
-          </p>
-        )}
-        <p>
-          {" "}
-          <b>Status: </b>
-          <BlueColor>{item.state}</BlueColor>
-        </p>
-      </div>
-      {user.role === "MENTOR" && (
-        <RequestDetailsBlock>
-          <Button
-            theme="accent"
-            size="sm"
-            onClick={() =>
-              acceptRequest(item).then(() => {
-                setMessage("Request Accepted");
-                setToastOpen(true);
-                setTimeout(() => {
-                  setToastOpen(false);
-                }, 3000);
-
-                // Update the state:
-                getRequests("ACTIVE").then((requests) => {
-                  setActiveMentorships(requests);
-                });
-              })
-            }
-          >
-            {" "}
-            Accept{" "}
-          </Button>
-          <Button
-            theme="danger"
-            size="sm"
-            onClick={() =>
-              rejectRequest(item).then(() => {
-                setMessage("Request Rejected");
-                setToastOpen(true);
-                setTimeout(() => {
-                  setToastOpen(false);
-                }, 3000);
-                // Update the state:
-                getRequests("ACTIVE").then((requests) => {
-                  setActiveMentorships(requests);
-                });
-              })
-            }
-          >
-            {" "}
-            Reject{" "}
-          </Button>
-        </RequestDetailsBlock>
-      )}
-    </RequestsWrapperPending>
-  ));
-
-  const otherRequestsList = activeMentorships.map(
-    (item) =>
-      (item.state === "ACTIVE" ||
-        item.state === "ARCHIVED" ||
-        item.state === "REJECTED") && (
-        <RequestsWrapper>
-          {item.state === "ACTIVE" && (
-            <FlexClass1>
-              <UserPicture
-                src="http://via.placeholder.com/115"
-                alt="profile pic"
-              />
-              <Button
-                theme="danger"
-                size="sm"
-                onClick={() =>
-                  archiveRequest(item).then(() => {
-                    setMessage("Request Archived");
-                    setToastOpen(true);
-                    setTimeout(() => {
-                      setToastOpen(false);
-                    }, 3000);
-
-                    // Update the state:
-                    getRequests("ACTIVE").then((requests) => {
-                      setActiveMentorships(requests);
-                    });
-                  })
-                }
-              >
-                {" "}
-                End Membership{" "}
-              </Button>
-            </FlexClass1>
+  const pendingRequestsList = mentorships
+    .filter((item) => {
+      return (
+        item.student != null &&
+        item.student !== undefined &&
+        item.student.name !== undefined &&
+        item.state === "PENDING"
+      );
+    })
+    .map((item) => (
+      <RequestsWrapperPending>
+        <Jdenticon size="150" value={item.student.name} />
+        <div>
+          {user.role === "MENTOR" ? (
+            <p>
+              <b>Parent: </b>
+              {item.parent.name}
+              <br />
+              <b>Student: </b>
+              {item.student.name}
+              <br />
+              <b>Message: </b>
+              {item.message}
+            </p>
+          ) : (
+            <p>
+              <b>Student: </b>
+              {item.student.name}
+              <br />
+              <b>Mentor: </b>
+              {item.mentor.name}
+            </p>
           )}
-          {user.role === "MENTOR" && item.state === "ACTIVE" && (
+          <p>
+            {" "}
+            <b>Status: </b>
+            <BlueColor>{item.state}</BlueColor>
+          </p>
+        </div>
+        {user.role === "MENTOR" && (
+          <RequestDetailsBlock>
+            <Button
+              theme="accent"
+              size="sm"
+              onClick={() =>
+                acceptRequest(item).then(() => {
+                  setMessage("Request Accepted");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+
+                  // Update the state:
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              Accept{" "}
+            </Button>
+            <Button
+              theme="danger"
+              size="sm"
+              onClick={() =>
+                rejectRequest(item).then(() => {
+                  setMessage("Request Rejected");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+                  // Update the state:
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              Reject{" "}
+            </Button>
+          </RequestDetailsBlock>
+        )}
+      </RequestsWrapperPending>
+    ));
+
+  const mentorshipList = mentorships
+    .filter((item) => item.student !== null)
+    .map((item) => (
+      <RequestsWrapper>
+        {item.state === "ACTIVE" && (
+          <FlexClass1>
+            <Jdenticon size="150" value={item.student.name} />
+            <Button
+              theme="danger"
+              size="sm"
+              onClick={() =>
+                archiveRequest(item).then(() => {
+                  setMessage("Request Archived");
+                  setToastOpen(true);
+                  setTimeout(() => {
+                    setToastOpen(false);
+                  }, 3000);
+
+                  // Update the state:
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
+                  });
+                })
+              }
+            >
+              {" "}
+              End Membership{" "}
+            </Button>
+          </FlexClass1>
+        )}
+        {user.role === "MENTOR" && item.state === "ACTIVE" && (
+          <FlexClass>
+            <Jdenticon size="150" value={item.student.name} />
+          </FlexClass>
+        )}
+        {(user.role === "PARENT" || user.role === "MENTOR") &&
+          item.state !== "ACTIVE" && (
             <FlexClass>
-              <UserPicture
-                src="http://via.placeholder.com/115"
-                alt="profile pic"
-              />
+              <Jdenticon size="150" value={item.student.name} />
             </FlexClass>
           )}
-          {(user.role === "PARENT" || user.role === "MENTOR") &&
-            item.state !== "ACTIVE" && (
-              <FlexClass>
-                <UserPicture
-                  src="http://via.placeholder.com/115"
-                  alt="profile pic"
-                />
-              </FlexClass>
+        <div>
+          <p>
+            {" "}
+            <b>Mentor: </b> {item.mentor.name}{" "}
+          </p>
+          <p>
+            {" "}
+            <b>Student: </b>
+            {item.student.name}{" "}
+          </p>
+          <p>
+            {item.startDate && (
+              <>
+                <b>Start date: </b> {getDate(item.startDate)}
+              </>
             )}
-          <div>
+          </p>
+          <p>
+            {item.endDate && (
+              <>
+                <b>End date: </b> {getDate(item.startDate)}
+              </>
+            )}
+          </p>
+          <p>
+            {" "}
+            <b>Status: </b>
+            {item.state === "ACTIVE" && <GreenColor>{item.state}</GreenColor>}
+            {item.state === "ARCHIVED" && (
+              <YellowColor>{item.state}</YellowColor>
+            )}
+            {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
+          </p>
+          <p>
+            <b>Session Hours: </b>
+            {Math.floor(
+              item.sessions
+                .map((session) => session.durationMinutes)
+                .reduce((a, b) => a + b, 0) / 60
+            )}
+          </p>
+          {user.role === "MENTOR" && (
             <p>
-              {" "}
-              <b>Mentor: </b> {item.mentor.name}{" "}
+              <b>Ratings: </b>
+              <span>
+                {item.sessions && item.sessions.length > 0
+                  ? item.sessions
+                      .map((session) => session.rating)
+                      .map((rating) => getRatingsFixed(rating))
+                  : "No ratings yet."}
+              </span>
             </p>
+          )}
+          {user.role === "PARENT" && (
             <p>
-              {" "}
-              <b>Student: </b>
-              {item.student.name}{" "}
-            </p>
-            <p>
-              {item.startDate && (
-                <>
-                  <b>Start date: </b> {getDate(item.startDate)}
-                </>
-              )}
-            </p>
-            <p>
-              {item.endDate && (
-                <>
-                  <b>End date: </b> {getDate(item.startDate)}
-                </>
-              )}
-            </p>
-            <p>
-              {" "}
-              <b>Status: </b>
-              {item.state === "ACTIVE" && <GreenColor>{item.state}</GreenColor>}
-              {item.state === "ARCHIVED" && (
-                <YellowColor>{item.state}</YellowColor>
-              )}
-              {item.state === "REJECTED" && <RedColor>{item.state}</RedColor>}
-            </p>
-            <p>
-              <b>Session Hours: </b>
-              {Math.floor(
-                item.sessions
-                  .map((session) => session.durationMinutes)
-                  .reduce((a, b) => a + b, 0) / 60
-              )}
-            </p>
-            {user.role === "MENTOR" && (
-              <p>
-                <b>Ratings: </b>
-                <span>
-                  {item.sessions && item.sessions.length > 0
-                    ? item.sessions
+              <b>Avg. Ratings: </b>
+              <span>
+                {item.sessions && item.sessions.length > 0
+                  ? getRatingsFixed(
+                      item.sessions
                         .map((session) => session.rating)
-                        .map((rating) => getRatingsFixed(rating))
-                    : "No ratings yet."}
-                </span>
-              </p>
-            )}
-            {user.role === "PARENT" && (
+                        .reduce((a, b) => a + b, 0) / item.sessions.length
+                    )
+                  : "No ratings yet."}
+              </span>
+            </p>
+          )}
+          {user.role === "MENTOR" && item.state === "ACTIVE" && (
+            <div>
               <p>
-                <b>Avg. Ratings: </b>
-                <span>
-                  {item.sessions && item.sessions.length > 0
-                    ? getRatingsFixed(
-                        item.sessions
-                          .map((session) => session.rating)
-                          .reduce((a, b) => a + b, 0) / item.sessions.length
-                      )
-                    : "No ratings yet."}
-                </span>
-              </p>
-            )}
-            {user.role === "MENTOR" && item.state === "ACTIVE" && (
-              <div>
-                <p>
-                  <b>Session Hours: </b>
-                  <input
-                    type="number"
-                    id="sessionHours"
-                    onChange={(e) => {
-                      setSession({
-                        ...session,
-                        durationMinutes: Math.floor(
-                          Number(e.target.value) * 60
-                        ),
-                      });
-                    }}
-                  ></input>
-                </p>
-              </div>
-            )}
-            {user.role === "PARENT" && item.state === "ACTIVE" && (
-              <div>
-                <p>
-                  <b>Rate my last session: </b>
-                  <input
-                    type="number"
-                    id="ratingsInput"
-                    onChange={(e) => {
-                      setSession({
-                        ...session,
-                        rating: Math.floor(Number(e.target.value)),
-                      });
-                    }}
-                    max="5"
-                  ></input>
-                </p>
-                <Button
-                  theme="accent"
-                  size="sm"
-                  onClick={() => {
-                    addSession({ _id: item._id }, session);
+                <b>Session Hours: </b>
+                <input
+                  type="number"
+                  id="sessionHours"
+                  onChange={(e) => {
+                    setSession({
+                      ...session,
+                      durationMinutes: Math.floor(Number(e.target.value) * 60),
+                    });
                   }}
-                >
-                  Submit Session
-                </Button>
-              </div>
-            )}
-          </div>
-        </RequestsWrapper>
-      )
-  );
+                ></input>
+              </p>
+            </div>
+          )}
+          {user.role === "PARENT" && item.state === "ACTIVE" && (
+            <div>
+              <p>
+                <b>Rate my last session: </b>
+                <input
+                  type="number"
+                  id="ratingsInput"
+                  onChange={(e) => {
+                    setSession({
+                      ...session,
+                      rating: Math.floor(Number(e.target.value)),
+                    });
+                  }}
+                  max="5"
+                ></input>
+              </p>
+              <Button
+                theme="accent"
+                size="sm"
+                onClick={() => {
+                  addSession({ _id: item._id }, session);
+                  // Update the state:
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
+                  });
+                }}
+              >
+                Submit Session
+              </Button>
+            </div>
+          )}
+        </div>
+      </RequestsWrapper>
+    ));
 
   return (
     <RequestsPageWrapper>
@@ -398,15 +388,36 @@ const RequestsPage = () => {
         </div>
       </RequestsHeader>
 
-      {hasRequests && pendingRequestsList}
+      {hasRequests &&
+      mentorships.filter((v) => v.state === "PENDING").length > 0 ? (
+        pendingRequestsList
+      ) : (
+        <>
+          <Alert severity="info" style={{ marginBottom: "4em" }}>
+            <AlertTitle>No pending requests</AlertTitle>
+            We will notify you when you receive a mentorship request. Thanks for
+            volunteeering!
+          </Alert>
+        </>
+      )}
 
       <RequestsHeader>
         <div>
           <h1>Mentorships</h1>
         </div>
       </RequestsHeader>
-
-      {hasRequests && otherRequestsList}
+      {hasRequests &&
+      mentorships.filter((v) => v.state !== "PENDING").length > 0 ? (
+        mentorshipList
+      ) : (
+        <>
+          <Alert severity="info">
+            <AlertTitle>No active or previous mentorships</AlertTitle>
+            Once you accept a mentorship request, you will be able to see your
+            current and past mentorships here.
+          </Alert>
+        </>
+      )}
     </RequestsPageWrapper>
   );
 };

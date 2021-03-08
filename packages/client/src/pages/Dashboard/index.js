@@ -7,6 +7,7 @@ import ProfilePage from "../Profile";
 import RequestsPage from "../Requests";
 import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
 import SpeakerSeriesPage from "../SpeakerSeries";
+import ProfilePicture from "../../components/ProfilePicture";
 
 const DashboardWrapper = styled.div`
   height: calc(100vh - 64px); // subtract heights for navbar and footer
@@ -90,7 +91,7 @@ const DashboardPage = () => {
   return (
     <DashboardWrapper>
       <DashboardHeader>
-        <img src="https://via.placeholder.com/100" alt="profile pic" />
+        <ProfilePicture size={100} value={user.name}></ProfilePicture>
         <div>
           <h1>{user.name}</h1>
           <p>{userType} Dashboard</p>

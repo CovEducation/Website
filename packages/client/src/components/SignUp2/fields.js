@@ -11,7 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-import { Grid } from "@material-ui/core";
+import { FormHelperText, Grid } from "@material-ui/core";
 
 const FormikField = (props) => {
   const {
@@ -24,16 +24,16 @@ const FormikField = (props) => {
     multiline,
     xs,
     rows,
-    validationFunc
+    validationFunc,
   } = props;
 
   let value, error, helperText;
   if (!validationFunc) {
     value = formik.values[name];
-    error = formik.touched[name] && Boolean(formik.errors[name])
-    helperText = formik.touched[name] && formik.errors[name]
+    error = formik.touched[name] && Boolean(formik.errors[name]);
+    helperText = formik.touched[name] && formik.errors[name];
   } else {
-    ([value, error, helperText] = validationFunc(formik));
+    [value, error, helperText] = validationFunc(formik);
   }
 
   return (
@@ -104,15 +104,14 @@ const FormikSelect = (props) => {
   let value, error, helperText;
   if (!validationFunc) {
     value = formik.values[name];
-    error = formik.touched[name] && Boolean(formik.errors[name])
-    helperText = formik.touched[name] && formik.errors[name]
+    error = formik.touched[name] && Boolean(formik.errors[name]);
+    helperText = formik.touched[name] && formik.errors[name];
   } else {
-    ([value, error, helperText] = validationFunc(formik));
+    [value, error, helperText] = validationFunc(formik);
   }
-
   return (
     <Grid item sm={xs}>
-      <FormControl variant="filled" fullWidth>
+      <FormControl variant="filled" fullWidth error={error}>
         <InputLabel id={name}> {label} </InputLabel>
         <Select
           labelId={name}
@@ -128,6 +127,7 @@ const FormikSelect = (props) => {
             </MenuItem>
           ))}
         </Select>
+        {error && <FormHelperText> {helperText} </FormHelperText>}
       </FormControl>
     </Grid>
   );

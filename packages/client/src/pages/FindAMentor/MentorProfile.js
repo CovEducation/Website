@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../../components/Button";
 import TextField from "@material-ui/core/TextField";
+import Jdenticon from "react-jdenticon";
 import useAuth from "../../providers/AuthProvider";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -80,7 +81,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     ["subjects", "Subjects"],
     ["location", "Location"],
     ["gradeLevels", "Grades"],
-    ["timezone", "Timezone"],
+    ["region", "Region"],
     ["languages_spoken", "Languages"],
   ];
 
@@ -88,12 +89,12 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
     ["subjects", "Subjects"],
     ["location", "Location"],
     ["gradeLevels", "Grades"],
-    ["timezone", "Timezone"],
+    ["region", "Region"],
     ["languages_spoken", "Languages"],
   ];
 
   const sendRequest = async () => {
-    await onSubmit(user._id, mentor.id, studentID, userMessage);
+    await onSubmit(user._id, mentor.objectID, studentID, userMessage);
   };
 
   const studentList =
@@ -109,6 +110,7 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   const handleChange = (event) => {
     setStudentName(event.target.value);
     // Efficiency.
+
     let id = students.filter((stud) => stud.name === event.target.value)[0]._id;
     setStudentID(id);
     setValidation(false);
@@ -120,13 +122,10 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
   return (
     <MentorProfileContainer key={mentor.id}>
       <MentorProfileHeader>
-        <MentorProfilePicture
-          src={mentor.avatar || `${process.env.PUBLIC_URL}/stock-profile.png`}
-          alt="Profile"
-        />
+        <Jdenticon size="150" value={mentor.name} />
         <MentorDetailsBlock>
           <h3>{mentor.name}</h3>
-          <h4>{mentor.school}</h4>
+          <h4>{mentor.college}</h4>
           <h4>{mentor.major}</h4>
         </MentorDetailsBlock>
         <div></div>
@@ -202,8 +201,20 @@ const validateMentorData = (mentor) => {
 const displayField = (field, mentor) => {
   let mentorInfo = mentor[field[0]];
   if (Array.isArray(mentorInfo)) {
-    mentorInfo = mentorInfo.join(", ");
+    mentorInfo = mentorInfo
+      .map((v) => {
+        try {
+          // https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+          return v.replace(/\w\S*/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+          });
+        } catch {
+          return v;
+        }
+      })
+      .join(", ");
   }
+
   return (
     <>
       {mentorInfo && (

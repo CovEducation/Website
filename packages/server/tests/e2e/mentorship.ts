@@ -131,7 +131,7 @@ describe("💾 Server", async () => {
         request.parentID = undefined;
         const resp = await app.post("/mentorships/request").send(request);
 
-        expect(resp.status).to.not.be.equal(200);
+        expect(resp.status).to.be.equal(400);
       });
     });
 
@@ -185,7 +185,7 @@ describe("💾 Server", async () => {
         const blocked = await app
           .post("/mentorships/accept")
           .send({ mentorship });
-        expect(blocked.status).to.be.equal(400);
+        expect(blocked.status).to.not.be.equal(200);
       });
 
       it("POST cannot mentor student after they have already been accepted by someone else", async () => {
@@ -444,7 +444,10 @@ describe("💾 Server", async () => {
           token: { uid: testMentor.firebaseUID },
         });
         expect(login.status).to.be.equal(200);
-        await app.post("/mentorships/accept").send({ mentorship });
+        const accept = await app
+          .post("/mentorships/accept")
+          .send({ mentorship });
+        expect(accept.status).to.be.equal(200);
         const archive = await app
           .post("/mentorships/archive")
           .send({ mentorship });

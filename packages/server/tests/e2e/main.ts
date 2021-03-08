@@ -12,6 +12,7 @@ import createHttpServer from "../../src/server";
 import { testMentor, testParent } from "../data";
 import { IMentor } from "../../src/models/Mentors";
 import mongoose from "mongoose";
+import { IParent } from "../../src/models/Parents";
 
 let app: SuperAgentTest;
 let server: http.Server;
@@ -95,6 +96,67 @@ describe("💾 Server", () => {
         expect(res.status).to.be.equal(400);
       });
 
+      it("PUT - updates user", async () => {
+        const res = await app
+          .post("/users/mentor")
+          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
+        expect(res.status).to.be.equal(200);
+        expect(res.body._id).to.exist;
+        expect(res.body as IMentor).to.deep.contain(testMentor);
+        const mentorUpdate = {
+          ...testMentor,
+          name: "Jack Florey",
+          introduction: "Hi Jack!",
+        };
+        const update = await app.put("/users/mentor").send({
+          mentor: mentorUpdate,
+          token: { uid: testMentor.firebaseUID },
+        });
+        expect(update.status).to.be.equal(200);
+
+        const getMentor = await app
+          .get("/users/mentor")
+          .query({ _id: res.body._id });
+        expect(getMentor.status).to.be.equal(200);
+        expect(getMentor.body.name).to.be.equal(mentorUpdate.name);
+        expect(getMentor.body.introduction).to.be.equal(
+          mentorUpdate.introduction
+        );
+      });
+
+      it("PUT - rejects empty requests", async () => {
+        const res = await app.put("/users/mentor");
+        expect(res.status).to.be.equal(401);
+      });
+
+      it("POST - rejects missing token", async () => {
+        const res = await app.put("/users/mentor").send({ mentor: testMentor });
+        expect(res.status).to.not.be.equal(200);
+      });
+
+      it("PUT - rejects invalid phone number", async () => {
+        const res = await app.post("/users/mentor").send({
+          mentor: testMentor,
+          token: { uid: testMentor.firebaseUID },
+        });
+        expect(res.status).to.be.equal(200);
+
+        const mentorUpdate = {
+          ...res.body,
+          phone: "11111",
+        };
+        const update = await app.put("/users/mentor").send({
+          mentor: mentorUpdate,
+          token: { uid: testMentor.firebaseUID },
+        });
+        expect(update.status).to.not.be.equal(200);
+        const getMentor = await app
+          .get("/users/mentor")
+          .query({ _id: res.body._id });
+        expect(getMentor.status).to.be.equal(200);
+        expect(getMentor.body.phone).to.be.equal(testMentor.phone);
+      });
+
       it("GET - gets a mentor", async () => {
         const setup = await app
           .post("/users/mentor")
@@ -153,7 +215,6 @@ describe("💾 Server", () => {
           .set({ token: setup.body._id });
         expect(res.status).to.be.equal(401);
       });
-      
       it("DELETE - rejects invalid requests", async () => {
         const setup = await app
           .post("/users/mentor")
@@ -203,6 +264,63 @@ describe("💾 Server", () => {
           token: { uid: testParent.firebaseUID },
         });
         expect(res.status).to.be.equal(400);
+      });
+
+      it("PUT - updates user", async () => {
+        const res = await app
+          .post("/users/parent")
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
+        expect(res.status).to.be.equal(200);
+        expect(res.body._id).to.exist;
+        const parentUpdate = {
+          ...testParent,
+          name: "Jack Florey",
+        };
+        const update = await app.put("/users/parent").send({
+          parent: parentUpdate,
+          token: { uid: testParent.firebaseUID },
+        });
+        expect(update.status).to.be.equal(200);
+
+        const getParent = await app
+          .get("/users/parent")
+          .query({ _id: res.body._id });
+        expect(getParent.status).to.be.equal(200);
+        expect(getParent.body.name).to.be.equal(parentUpdate.name);
+      });
+
+      it("PUT - rejects empty requests", async () => {
+        const res = await app.put("/users/parent");
+        expect(res.status).to.be.equal(401);
+      });
+
+      it("POST - rejects missing token", async () => {
+        const res = await app.put("/users/parent").send({ parent: testParent });
+        expect(res.status).to.not.be.equal(200);
+      });
+
+      it("PUT - rejects invalid phone number", async () => {
+        const res = await app.post("/users/parent").send({
+          parent: testParent,
+          token: { uid: testParent.firebaseUID },
+        });
+        expect(res.status).to.be.equal(200);
+
+        const parentUpdate: IParent = {
+          ...res.body,
+          phone: "11111",
+        };
+        const update = await app.put("/users/parent").send({
+          mentor: parentUpdate,
+          token: { uid: testParent.firebaseUID },
+        });
+        expect(update.status).to.not.be.equal(200);
+
+        const getParent = await app
+          .get("/users/parent")
+          .query({ _id: res.body._id });
+        expect(getParent.status).to.be.equal(200);
+        expect(getParent.body.phone).to.be.equal(testParent.phone);
       });
 
       it("GET - gets a parent", async () => {

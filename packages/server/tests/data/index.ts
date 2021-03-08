@@ -22,7 +22,7 @@ export const testMentor: IMentor = {
     "Differential Equations",
   ],
   college: "MIT",
-  timezone: "EST",
+  region: "Midwest",
 };
 
 export const testStudent: IStudent = {
@@ -39,6 +39,6 @@ export const testParent: IParent = {
   pronouns: "She/Her",
   avatar: "www.imgur.com/testImage.jpg",
   communicationPreference: CommunicationPreference.EMAIL,
-  timezone: "EST",
   students: [testStudent],
+  region: "Midwest",
 };

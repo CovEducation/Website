@@ -130,7 +130,7 @@ export const getRequests = async (requestState) => {
   }
   const token = await Auth.currentUser.getIdToken();
   return await get(host + "mentorships", { token }).then((mentorships) =>
-    mentorships.filter((mentorship) => mentorship.state === requestState)
+    mentorships.filter((mentorship) => requestState === undefined || mentorship.state === requestState)
   );
 };
 /**

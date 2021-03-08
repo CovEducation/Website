@@ -98,6 +98,8 @@ const SpeakerSeriesPage = () => {
     moment(data.date).isAfter(new Date())
   );
 
+  const launched = false;
+
   // TODO redo the styling of this page
   return (
     <SpeakerSeriesPageWrapper>
@@ -113,7 +115,7 @@ const SpeakerSeriesPage = () => {
 
       <SpeakerSeriesWrapper>
         <SpeakerSeriesContainer>
-          {speakerSeriesUpComingData.length > 0 ? (
+          {speakerSeriesUpComingData.length > 0 && launched ? (
             speakerSeriesUpComingData.map((speaker) => {
               return (
                 <Modal
@@ -139,7 +141,7 @@ const SpeakerSeriesPage = () => {
       </PastEventsHeader>
       <SpeakerSeriesWrapper>
         <SpeakerSeriesContainer>
-          {speakerSeriesPastData.length > 0 ? (
+          {speakerSeriesPastData.length > 0 && launched ? (
             speakerSeriesPastData.map((speaker) => {
               return (
                 <Modal
