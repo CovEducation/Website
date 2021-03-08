@@ -151,8 +151,7 @@ const useRequestProvider = () => {
         console.log(`Error fetching user: ${err}`);
         setUser(null);
       });
-    //getRequestList();
-  }, [authState, auth]);
+  }, [authState, auth, getCurrentUser]);
 
   return {
     auth,
