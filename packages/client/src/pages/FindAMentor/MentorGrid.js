@@ -43,7 +43,7 @@ const MentorGrid = ({ hits }) => {
   // A grid of mentor components.
   return (
     <Container>
-      <Toast open={toastOpen} message="Request Send successfully." />
+      <Toast open={toastOpen} message="Request Sent successfully." />
       <Grid container spacing={2}>
         {hits.map((mentor) => {
           if (mentor === null || mentor === undefined) {
