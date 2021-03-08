@@ -63,7 +63,21 @@ describe("📚 Mentorship Service", () => {
       expect(mentorship.sessions).to.have.length.gte(0);
       expect(mentorship.startDate).to.be.undefined;
     });
-
+    it("saves the message", async () => {
+      const [parent, mentor, student] = await createUsers();
+      const request: MentorshipRequest = {
+        message: "Hi! Would you be able to tutor my son?",
+        parent,
+        student,
+        mentor,
+      };
+      const mentorship = await MentorshipService.sendRequest(request);
+      expect(mentorship._id).to.exist;
+      expect(mentorship.state).to.be.equal(MentorshipState.PENDING);
+      expect(mentorship.sessions).to.have.length.gte(0);
+      expect(mentorship.startDate).to.be.undefined;
+      expect(mentorship.message).to.be.equal(request.message);
+    });
     it("sends an email", async () => {
       const mentor = await UserService.createMentor({
         ...testMentor,

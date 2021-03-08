@@ -62,6 +62,7 @@ class MentorshipService {
         student: request.student,
         mentor: request.mentor._id,
         parent: request.parent._id,
+        message: request.message,
         sessions: [],
       }).then(async (mentorship) => {
         if (request.mentor._id === undefined) {

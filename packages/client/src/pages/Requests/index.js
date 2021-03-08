@@ -153,8 +153,15 @@ const RequestsPage = () => {
               <b>Student: </b>
               {item.student.name}
               <br />
-              <b>Message: </b>
-              {item.message}
+              {item.message && (
+                <>
+                  <b>Message: </b>
+                  {item.message}
+                </>
+              )}
+              <br />
+              <b>Status: </b>
+              <BlueColor>{item.state}</BlueColor>
             </p>
           ) : (
             <p>
@@ -163,13 +170,18 @@ const RequestsPage = () => {
               <br />
               <b>Mentor: </b>
               {item.mentor.name}
+              <br />
+              {item.message && (
+                <>
+                  <b>Message: </b>
+                  {item.message}
+                </>
+              )}
+              <br />
+              <b>Status: </b>
+              <BlueColor>{item.state}</BlueColor>
             </p>
           )}
-          <p>
-            {" "}
-            <b>Status: </b>
-            <BlueColor>{item.state}</BlueColor>
-          </p>
         </div>
         {user.role === "MENTOR" && (
           <RequestDetailsBlock>
