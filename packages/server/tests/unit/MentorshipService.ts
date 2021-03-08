@@ -49,7 +49,7 @@ const createUsers = async (): Promise<[IParent, IMentor, IStudent]> => {
 
 describe("📚 Mentorship Service", () => {
   describe("::sendRequest()", () => {
-    it("creates a mentorship document", async () => {
+    it.only("creates a mentorship document", async () => {
       const [parent, mentor, student] = await createUsers();
       const request: MentorshipRequest = {
         message: "Hi! Would you be able to tutor my son?",
@@ -64,7 +64,7 @@ describe("📚 Mentorship Service", () => {
       expect(mentorship.startDate).to.be.undefined;
     });
 
-    it("sends an email", async () => {
+    it.only("sends an email", async () => {
       const mentor = await UserService.createMentor({
         ...testMentor,
         communicationPreference: CommunicationPreference.EMAIL,
@@ -80,7 +80,7 @@ describe("📚 Mentorship Service", () => {
       await MentorshipService.sendRequest(request);
 
       const sentMail = nodemailerMock.mock.getSentMail();
-      expect(sentMail.length).to.not.be.equal(1);
+      expect(sentMail.length).to.be.equal(2); // one for the parent and one for the mentor.
     });
 
     it("rejects empty messages", async () => {
@@ -154,6 +154,8 @@ describe("📚 Mentorship Service", () => {
       const acceptedMentorship = mentorships[0];
       expect(acceptedMentorship.state).to.be.equal(MentorshipState.ACTIVE);
       expect(acceptedMentorship.startDate).to.exist;
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.be.equal(2); // one for the parent and one for the mentor.
     });
 
     it("blocks accepting a non-pending request", async () => {
@@ -524,6 +526,8 @@ describe("📚 Mentorship Service", () => {
         mentorship
       );
       expect(updatedMentorship.state).to.be.equal(MentorshipState.REJECTED);
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.be.equal(2); // one for the parent and one for the mentor.
     });
     it("rejects only pending requests", async () => {
       const [parent, mentor, student] = await createUsers();

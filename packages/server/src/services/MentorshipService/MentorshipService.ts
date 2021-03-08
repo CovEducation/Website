@@ -67,6 +67,9 @@ class MentorshipService {
         if (request.mentor._id === undefined) {
           return Promise.reject("Invalid mentor");
         }
+        if (request.parent._id === undefined) {
+          return Promise.reject("Invalid parent");
+        }
         const mentor = await UserService.findMentor(request.mentor._id);
         await CommunicationService.sendMessage(
           mentor,
@@ -108,18 +111,6 @@ class MentorshipService {
       return Promise.reject(
         `${request.student.name} has previous been rejected by ${request.mentor.name}`
       );
-    } else {
-      return CommunicationService.sendMessage(
-        request.mentor,
-        CommunicationTemplates.MENTORSHIP_REJECTED_MENTOR,
-        request
-      ).then(async () => {
-        await CommunicationService.sendMessage(
-          request.parent,
-          CommunicationTemplates.MENTORSHIP_REJECTED_PARENT,
-          request
-        );
-      });
     }
   }
 
@@ -221,7 +212,7 @@ class MentorshipService {
    * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
    * @param mentorship to be rejected.
    */
-  public rejectRequest(mentorship: IMentorship) {
+  public rejectRequest(mentorship: IMentorship, notify?: boolean) {
     if (mentorship._id === undefined) {
       throw new Error(`Cannot reject non-existent mentorship`);
     }
@@ -242,16 +233,19 @@ class MentorshipService {
           student,
           mentor,
         } = await this.getUsersFromPopulatedMentorship(mentorship);
-        await CommunicationService.sendMessage(
-          mentor,
-          CommunicationTemplates.MENTORSHIP_REJECTED_MENTOR,
-          { mentor, parent, student }
-        );
-        await CommunicationService.sendMessage(
-          parent,
-          CommunicationTemplates.MENTORSHIP_REJECTED_PARENT,
-          { mentor, parent, student }
-        );
+        if (notify) {
+          await CommunicationService.sendMessage(
+            mentor,
+            CommunicationTemplates.MENTORSHIP_REJECTED_MENTOR,
+            { mentor, parent, student }
+          );
+          await CommunicationService.sendMessage(
+            parent,
+            CommunicationTemplates.MENTORSHIP_REJECTED_PARENT,
+            { mentor, parent, student }
+          );
+        }
+
         return doc;
       });
     });
@@ -262,13 +256,13 @@ class MentorshipService {
     const otherMentorships = await MentorshipModel.find({
       student: mentorship.student,
     }).then((mentorships) =>
-      mentorships.filter((v) => v.id !== mentorship._id)
+      mentorships.filter((v) => v._id !== mentorship._id)
     );
 
     return Promise.all(
       otherMentorships.map((m) => {
-        if (m.state === MentorshipState.PENDING && m.id !== mentorship._id) {
-          return this.rejectRequest(m);
+        if (m.state === MentorshipState.PENDING && m._id !== mentorship._id) {
+          return this.rejectRequest(m, false); // TODO: Verify with Dheekshu.
         }
         return Promise.resolve(m);
       })
@@ -288,7 +282,6 @@ class MentorshipService {
       }
       doc.endDate = new Date();
       doc.state = MentorshipState.ARCHIVED;
-      // TODO(management) - End of mentorship survey?
       return doc.save();
     });
   }
