@@ -72,22 +72,6 @@ describe("💾 Server", async () => {
         expect(existingMentorships.body.length).to.be.equal(1);
       });
 
-      it("POST blocks double requests", async () => {
-        const [parent, mentor, student] = await createUsers();
-        const request = {
-          message: "Hello! I want one mentorship please.",
-          mentorID: mentor._id,
-          parentID: parent._id,
-          studentID: student._id,
-        };
-        const resp = await app.post("/mentorships/request").send(request);
-
-        expect(resp.status).to.be.equal(200);
-
-        const repeat = await app.post("/mentorships/request").send(request);
-        expect(repeat.status).to.be.equal(400);
-      });
-
       it("POST can send multiple requests", async () => {
         const [parent, mentor, student] = await createUsers();
         const otherMentor = await UserService.createMentor({
@@ -188,7 +172,8 @@ describe("💾 Server", async () => {
         expect(blocked.status).to.not.be.equal(200);
       });
 
-      it("POST cannot mentor student after they have already been accepted by someone else", async () => {
+      // TODO: Decide if this is the desired behavior.
+      it.skip("POST cannot mentor student after they have already been accepted by someone else", async () => {
         const otherMentor = await UserService.createMentor({
           ...testMentor,
           email: "test@email.com",
