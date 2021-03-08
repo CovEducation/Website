@@ -43,7 +43,6 @@ class MentorshipService {
    * @param request contains information about members of the mentorship
    */
   public async sendRequest(request: MentorshipRequest): Promise<Mentorship> {
-    console.log(request);
     return this.validateRequest(request).then(() => {
       // These checks are done in validateRequest, but TS complains if we don't validate the fields here.
       if (request.message.length === 0) {
@@ -65,7 +64,6 @@ class MentorshipService {
         parent: request.parent._id,
         sessions: [],
       }).then(async (mentorship) => {
-        console.log(mentorship);
         if (request.mentor._id === undefined) {
           return Promise.reject("Invalid mentor");
         }
@@ -90,7 +88,6 @@ class MentorshipService {
   }
 
   private async validateRequest(request: MentorshipRequest): Promise<void> {
-    console.log("validating...");
     if (request.mentor._id === undefined) {
       return Promise.reject(`Mentor: ${request.mentor.name} has no _id`);
     }
@@ -187,7 +184,6 @@ class MentorshipService {
         doc.state = MentorshipState.ACTIVE;
         return doc.save();
       })
-      .then(() => this.rejectOtherRequestsMadeForStudent(mentorship))
       .then(async () => {
         const {
           parent,
@@ -253,24 +249,6 @@ class MentorshipService {
     });
   }
 
-  private async rejectOtherRequestsMadeForStudent(mentorship: IMentorship) {
-    // mentorship.student is an ObjectId if mentorship has not been populated.
-    const otherMentorships = await MentorshipModel.find({
-      student: mentorship.student,
-    }).then((mentorships) =>
-      mentorships.filter((v) => v._id !== mentorship._id)
-    );
-
-    return Promise.all(
-      otherMentorships.map((m) => {
-        if (m.state === MentorshipState.PENDING && m._id !== mentorship._id) {
-          return this.rejectRequest(m, false); // TODO: Verify with Dheekshu.
-        }
-        return Promise.resolve(m);
-      })
-    ).then(() => {});
-  }
-
   public archiveMentorship(mentorship: IMentorship) {
     if (mentorship._id === undefined) {
       return Promise.reject("Cannot archive non-existent mentorship");
@@ -315,7 +293,6 @@ class MentorshipService {
   private async getUsersFromPopulatedMentorship(
     mentorship: IMentorship
   ): Promise<{ parent: IParent; mentor: IMentor; student: IStudent }> {
-    console.log(mentorship);
     let { mentor, parent, student } = mentorship;
 
     try {
@@ -338,7 +315,6 @@ class MentorshipService {
       };
       return resp;
     } catch {
-      console.log("here!");
       const mentorID = String((mentor as IMentor)._id || mentor);
       const parentID = String((parent as IParent)._id || parent);
       const studentID = String((student as IStudent)._id || student);
@@ -369,7 +345,6 @@ class MentorshipService {
         throw new Error("Unable to find student.");
       }
       let populatedStudent = students[0];
-
       return {
         mentor: populatedMentor,
         parent: populatedParent,
