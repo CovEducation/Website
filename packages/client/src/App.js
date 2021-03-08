@@ -15,6 +15,7 @@ import ForParents from './pages/HowItWorks/ForParents';
 import ContactUsPage from './pages/ContactUs';
 import SignInPage from './pages/SignIn';
 import RequestsPage from './pages/Requests';
+import PasswordReset from './pages/PasswordReset';
 
 import { AuthProvider } from './providers/AuthProvider';
 import SpeakerSeriesPage from './pages/SpeakerSeries';
@@ -63,7 +64,7 @@ function App() {
                 <SignInPage/>
               </Route>
               <Route path="/forgot-password">
-                <br/>
+                <PasswordReset />
               </Route>
             </Switch>
           </Router>
