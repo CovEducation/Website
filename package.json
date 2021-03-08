@@ -1,5 +1,5 @@
 {
-  "name": "@johanc/apollo",
+  "name": "@johanc/coved",
   "version": "1.0.0",
   "author": "Johan Cervantes <johanc@mit.edu>",
   "license": "MIT",
@@ -11,9 +11,9 @@
     ]
   },
   "scripts": {
-    "start": "node packages/server/build/index.js",
     "postinstall": "husky install",
-    "build": "run-p clean run-s tsc -b ./packages/tsconfig.base.json",
+    "build": "cd packages/client && yarn build && cd ../server && yarn build && cd ../..",
+    "start": "cd packages/server && yarn start",
     "bootstrap": "lerna bootstrap",
     "clean": "lerna run --parallel lint",
     "lint": "yarn run workspaces lint",
