@@ -40,11 +40,12 @@ const TeamDataText = styled.p`
     font-size: 14px;
     margin-bottom: 5px;
     margin-top: 0px;
+    white-space: pre-line;
 `
 function a11yProps(index) {
     return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`
+        id: `scrollable-auto-tabpanel-${index}`,
+        'aria-controls': `scrollable-auto-tabpanel-${index}`
     };
 }
 
@@ -55,8 +56,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            id={`scrollable-auto-tabpanel-${index}`}
+            aria-labelledby={`scrollable-auto-tabpanel-${index}`}
             {...other}
         >
             {value === index && (
@@ -138,7 +139,7 @@ export default function HTabs(props) {
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default" className={classes.root}>
-                <AntTabs variant="standard" value={value} onChange={handleChange} aria-label="ant example" centered>
+                <AntTabs variant="scrollable" value={value} onChange={handleChange} aria-label="ant example" scrollButtons="auto" centered>
                     {props.labels.map((label, index) => (
                         <AntTab key={label} label={label} {...a11yProps(index)} />
                     ))}
@@ -152,9 +153,9 @@ export default function HTabs(props) {
 
                        { data && data.map((subData, id) => (
                         <TeamDataContainer key={id}>
-                            <img src={`${process.env.PUBLIC_URL}/stock-profile.png`}  alt='profile pic'/>
+                            <img src={`${process.env.PUBLIC_URL+"/"+subData.photo}`}  alt='profile pic'/>
                             <h2>{subData.name}</h2>
-                            <TeamDataText>{subData.designation}, {subData.position}</TeamDataText>
+                            <TeamDataText>{subData.designation} <br /> {subData.position}</TeamDataText>
                          </TeamDataContainer>
                             ))
                        } 

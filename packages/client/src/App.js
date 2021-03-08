@@ -10,12 +10,11 @@ import ProfilePage from './pages/Profile';
 import SignUpPage from './components/SignUp2';
 import MeetOurTeam from './pages/MeetOurTeam';
 import NavBar from './components/NavBar';
-import ForMentors from './pages/HowItWorks/ForMentors';
-import ForParents from './pages/HowItWorks/ForParents';
 import ContactUsPage from './pages/ContactUs';
 import SignInPage from './pages/SignIn';
 import RequestsPage from './pages/Requests';
 import PasswordReset from './pages/PasswordReset';
+import ResourcesPage from './pages/Resources';
 
 import { AuthProvider } from './providers/AuthProvider';
 import SpeakerSeriesPage from './pages/SpeakerSeries';
@@ -33,12 +32,6 @@ function App() {
               <Route path="/profile">
                 <ProfilePage />
               </Route>
-              <Route path="/parents">
-                <ForParents />
-              </Route>
-              <Route path="/mentors">
-                <ForMentors />
-              </Route>
               <Route path="/speaker-series">
                 <SpeakerSeriesPage/>
               </Route>
@@ -47,6 +40,9 @@ function App() {
               </Route>
               <Route path="/contactus">
                 <ContactUsPage />
+              </Route>
+              <Route path="/resources">
+                <ResourcesPage />
               </Route>
               <Route path="/faqs">
                 <FAQsPage />
