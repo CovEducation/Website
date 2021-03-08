@@ -11,9 +11,9 @@
     ]
   },
   "scripts": {
+    "start": "node packages/server/build/index.js",
     "postinstall": "husky install",
-    "build": "cd packages/client && yarn build && cd ../server && yarn build && cd ../..",
-    "start": "cd packages/server && yarn start",
+    "build": "run-p clean run-s tsc -b ./packages/tsconfig.base.json",
     "bootstrap": "lerna bootstrap",
     "clean": "lerna run --parallel lint",
     "lint": "yarn run workspaces lint",

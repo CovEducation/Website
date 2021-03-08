@@ -11,7 +11,7 @@
   "repository": "https://github.com/johancc/Apollo",
   "scripts": {
     "start": "node build/index.js",
-    "build": "run-s clean build:tsc && node postInstall.js",
+    "build": "run-s clean build:tsc",
     "postinstall": "node postInstall.js",
     "build:tsc": "tsc -b",
     "lint": "prettier --write 'src/**/*.ts'",
