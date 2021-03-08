@@ -30,6 +30,7 @@ import {
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Alert from "@material-ui/lab/Alert";
 
 const SPACING = 1;
 
@@ -106,9 +107,9 @@ const ProfileRow = ({
 const EditButton = ({ onClick }) => {
   return (
     <h2>
-      <Button variant="outlined" onClick={onClick}>
-        edit
-      </Button>
+        <Button variant="outlined" onClick={onClick} disabled>
+          Edit
+        </Button>
     </h2>
   );
 };
@@ -171,6 +172,7 @@ export const UserDetails = ({ values, updateFields }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={SPACING}>
+        <Grid item sm={12}><Alert variant="outlined" severity="info">Editing Profile Temporarily Disabled.</Alert></Grid>
         <Grid item sm={6}>
           <h2>User Details</h2>
         </Grid>

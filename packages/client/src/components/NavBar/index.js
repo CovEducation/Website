@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import PropTypes from "prop-types";
@@ -61,6 +61,8 @@ export default function NavBar(props) {
   const [menuDropdownAnchor, setMenuDropdownAnchor] = useState(null);
   const { authState, signout } = useAuth();
 
+  const history = useHistory();
+
   const handleMenuDropdownClick = (event) => {
     setMenuDropdownAnchor(event.currentTarget);
     event.stopPropagation();
@@ -71,17 +73,11 @@ export default function NavBar(props) {
 
   const loggedOutUserLinks = (
     <>
-      <Modal
-        title="Login"
-        trigger={
-          <Button theme="primary" size="sm">
+
+          <Button theme="primary" size="sm" onClick={() => history.push("/signin")}>
             {" "}
             Login{" "}
           </Button>
-        }
-      >
-        <Signin />
-      </Modal>
       <Modal
         title="Sign Up"
         trigger={

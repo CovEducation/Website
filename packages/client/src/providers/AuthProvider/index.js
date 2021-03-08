@@ -55,8 +55,10 @@ const useAuthProvider = () => {
    */
   const signin = (email, password) => {
     setAuthState(AUTH_STATES.LOGGED_IN);
-    return Auth.signInWithEmailAndPassword(email, password).catch(() => {
+    return Auth.signInWithEmailAndPassword(email, password)
+    .catch((err) => {
       setAuthState(AUTH_STATES.LOGGED_OUT);
+      throw err; // propogate error
     });
   };
 

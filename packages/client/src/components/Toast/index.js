@@ -14,7 +14,7 @@ export default function Toast(props) {
         horizontal: "center",
       }}
       open={props.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={props.onClose}
     >
       <Alert severity={props.status || "success"}>
