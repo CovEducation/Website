@@ -12,6 +12,7 @@ import CommunicationService, {
   CommunicationTemplates,
 } from "../CommunicationService";
 import UserService from "../UserService";
+import { ensureIDsAreEqual } from "../../routes/utils";
 
 export interface MentorshipRequest {
   parent: IParent;
@@ -63,14 +64,21 @@ class MentorshipService {
         parent: request.parent._id,
         sessions: [],
       }).then(async (mentorship) => {
-        // TODO: Send welcome message.
         if (request.mentor._id === undefined) {
           return Promise.reject("Invalid mentor");
+        }
+        if (request.parent._id === undefined) {
+          return Promise.reject("Invalid parent");
         }
         const mentor = await UserService.findMentor(request.mentor._id);
         await CommunicationService.sendMessage(
           mentor,
           CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR,
+          request
+        );
+        await CommunicationService.sendMessage(
+          request.parent,
+          CommunicationTemplates.MENTORSHIP_REQUEST_PARENT,
           request
         );
         return mentorship;
@@ -103,8 +111,6 @@ class MentorshipService {
       return Promise.reject(
         `${request.student.name} has previous been rejected by ${request.mentor.name}`
       );
-    } else {
-      return Promise.resolve();
     }
   }
 
@@ -180,14 +186,34 @@ class MentorshipService {
         doc.state = MentorshipState.ACTIVE;
         return doc.save();
       })
-      .then(() => this.rejectOtherRequestsMadeForStudent(mentorship));
+      .then(() => this.rejectOtherRequestsMadeForStudent(mentorship))
+      .then(async () => {
+        const {
+          parent,
+          student,
+          mentor,
+        } = await this.getUsersFromPopulatedMentorship(mentorship);
+
+        await CommunicationService.sendMessage(
+          mentor,
+          CommunicationTemplates.MENTORSHIP_ACCEPTED_MENTOR,
+          { mentor, parent, student }
+        );
+
+        await CommunicationService.sendMessage(
+          parent,
+          CommunicationTemplates.MENTORSHIP_ACCEPTED_PARENT,
+          { mentor, parent, student }
+        );
+      });
   }
 
   /**
    * Assumes that the mentorship is being rejected by request of the mentor. A mentorship can only be rejected once, double-rejection will throw an error. A mentorship cannot be accepted afterwards - a new mentorship request should be sent if the mentorship should be reactivated.
    * @param mentorship to be rejected.
+   * @param notify whether to send an email / sms
    */
-  public rejectRequest(mentorship: IMentorship) {
+  public rejectRequest(mentorship: IMentorship, notify: boolean = true) {
     if (mentorship._id === undefined) {
       throw new Error(`Cannot reject non-existent mentorship`);
     }
@@ -202,8 +228,27 @@ class MentorshipService {
       }
       doc.state = MentorshipState.REJECTED;
 
-      // TODO(external) - Ask Dheekshu if it makes sense to not send a message?
-      return doc.save();
+      return doc.save().then(async (doc) => {
+        const {
+          parent,
+          student,
+          mentor,
+        } = await this.getUsersFromPopulatedMentorship(mentorship);
+        if (notify) {
+          await CommunicationService.sendMessage(
+            mentor,
+            CommunicationTemplates.MENTORSHIP_REJECTED_MENTOR,
+            { mentor, parent, student }
+          );
+          await CommunicationService.sendMessage(
+            parent,
+            CommunicationTemplates.MENTORSHIP_REJECTED_PARENT,
+            { mentor, parent, student }
+          );
+        }
+
+        return doc;
+      });
     });
   }
 
@@ -212,13 +257,13 @@ class MentorshipService {
     const otherMentorships = await MentorshipModel.find({
       student: mentorship.student,
     }).then((mentorships) =>
-      mentorships.filter((v) => v.id !== mentorship._id)
+      mentorships.filter((v) => v._id !== mentorship._id)
     );
 
     return Promise.all(
       otherMentorships.map((m) => {
-        if (m.state === MentorshipState.PENDING && m.id !== mentorship._id) {
-          return this.rejectRequest(m);
+        if (m.state === MentorshipState.PENDING && m._id !== mentorship._id) {
+          return this.rejectRequest(m, false); // TODO: Verify with Dheekshu.
         }
         return Promise.resolve(m);
       })
@@ -238,7 +283,6 @@ class MentorshipService {
       }
       doc.endDate = new Date();
       doc.state = MentorshipState.ARCHIVED;
-      // TODO(management) - End of mentorship survey?
       return doc.save();
     });
   }
@@ -265,6 +309,71 @@ class MentorshipService {
       doc.sessions.push(session);
       return doc.save();
     });
+  }
+
+  private async getUsersFromPopulatedMentorship(
+    mentorship: IMentorship
+  ): Promise<{ parent: IParent; mentor: IMentor; student: IStudent }> {
+    let { mentor, parent, student } = mentorship;
+
+    try {
+      let touch = (mentor as IMentor).name;
+      if (touch === undefined) {
+        throw new Error("Unable to retrieve object id");
+      }
+      touch = (parent as IParent).name;
+      if (touch === undefined) {
+        throw new Error("Unable to retrieve object id");
+      }
+      touch = (student as IStudent).name;
+      if (touch === undefined) {
+        throw new Error("Unable to retrieve object id");
+      }
+      const resp = {
+        mentor: mentor as IMentor,
+        parent: parent as IParent,
+        student: student as IStudent,
+      };
+      return resp;
+    } catch {
+      const mentorID = String((mentor as IMentor)._id || mentor);
+      const parentID = String((parent as IParent)._id || parent);
+      const studentID = String((student as IStudent)._id || student);
+
+      let populatedMentor = await UserService.findMentor(
+        mongoose.Types.ObjectId(mentorID)
+      ).then((m) => {
+        if (m._id === undefined) {
+          m._id = mongoose.Types.ObjectId(mentorID);
+        }
+        return m;
+      });
+
+      let populatedParent = await UserService.findParent(
+        mongoose.Types.ObjectId(parentID)
+      ).then((p) => {
+        if (p._id === undefined) {
+          p._id = mongoose.Types.ObjectId(parentID);
+        }
+        return p;
+      });
+
+      let students = populatedParent.students.filter(
+        (stud) =>
+          (stud._id !== undefined && ensureIDsAreEqual(stud._id, studentID)) ||
+          stud._id?.toHexString() === studentID
+      );
+      if (students.length === 0) {
+        throw new Error("Unable to find student.");
+      }
+      let populatedStudent = students[0];
+
+      return {
+        mentor: populatedMentor,
+        parent: populatedParent,
+        student: populatedStudent,
+      };
+    }
   }
 }
 

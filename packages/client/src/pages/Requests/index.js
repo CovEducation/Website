@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
 import Button from "../../components/Button";
+import Jdenticon from "react-jdenticon";
 import useAuth from "../../providers/AuthProvider";
 import Toast from "../../components/Toast/index.js";
 import {
@@ -65,8 +66,6 @@ const RequestsWrapperPending = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 50px;
-  width: 50%;
-  float: left;
   justify-content: center;
 `;
 const RequestDetailsBlock = styled.div`
@@ -80,10 +79,6 @@ const RequestDetailsBlock = styled.div`
     color: ${COLORS.blue};
     border-bottom: 2px solid;
   }
-`;
-
-const UserPicture = styled.img`
-  margin-right: 50px;
 `;
 
 const BlueColor = styled.span`
@@ -106,14 +101,8 @@ const RequestsPage = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [status] = useState("");
   const [message, setMessage] = useState("");
-  const [pendingReqs, setPendingReqs] = useState([]);
   const [mentorships, setMentorships] = useState([]);
 
-  useEffect(() => {
-    getRequests("PENDING").then((requests) => {
-      setPendingReqs(requests);
-    });
-  }, []);
   useEffect(() => {
     getRequests().then((requests) => {
       setMentorships(requests);
@@ -130,7 +119,7 @@ const RequestsPage = () => {
   };
 
   const hasRequests = () => {
-    return pendingReqs.length + mentorships.length > 0;
+    return mentorships.length > 0;
   };
 
   const getRatingsFixed = (d) => {
@@ -141,17 +130,18 @@ const RequestsPage = () => {
     return a.toFixed(1);
   };
 
-  const pendingRequestsList = pendingReqs
+  const pendingRequestsList = mentorships
     .filter((item) => {
       return (
         item.student != null &&
         item.student !== undefined &&
-        item.student.name !== undefined
+        item.student.name !== undefined &&
+        item.state === "PENDING"
       );
     })
     .map((item) => (
       <RequestsWrapperPending>
-        <UserPicture src="http://via.placeholder.com/115" alt="profile pic" />
+        <Jdenticon size="150" value={item.student.name} />
         <div>
           {user.role === "MENTOR" ? (
             <p>
@@ -233,10 +223,7 @@ const RequestsPage = () => {
       <RequestsWrapper>
         {item.state === "ACTIVE" && (
           <FlexClass1>
-            <UserPicture
-              src="http://via.placeholder.com/115"
-              alt="profile pic"
-            />
+            <Jdenticon size="150" value={item.student.name} />
             <Button
               theme="danger"
               size="sm"
@@ -249,7 +236,7 @@ const RequestsPage = () => {
                   }, 3000);
 
                   // Update the state:
-                  getRequests("ACTIVE").then((requests) => {
+                  getRequests().then((requests) => {
                     setMentorships(requests);
                   });
                 })
@@ -262,19 +249,13 @@ const RequestsPage = () => {
         )}
         {user.role === "MENTOR" && item.state === "ACTIVE" && (
           <FlexClass>
-            <UserPicture
-              src="http://via.placeholder.com/115"
-              alt="profile pic"
-            />
+            <Jdenticon size="150" value={item.student.name} />
           </FlexClass>
         )}
         {(user.role === "PARENT" || user.role === "MENTOR") &&
           item.state !== "ACTIVE" && (
             <FlexClass>
-              <UserPicture
-                src="http://via.placeholder.com/115"
-                alt="profile pic"
-              />
+              <Jdenticon size="150" value={item.student.name} />
             </FlexClass>
           )}
         <div>
@@ -382,6 +363,10 @@ const RequestsPage = () => {
                 size="sm"
                 onClick={() => {
                   addSession({ _id: item._id }, session);
+                  // Update the state:
+                  getRequests().then((requests) => {
+                    setMentorships(requests);
+                  });
                 }}
               >
                 Submit Session
