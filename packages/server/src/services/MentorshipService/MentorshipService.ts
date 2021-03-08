@@ -90,6 +90,7 @@ class MentorshipService {
   }
 
   private async validateRequest(request: MentorshipRequest): Promise<void> {
+    console.log("validating...");
     if (request.mentor._id === undefined) {
       return Promise.reject(`Mentor: ${request.mentor.name} has no _id`);
     }
@@ -102,18 +103,15 @@ class MentorshipService {
     if (request.message.length === 0) {
       return Promise.reject(`Please specify a message`);
     }
+
     if (await this.isStudentBeingMentored(request.student)) {
-      return Promise.reject(
-        `${request.student.name} is already being mentored.`
-      );
+      return Promise.resolve();
     } else if (await this.isDuplicate(request)) {
-      return Promise.reject("Duplicated request.");
+      return Promise.resolve();
     } else if (
       await this.hasStudentBeenRejectedByMentor(request.student, request.mentor)
     ) {
-      return Promise.reject(
-        `${request.student.name} has previous been rejected by ${request.mentor.name}`
-      );
+      return Promise.resolve();
     }
   }
 
@@ -317,6 +315,7 @@ class MentorshipService {
   private async getUsersFromPopulatedMentorship(
     mentorship: IMentorship
   ): Promise<{ parent: IParent; mentor: IMentor; student: IStudent }> {
+    console.log(mentorship);
     let { mentor, parent, student } = mentorship;
 
     try {
@@ -339,10 +338,10 @@ class MentorshipService {
       };
       return resp;
     } catch {
+      console.log("here!");
       const mentorID = String((mentor as IMentor)._id || mentor);
       const parentID = String((parent as IParent)._id || parent);
       const studentID = String((student as IStudent)._id || student);
-
       let populatedMentor = await UserService.findMentor(
         mongoose.Types.ObjectId(mentorID)
       ).then((m) => {
