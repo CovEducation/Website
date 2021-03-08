@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import AlertTitle from "@material-ui/lab/AlertTitle";
+import Alert from "@material-ui/lab/Alert";
 import { COLORS } from "../../constants";
 import Button from "../../components/Button";
 import Jdenticon from "react-jdenticon";
@@ -386,15 +388,36 @@ const RequestsPage = () => {
         </div>
       </RequestsHeader>
 
-      {hasRequests && pendingRequestsList}
+      {hasRequests &&
+      mentorships.filter((v) => v.state === "PENDING").length > 0 ? (
+        pendingRequestsList
+      ) : (
+        <>
+          <Alert severity="info" style={{ marginBottom: "4em" }}>
+            <AlertTitle>No pending requests</AlertTitle>
+            We will notify you when you receive a mentorship request. Thanks for
+            volunteeering!
+          </Alert>
+        </>
+      )}
 
       <RequestsHeader>
         <div>
           <h1>Mentorships</h1>
         </div>
       </RequestsHeader>
-
-      {hasRequests && mentorshipList}
+      {hasRequests &&
+      mentorships.filter((v) => v.state !== "PENDING").length > 0 ? (
+        mentorshipList
+      ) : (
+        <>
+          <Alert severity="info">
+            <AlertTitle>No active or previous mentorships</AlertTitle>
+            Once you accept a mentorship request, you will be able to see your
+            current and past mentorships here.
+          </Alert>
+        </>
+      )}
     </RequestsPageWrapper>
   );
 };
