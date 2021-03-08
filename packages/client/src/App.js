@@ -13,6 +13,7 @@ import NavBar from './components/NavBar';
 import ContactUsPage from './pages/ContactUs';
 import SignInPage from './pages/SignIn';
 import RequestsPage from './pages/Requests';
+import PasswordReset from './pages/PasswordReset';
 import ResourcesPage from './pages/Resources';
 
 import { AuthProvider } from './providers/AuthProvider';
@@ -59,7 +60,7 @@ function App() {
                 <SignInPage/>
               </Route>
               <Route path="/forgot-password">
-                <br/>
+                <PasswordReset />
               </Route>
             </Switch>
           </Router>
