@@ -80,7 +80,7 @@ describe("📚 Mentorship Service", () => {
       await MentorshipService.sendRequest(request);
 
       const sentMail = nodemailerMock.mock.getSentMail();
-      expect(sentMail.length).to.be.equal(1);
+      expect(sentMail.length).to.not.be.equal(1);
     });
 
     it("rejects empty messages", async () => {
