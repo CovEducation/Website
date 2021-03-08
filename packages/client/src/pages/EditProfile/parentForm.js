@@ -26,7 +26,6 @@ const SelectMenuProps = {
 
 
 const ParentEditForm = (props) => {
-    console.log("ParentEditForm props", props);
     const timeZoneMenuItems = timeZones.map(item => {
         return <MenuItem key={item.value} value={item.timezone}>{item.timezone}</MenuItem>;
     });
