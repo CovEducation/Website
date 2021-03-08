@@ -144,33 +144,6 @@ export default function NavBar(props) {
             <LinkStyled to="/" ver="lg">
               CovEd
             </LinkStyled>
-            <LinkStyled to="#" ver="default" onClick={handleMenuDropdownClick}>
-              How It Works
-            </LinkStyled>
-            <Menu
-              id="howitworks"
-              anchorEl={menuDropdownAnchor}
-              getContentAnchorEl={null}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-              open={Boolean(menuDropdownAnchor)}
-              onClose={handleMenuDropdownClose}
-              MenuListProps={{ onMouseLeave: handleMenuDropdownClose }}
-            >
-              <MenuItem component={LinkStyled} to="/parents">
-                For Parents
-              </MenuItem>
-              <MenuItem component={LinkStyled} to="/mentors">
-                For Mentors
-              </MenuItem>
-            </Menu>
             {props.links.map((link) => (
               <LinkStyled key={link.link} to={link.link} ver="default">
                 {link.title}

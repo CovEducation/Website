@@ -67,5 +67,11 @@
       "Name": "Name",
       "Email": "Email",
       "Message": "Message"
+    },
+
+    "Terms" : {
+      "Title": "Terms and Conditions",
+      "Subtitle" : "Last Updated: March 6, 2021",
+      "terms" : ""
     }
 }
