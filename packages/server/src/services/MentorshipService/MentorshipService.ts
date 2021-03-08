@@ -43,6 +43,7 @@ class MentorshipService {
    * @param request contains information about members of the mentorship
    */
   public async sendRequest(request: MentorshipRequest): Promise<Mentorship> {
+    console.log(request);
     return this.validateRequest(request).then(() => {
       // These checks are done in validateRequest, but TS complains if we don't validate the fields here.
       if (request.message.length === 0) {
@@ -64,6 +65,7 @@ class MentorshipService {
         parent: request.parent._id,
         sessions: [],
       }).then(async (mentorship) => {
+        console.log(mentorship);
         if (request.mentor._id === undefined) {
           return Promise.reject("Invalid mentor");
         }
@@ -76,8 +78,9 @@ class MentorshipService {
           CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR,
           request
         );
+        const parent = await UserService.findParent(request.parent._id);
         await CommunicationService.sendMessage(
-          request.parent,
+          parent,
           CommunicationTemplates.MENTORSHIP_REQUEST_PARENT,
           request
         );
