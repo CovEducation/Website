@@ -51,7 +51,7 @@
     "firebase-mock": "^2.3.2",
     "mocha": "^8.2.1",
     "mockery": "^2.1.0",
-    "nodemailer-mock": "^1.5.3",
+    "nodemailer-mock": "^1.5.4",
     "nodemon": "^2.0.7",
     "supertest": "^6.1.1",
     "supertest-session": "^4.1.0",
