@@ -6,17 +6,21 @@ import {
   getParentValidation,
   postParentValidation,
   deleteParentValidation,
+  putParentValidation,
+  putMentorValidation,
 } from "./validation";
 import {
   getMentorHandler,
   postMentorHandler,
+  putMentorHandler,
   deleteMentorHandler,
   getParentHandler,
   postParentHandler,
   deleteParentHandler,
+  putParentHandler,
 } from "./handlers";
 import validate from "../../middleware/validation";
-import { ensureLoggedIn } from "../../middleware/auth";
+import { ensureLoggedIn, verifyFirebaseToken } from "../../middleware/auth";
 
 class UserRouter {
   private _router = Router();
@@ -41,6 +45,14 @@ class UserRouter {
       validate,
       getMentorHandler
     );
+
+    this.router.put(
+      "/mentor",
+      ensureLoggedIn,
+      putMentorValidation,
+      validate,
+      putMentorHandler
+    );
     this.router.delete(
       "/mentor",
       ensureLoggedIn,
@@ -62,17 +74,26 @@ class UserRouter {
       validate,
       deleteParentHandler
     );
+    this.router.put(
+      "/parent",
+      ensureLoggedIn,
+      putParentValidation,
+      validate,
+      putParentHandler
+    );
   }
 
   private configurePublicRoutes() {
     this.router.post(
       "/mentor",
+      verifyFirebaseToken,
       postMentorValidation,
       validate,
       postMentorHandler
     );
     this.router.post(
       "/parent",
+      verifyFirebaseToken,
       postParentValidation,
       validate,
       postParentHandler

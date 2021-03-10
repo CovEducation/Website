@@ -25,6 +25,7 @@ export enum MentorshipState {
 export interface IMentorship {
   _id?: mongoose.Types.ObjectId;
   state: MentorshipState;
+  message?: string; // Populated by the request.
   // Undefined iff Mentorship.state is PENDING or REJECTED.
   startDate?: Date;
   endDate?: Date;
@@ -46,15 +47,18 @@ export class Mentorship implements IMentorship {
   public state: MentorshipState;
 
   @prop({ required: false })
+  public message?: string;
+
+  @prop({ required: false })
   public startDate?: Date;
 
   @prop({ required: false })
   public endDate?: Date;
 
-  @prop({ ref: "Mentor", required: true })
+  @prop({ ref: "Mentor", autopulate: true, required: true })
   public mentor: Ref<Mentor>;
 
-  @prop({ ref: "Parent", required: true })
+  @prop({ ref: "Parent", autopulate: true, required: true })
   public parent: Ref<Parent>;
 
   @prop({ ref: "Student", required: true })

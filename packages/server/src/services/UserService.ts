@@ -44,6 +44,26 @@ class UserService {
     });
   }
 
+  updateMentor(
+    _id: mongoose.Types.ObjectId,
+    updatedMentor: IMentor
+  ): Promise<boolean> {
+    return MentorModel.findOne({ _id }).then((doc) => {
+      if (doc === null) {
+        return Promise.reject(`Unknown _id ${_id}`);
+      }
+      const update = {
+        ...updatedMentor,
+        // These fields should never be changed.
+        _id: doc._id,
+        firebaseUID: doc.firebaseUID,
+      };
+      return MentorModel.updateOne({ _id }, update).then((doc) => {
+        return doc !== null;
+      });
+    });
+  }
+
   createParent(parent: IParent): Promise<IParent> {
     return this.userExists(parent)
       .then((exists) => {
@@ -67,6 +87,26 @@ class UserService {
   findParent(_id: mongoose.Types.ObjectId): Promise<IParent> {
     return ParentModel.findOne({ _id }).then((resp) => {
       return resp as IParent;
+    });
+  }
+
+  updateParent(
+    _id: mongoose.Types.ObjectId,
+    updatedParent: IParent
+  ): Promise<boolean> {
+    return ParentModel.findOne({ _id }).then((doc) => {
+      if (doc === null) {
+        return Promise.reject(`Unknown _id ${_id}`);
+      }
+      const update = {
+        ...updatedParent,
+        // These fields should never be changed.
+        _id: doc._id,
+        firebaseUID: doc.firebaseUID,
+      };
+      return ParentModel.updateOne({ _id }, update).then((doc) => {
+        return doc !== null;
+      });
     });
   }
 

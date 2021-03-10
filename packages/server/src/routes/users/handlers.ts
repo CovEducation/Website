@@ -15,32 +15,52 @@ import {
   GetParentResponse,
   DeleteParentRequest,
   DeleteParentResponse,
+  PutMentorRequest,
+  PutMentorResponse,
+  PutParentResponse,
+  PutParentRequest,
 } from "./interfaces";
 
 export const postMentorHandler = (
   req: PostMentorRequest,
   res: PostMentorResponse
 ) => {
-  if (req.session.userId !== undefined) {
-    res.status(400);
-  } else {
-    const mentor: IMentor = req.body.mentor;
-    UserService.createMentor(mentor)
-      .then((newMentor) => {
-        req.session.userId = newMentor._id;
-        res.send(newMentor);
-      })
-      .catch(() => {
-        res.status(500).end();
-      });
+  const mentor: IMentor = req.body.mentor;
+  mentor.firebaseUID = req.body.decodedToken.uid;
+  UserService.createMentor(mentor)
+    .then((newMentor) => {
+      req.session.userId = newMentor._id;
+      res.send(newMentor);
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
+};
+
+export const putMentorHandler = (
+  req: PutMentorRequest,
+  res: PutMentorResponse
+) => {
+  const mentor: IMentor = req.body.mentor;
+  const userID = req.session.userId;
+  if (userID === undefined) {
+    res.status(403).send({ err: "User must be logged in." });
+    return;
   }
+  UserService.updateMentor(userID, mentor).then((ok) => {
+    if (!ok) {
+      res.status(500).send({ err: "Unable to update mentor." });
+    } else {
+      res.status(200).send({});
+    }
+  });
 };
 
 export const getMentorHandler = (
   req: GetMentorRequest,
   res: GetMentorResponse
 ) => {
-  UserService.findMentor(new mongoose.Types.ObjectId(req.query._id))
+  UserService.findMentor(mongoose.Types.ObjectId(req.query._id))
     .then((mentor) => {
       if (mentor === null) {
         res.status(404).end();
@@ -57,46 +77,58 @@ export const deleteMentorHandler = (
   req: DeleteMentorRequest,
   res: DeleteMentorResponse
 ) => {
-  if (req.body._id !== String(req.session.userId)) {
-    res.status(403).send();
-  } else {
-    UserService.deleteMentor(new mongoose.Types.ObjectId(req.body._id)).then(
-      (ok) => {
-        req.session.userId = undefined;
-        if (ok) {
-          res.status(200).end();
-        } else {
-          res.status(400).end();
-        }
-      }
-    );
-  }
+  UserService.deleteMentor(
+    mongoose.Types.ObjectId(String(req.session.userId))
+  ).then((ok) => {
+    req.session.userId = undefined;
+    if (ok) {
+      res.status(200).end();
+    } else {
+      res.status(400).end();
+    }
+  });
 };
 
 export const postParentHandler = (
   req: PostParentRequest,
   res: PostParentResponse
 ) => {
-  if (req.session.userId !== undefined) {
-    res.status(400).send();
-  } else {
-    const parent: IParent = req.body.parent;
-    UserService.createParent(parent)
-      .then((newParent) => {
-        req.session.userId = newParent._id;
-        res.send(newParent);
-      })
-      .catch(() => {
-        res.status(500).end();
-      });
+  const parent: IParent = req.body.parent;
+  parent.firebaseUID = req.body.decodedToken.uid;
+  UserService.createParent(parent)
+    .then((newParent) => {
+      req.session.userId = newParent._id;
+      res.send(newParent);
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
+};
+
+export const putParentHandler = (
+  req: PutParentRequest,
+  res: PutParentResponse
+) => {
+  const parent: IParent = req.body.parent;
+  const userID = req.session.userId;
+  if (userID === undefined) {
+    res.status(403).send({ err: "User must be logged in." });
+    return;
   }
+  UserService.updateParent(userID, parent).then((ok) => {
+    if (!ok) {
+      res.status(500).send({ err: "Unable to update parent." });
+    } else {
+      res.status(200).send({});
+    }
+  });
 };
 
 export const getParentHandler = (
   req: GetParentRequest,
   res: GetParentResponse
 ) => {
-  UserService.findParent(new mongoose.Types.ObjectId(req.query._id))
+  UserService.findParent(mongoose.Types.ObjectId(req.query._id))
     .then((parent) => {
       if (parent === null) {
         res.status(404).end();
@@ -113,18 +145,14 @@ export const deleteParentHandler = (
   req: DeleteParentRequest,
   res: DeleteParentResponse
 ) => {
-  if (req.body._id !== String(req.session.userId)) {
-    res.status(403).send();
-  } else {
-    UserService.deleteParent(new mongoose.Types.ObjectId(req.body._id)).then(
-      (ok) => {
-        if (ok) {
-          req.session.userId = undefined;
-          res.status(200).end();
-        } else {
-          res.status(404).end();
-        }
-      }
-    );
-  }
+  UserService.deleteParent(
+    mongoose.Types.ObjectId(String(req.session.userId))
+  ).then((ok) => {
+    if (ok) {
+      req.session.userId = undefined;
+      res.status(200).end();
+    } else {
+      res.status(404).end();
+    }
+  });
 };

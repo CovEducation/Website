@@ -64,7 +64,7 @@ class CommunicationService {
     info: MessageData
   ): Promise<void> {
     const recipient = this.getRecipientAddress(user);
-    if (recipient.length === 0) {
+    if (recipient === undefined || recipient.length === 0) {
       return Promise.reject("Invalid email");
     }
     return CommunicationService.verifyMessage(

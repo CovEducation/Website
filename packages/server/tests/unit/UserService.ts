@@ -2,6 +2,7 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiSubset from "chai-subset";
 import { mongoose } from "@typegoose/typegoose";
+import { v4 as uuid } from "uuid";
 import { connect, clearDatabase, closeDatabase, setupMocks } from "../utils";
 (async () => {
   await setupMocks();
@@ -50,7 +51,72 @@ describe("🙋‍ User Service", () => {
 
     it("syncs with algolia", async () => {});
   });
+  describe("::updateMentor()", () => {
+    it("can update existing mentor", async () => {
+      const mentor: IMentor = await UserService.createMentor(testMentor);
+      expect(mentor._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(mentor[key]).to.be.deep.equal(testMentor[key]);
+      });
+      if (mentor._id === undefined) {
+        expect(mentor._id).to.not.be.undefined;
+        return;
+      }
+      const updatedMentor: IMentor = {
+        ...testMentor,
+        college: "Stanford",
+        name: "Alyssa P Hacker",
+      };
+      const ok = await UserService.updateMentor(mentor._id, updatedMentor);
+      expect(ok).to.be.true;
+    });
 
+    it("reflects the changes automatically", async () => {
+      const mentor: IMentor = await UserService.createMentor(testMentor);
+      expect(mentor._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(mentor[key]).to.be.deep.equal(testMentor[key]);
+      });
+      if (mentor._id === undefined) {
+        expect(mentor._id).to.not.be.undefined;
+        return;
+      }
+      const updatedMentor: IMentor = {
+        ...testMentor,
+        college: "Stanford",
+        name: "Alyssa P Hacker",
+      };
+      const ok = await UserService.updateMentor(mentor._id, updatedMentor);
+      expect(ok).to.be.true;
+      const doc = await UserService.findMentor(mentor._id);
+      expect(doc.name).to.be.equal(updatedMentor.name);
+      expect(doc._id?.equals(mentor._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(mentor.firebaseUID);
+      expect(doc.college).to.be.equal(updatedMentor.college);
+    });
+
+    it("blocks breaking updates", async () => {
+      const mentor: IMentor = await UserService.createMentor(testMentor);
+      expect(mentor._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(mentor[key]).to.be.deep.equal(testMentor[key]);
+      });
+      if (mentor._id === undefined) {
+        expect(mentor._id).to.not.be.undefined;
+        return;
+      }
+      const updatedMentor: IMentor = {
+        ...testMentor,
+        firebaseUID: uuid(),
+        _id: mongoose.Types.ObjectId(),
+      };
+      const ok = await UserService.updateMentor(mentor._id, updatedMentor);
+      expect(ok).to.be.true;
+      const doc = await UserService.findMentor(mentor._id);
+      expect(doc._id?.equals(mentor._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(mentor.firebaseUID);
+    });
+  });
   describe("::deleteMentor()", () => {
     it("deletes a mentor", async () => {
       const mentor: IMentor = await UserService.createMentor(testMentor);
@@ -132,6 +198,71 @@ describe("🙋‍ User Service", () => {
     it("handles non-existent parents", async () => {
       const ok = await UserService.deleteParent(mongoose.Types.ObjectId());
       expect(ok).to.be.false;
+    });
+  });
+
+  describe("::updateParent()", () => {
+    it("can update existing parent", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const updatedParent: IParent = {
+        ...testParent,
+        name: "Alyssa P Hacker",
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+    });
+
+    it("reflects the changes automatically", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const updatedParent: IParent = {
+        ...testParent,
+        name: "Alyssa P Hacker",
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+      const doc = await UserService.findParent(parent._id);
+      expect(doc.name).to.be.equal(updatedParent.name);
+      expect(doc._id?.equals(parent._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
+    });
+
+    it("blocks breaking updates", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const updatedParent: IParent = {
+        ...testParent,
+        firebaseUID: uuid(),
+        _id: mongoose.Types.ObjectId(),
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+      const doc = await UserService.findParent(parent._id);
+      expect(doc.name).to.be.equal(updatedParent.name);
+      expect(doc._id?.equals(parent._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
     });
   });
 

@@ -12,6 +12,9 @@ const mongod = new MongoMemoryServer();
  */
 export const connect = async () => {
   // The server uses MONGO_URI by default, use the in-memory db instead.
+  if (process.env.NODE_ENV !== "test") {
+    throw new Error("Tests stopped: Running with non-test credentials.");
+  }
 
   await mongoose.disconnect();
 
@@ -63,7 +66,10 @@ export const setupMocks = async () => {
     auth: () => {
       return {
         verifyIdToken: (user) => {
-          return Promise.resolve({ sub: user });
+          if (user === undefined) {
+            return Promise.resolve(undefined);
+          }
+          return Promise.resolve({ ...user });
         },
       };
     },

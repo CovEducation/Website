@@ -11,7 +11,7 @@ coverage
 /deploy.yaml
 .nyc_output
 tailwind.scss
-service_account.json
+service_account*.json
 # Other files
 *.log
 

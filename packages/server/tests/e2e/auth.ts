@@ -46,32 +46,32 @@ describe("🔒 Auth", () => {
     it("can log in", async () => {
       const setup = await app
         .post("/users/parent")
-        .send({ parent: testParent });
+        .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
       const out = await app.post("/logout");
       expect(setup.status).to.be.equal(200);
       expect(out.status).to.be.equal(200);
       const login = await app
         .post("/login")
-        .set({ token: testParent.firebaseUID });
+        .send({ token: { uid: testParent.firebaseUID } });
       expect(login.status).to.be.equal(200);
     });
 
-    it("cannot login twice", async () => {
+    it("can login twice", async () => {
       const setup = await app
         .post("/users/parent")
-        .send({ parent: testParent });
+        .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
       expect(setup.status).to.be.equal(200);
       const out = await app.post("/logout");
       expect(out.status).to.be.equal(200);
 
       const login = await app
         .post("/login")
-        .set({ token: testParent.firebaseUID });
+        .send({ token: { uid: testParent.firebaseUID } });
       expect(login.status).to.be.equal(200);
       const double = await app
         .post("/login")
-        .set({ token: testParent.firebaseUID });
-      expect(double.status).to.be.equal(400);
+        .send({ token: { uid: testParent.firebaseUID } });
+      expect(double.status).to.be.equal(200);
     });
   });
 
@@ -79,11 +79,12 @@ describe("🔒 Auth", () => {
     it("can logout", async () => {
       const setup = await app
         .post("/users/parent")
-        .send({ parent: testParent });
+        .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
       expect(setup.status).to.be.equal(200);
       const out = await app.post("/logout");
       expect(out.status).to.be.equal(200);
     });
+
     it("cannot logged out if not logged in", async () => {
       const out = await app.post("/logout");
       expect(out.status).to.be.equal(400);
@@ -95,7 +96,7 @@ describe("🔒 Auth", () => {
       it("DELETE - prevents deleting when logged out", async () => {
         const setup = await app
           .post("/users/parent")
-          .send({ parent: testParent });
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
         const del = await app
           .delete("/users/parent")
           .send({ _id: setup.body._id });

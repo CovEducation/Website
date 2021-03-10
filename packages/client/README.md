@@ -1,76 +1,68 @@
-## Minimal React and Webpack 4 boilerplate with babel 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-> Minimal webpack and react boilerplate using latest version of react and babel as well as jest and enzyme for more details about technologies used. [click](#technologies-used) 
-> with real time server changes.
+## Available Scripts
 
+In the project directory, you can run:
 
-### Table of contents
-[Project structure](#project-structure)
+### `yarn start`
 
-[Installation](#installation)
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-[Configuration](#configuration)
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-[Technologies used](#technologies-used)
+### `yarn test`
 
-### Project structure
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-````
-build/
-src/
-|- index.tsx _______________________________ # Application entry 
-|- App.tsx _________________________________ # Application init
-|  |- Components/
-|    |- hello-world/ 
-|       |- index.tsx _______________________ # Sample component
+### `yarn build`
 
-webpack
-|- paths.js ________________________________ # webpack paths needed
-|- webpack.common.js _______________________ # common webpack config
-|- webpack.dev.js __________________________ # development config
-|- webpack.prod.js _________________________ # production config      
-````
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-### Installation
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-1- Clone the boilerplate repo
+### `yarn eject`
 
-`git clone git@github.com:johancc/Apollo`
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-2- `yarn` or `npm install` to install npm packages
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-3- start dev server using `yarn start` or `npm start`.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-3- build and bundling your resources for production `yarn build`.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Learn More
 
-## Development
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To enable live reloading, you can use `yarn start`. To use Storybook, you can use `yarn run storybook`.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Configuration
-* Webpack Config paths based on your file structure you can go to `webpack/paths.js` and modify the source and file names based on your need.
-* `webpack/webpack.common.js` config common webpack for both dev and production environments.
-* webpack/webpack.dev.js config webpack for dev environment.
-* `webpack/webpack.prod.js` config webpack for production environment.
-* `/webpack.config.js` main webpack config that merge common and webpack environment based config.
-* Prettier config `/.prettierc`.
-* Browsers list config `/.browserslistrc`.
+### Code Splitting
 
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-#### Technologies used
+### Analyzing the Bundle Size
 
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-* [Webpack 4](https://github.com/webpack/webpack) 
-* [Babel 7](https://github.com/babel/babel) [ transforming JSX and ES6,ES7,ES8 ]
-* [React](https://github.com/facebook/react) `16.8`
-* [Lodash](https://github.com/lodash/lodash)
-* [Eslint](https://github.com/eslint/eslint/) with airbnb config
-* [Prettier](https://github.com/prettier/prettier) [ Code formatter ]
-* [Style](https://github.com/webpack-contrib/style-loader) & [CSS Loader](https://github.com/webpack-contrib/css-loader) & [SASS-loader](https://github.com/webpack-contrib/sass-loader)
-* [CSS modules](https://github.com/css-modules/css-modules) [ Isolated style based on each component ]
-* [Storybook](https://storybook.js.org/)
-* [Browsers list](https://github.com/browserslist/browserslist) [ Share target browsers between different front-end tools, like Autoprefixer, Stylelint and babel-preset-env ]
-* [React hot loader](https://github.com/gaearon/react-hot-loader)
-* [Webpack dev serve](https://github.com/webpack/webpack-dev-server) 
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `yarn build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

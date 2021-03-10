@@ -1,0 +1,82 @@
+[
+  {
+    "_id" : 0,
+    "name" : "Evelyn Wong",
+    "designation" : "CEO",
+    "position" : "Harvard '21",
+    "team": "Management",
+    "photo": "propics/evelyn.jpg"
+  },
+  {
+    "_id" : 1,
+    "name" : "Dheekshita Kumar",
+    "designation" : "COO, Developer",
+    "position" : "MIT '20",
+    "team": "Management, Technology",
+    "photo": "propics/dheekshita.jpg"
+  },
+  {
+      "_id" : 2,
+      "name" : "Johan Cervantes",
+      "designation" : "CTO",
+      "position" : "MIT '21",
+      "team": "Management, Technology",
+      "photo": "propics/johanc.jpg"
+  },
+  {
+    "_id" : 3,
+    "name" : "Sanjay Yepuri",
+    "designation" : "CTO",
+    "position" : "UT Austin '21",
+    "team": "Management, Technology",
+    "photo": "stock-profile.png"
+  },
+  {
+    "_id" : 4,
+    "name" : "Anne Lheem",
+    "designation" : "Chief Outreach Officer",
+    "position" : "Harvard '21",
+    "team": "Management, Outreach",
+    "photo": "propics/anne.jpg"
+  },
+  {
+    "_id" : 5,
+    "name" : "Charlotte Wickert",
+    "designation" : "Chief Engagement Officer; Speaker Series Head",
+    "position" : "MIT '23",
+    "team": "Management, Speaker Series",
+    "photo": "propics/charlotte.jpg"
+  },
+  {
+    "_id" : 6,
+    "name" : "Pallas Chou",
+    "designation" : "Chief Engagement Officer; Coordinator Head",
+    "position" : "Harvard '23",
+    "team": "Management, Coordinators",
+    "photo": "propics/pallas.jpg"
+  },
+  {
+    "_id" : 7,
+    "name" : "Catherine Eng",
+    "designation" : "Lead Pedagogical Director",
+    "position" : "UCSD '20",
+    "team": "Management",
+    "photo": "propics/catherineeng.jpg"
+  },
+  {
+    "_id" : 8,
+    "name" : "Charles Ding",
+    "designation" : "West Coast Community Engagement Co-Director; Speaker Series Coordinator",
+    "position" : "USC '24",
+    "team": "Speaker Series, Outreach",
+    "photo": "propics/charles.jpg"
+  },
+  {
+    "_id" : 9,
+    "name" : "Yuan-Yuan Lo (Yona)",
+    "designation" : "PR Team Member \n Graphic Designer",
+    "position" : "Ohlone College '22",
+    "team": "Public Relations",
+    "photo": "propics/yona.jpg"
+  }
+]

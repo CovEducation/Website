@@ -11,16 +11,22 @@ export const testMentor: IMentor = {
   phone: "15005550006",
   pronouns: "He/Him",
   avatar: "www.imgur.com/testImage.jpg",
-  bio: "Hello I'm a test user",
+  introduction: "Hello I'm a test user",
   major: "Testing",
   communicationPreference: CommunicationPreference.EMAIL,
   gradeLevels: ["8"],
-  timezone: "EST",
+  subjects: [
+    "AP Computer Science",
+    "English",
+    "19th Century Literature",
+    "Differential Equations",
+  ],
+  college: "MIT",
+  region: "Midwest",
 };
 
 export const testStudent: IStudent = {
   name: "Pork Bun",
-  email: "pork@bun.com",
   gradeLevel: "5",
   subjects: ["Algebra", "English"],
 };
@@ -33,6 +39,6 @@ export const testParent: IParent = {
   pronouns: "She/Her",
   avatar: "www.imgur.com/testImage.jpg",
   communicationPreference: CommunicationPreference.EMAIL,
-  timezone: "EST",
   students: [testStudent],
+  region: "Midwest",
 };
