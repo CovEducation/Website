@@ -8,6 +8,9 @@ import RequestsPage from "../Requests";
 import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
 import SpeakerSeriesPage from "../SpeakerSeries";
 import ProfilePicture from "../../components/ProfilePicture";
+import { Container } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 
 const DashboardWrapper = styled.div`
   height: calc(100vh - 64px); // subtract heights for navbar and footer
@@ -72,13 +75,30 @@ const DashboardContent = styled.div`
   grid-area: dashboard-content;
 `;
 
+const UserFetchErr = () => {
+  return (
+    <Container maxWidth="md">
+      <Alert severity="warning" style={{margin: "10px"}}>
+      <AlertTitle>Unable to Fetch User Information</AlertTitle>
+      <p>
+        Mentors who were marked unavailable have not been transferred to the new website.
+        We are currently working on a fix.
+        <br></br> Thank you for your patience.
+      </p>
+      </Alert>
+    </Container>
+  )
+}
+
 const DashboardPage = () => {
   const { url, path } = useRouteMatch();
-  const { user, authState, request } = useAuth();
+  const { user, authState, authErr, request } = useAuth();
   const location = useLocation();
 
   // TODO move this logic to a dedicated component
-  if (
+  if (authErr) {
+    return <UserFetchErr />;
+  } else if (
     authState === AUTH_STATES.UNINITIALIZED ||
     (authState === AUTH_STATES.LOGGED_IN && !user)
   ) {
