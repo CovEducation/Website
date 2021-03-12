@@ -45,6 +45,7 @@ const useAuthProvider = () => {
   const [authState, setAuthState] = useState(AUTH_STATES.UNINITIALIZED);
   const [auth, setAuth] = useState(null);
   const [user, setUser] = useState(null);
+  const [authErr, setAuthErr] = useState(null);
 
   /**
    * Signs a user in. This triggers pulling the correct user information.
@@ -58,7 +59,7 @@ const useAuthProvider = () => {
     return Auth.signInWithEmailAndPassword(email, password)
     .catch((err) => {
       setAuthState(AUTH_STATES.LOGGED_OUT);
-      throw err; // propogate error
+      throw err; // propagate error
     });
   };
 
@@ -141,8 +142,19 @@ const useAuthProvider = () => {
           setUser(user);
         })
         .catch((err) => {
-          console.log(`Error fetching user: ${err}`);
-          setUser(null);
+          // if we fail to fetch user, log out
+          setAuthErr("Unable to load user data");
+          Auth.signOut()
+            .then(() => {
+              setAuthState(AUTH_STATES.LOGGED_OUT);
+              setUser(null);
+            })
+            .catch((err2) => {
+              setAuthState(AUTH_STATES.LOGGED_OUT);
+              setUser(null);
+
+            });
+
         });
     }
   }, [authState, user, auth]);
@@ -150,6 +162,7 @@ const useAuthProvider = () => {
   return {
     auth,
     authState,
+    authErr,
     user,
     signin,
     signup,
