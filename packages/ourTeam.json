@@ -64,7 +64,15 @@
     "photo": "propics/catherineeng.jpg"
   },
   {
-    "_id" : 8,
+    "_id": 8,
+    "name": "Grace Yang",
+    "designation": "Chief of Marketing: Digital Engagement (Public Relations Head)",
+    "team": "Management, Outreach",
+    "photo": "propics/grace.jpg",
+    "position": "UCLA '22"
+  },
+  {
+    "_id" : 9,
     "name" : "Charles Ding",
     "designation" : "Community Engagement Co-Director - West Coast; Speaker Series Coordinator",
     "position" : "USC '24",
@@ -72,7 +80,7 @@
     "photo": "propics/charles.jpg"
   },
   {
-    "_id" : 9,
+    "_id" : 10,
     "name" : "Yuan-Yuan Lo (Yona)",
     "designation" : "PR Team Member - Graphics",
     "position" : "Ohlone College '22",
@@ -80,7 +88,7 @@
     "photo": "propics/yona.jpg"
   },
   {
-    "_id" : 10,
+    "_id" : 11,
     "name" : "Francesca Yao",
     "designation" : "Team Member",
     "position" : "UC Berkeley '22",
@@ -88,7 +96,7 @@
     "photo": "propics/francesca.jpg"
   },
   {
-    "_id" : 11,
+    "_id" : 12,
     "name" : "Alair Zhao",
     "designation" : "PR Team Member - Layouting",
     "position" : "UCLA '23",
@@ -96,7 +104,7 @@
     "photo": "propics/alair.jpg"
   },
   {
-    "_id" : 12,
+    "_id" : 13,
     "name" : "Whitney Zhang",
     "designation" : "CMO - Partnerships",
     "position" : "MIT '21",
@@ -104,7 +112,7 @@
     "photo": "propics/whitney.jpg"
   },
   {
-    "_id" : 13,
+    "_id" : 14,
     "name" : "Jin Wong",
     "designation" : "Outreach Director - Great Lakes",
     "position" : "Southview HS '22",
@@ -112,7 +120,7 @@
     "photo": "propics/jin.jpg"
   },
   {
-    "_id" : 14,
+    "_id" : 15,
     "name" : "Joseph Naseib",
     "designation" : "Outreach Team Member - West Coast",
     "position" : "USC '22",
@@ -120,7 +128,7 @@
     "photo": "stock-profile.png"
   },
   {
-    "_id" : 15,
+    "_id" : 16,
     "name" : "Sharmi Shah",
     "designation" : "PR Team Member - Graphics, Speaker Series - Publicity",
     "position" : "MIT '23",
@@ -128,7 +136,7 @@
     "photo": "propics/sharmi.jpg"
   },
   {
-    "_id" : 16,
+    "_id" : 17,
     "name" : "Christian Denolan",
     "designation" : "Outreach Team - Great Plains",
     "position" : "UT Austin '23",
@@ -136,7 +144,7 @@
     "photo": "propics/christiand.jpg"
   },
   {
-    "_id" : 17,
+    "_id" : 18,
     "name" : "Faye Zou",
     "designation" : "Community Engagement Co-Director - West Coast",
     "position" : "UCLA '22",
@@ -144,7 +152,7 @@
     "photo": "propics/faye.jpg"
   },
   {
-    "_id" : 18,
+    "_id" : 19,
     "name" : "Rohun Shroff",
     "designation" : "Outreach Co-Director - Great Plains",
     "position" : "USC '24",
@@ -152,7 +160,7 @@
     "photo": "propics/rohun.jpg"
   },
   {
-    "_id" : 19,
+    "_id" : 20,
     "name" : "Marimo Oka",
     "designation" : "Community Engagement Director - New England",
     "position" : "Clark University '22",
@@ -160,7 +168,7 @@
     "photo": "propics/marimo.jpg"
   },
   {
-    "_id" : 20,
+    "_id" : 21,
     "name" : "Ojasw Upadhyey",
     "designation" : "Software Developer",
     "position" : "American HS Fremont '21",
@@ -168,7 +176,7 @@
     "photo": "propics/ojasw.jpg"
   },
   {
-    "_id" : 21,
+    "_id" : 22,
     "name" : "Dhathri Srungaram",
     "designation" : "Software Developer - Speaker Series",
     "position" : "SUNY @ Buffalo '22",
