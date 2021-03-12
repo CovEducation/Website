@@ -23,6 +23,7 @@ export const testMentor: IMentor = {
   ],
   college: "MIT",
   region: "Midwest",
+  available: true,
 };
 
 export const testStudent: IStudent = {

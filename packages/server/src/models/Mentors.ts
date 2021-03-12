@@ -29,6 +29,7 @@ export interface IMentor {
   gradeLevels: string[];
   subjects: string[];
   mentorships?: Ref<Mentorship>;
+  available: boolean;
 }
 
 @plugin(algoliaPlugin, {
@@ -85,6 +86,9 @@ export class Mentor implements IMentor {
 
   @prop({ required: false })
   public avatar?: string;
+
+  @prop({ required: false, default: false })
+  public available: boolean;
 }
 
 const MentorModel = getModelForClass(Mentor);
