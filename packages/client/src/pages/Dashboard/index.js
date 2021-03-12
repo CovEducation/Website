@@ -96,7 +96,7 @@ const DashboardPage = () => {
   const location = useLocation();
 
   // TODO move this logic to a dedicated component
-  if (authErr) {
+  if (authErr && authState === AUTH_STATES.UNINITIALIZED) {
     return <UserFetchErr />;
   } else if (
     authState === AUTH_STATES.UNINITIALIZED ||
