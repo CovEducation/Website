@@ -5,7 +5,7 @@ import Accordion, { AccordionRow } from '../../components/Accordion';
 import Grid from '@material-ui/core/Grid';
 
 const Wrapper = styled.div`
-  text-align: center;
+  text-align: left;
   width: 100%;
   margin: 0 auto;
   display: flex;
