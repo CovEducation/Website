@@ -20,7 +20,7 @@ const FAQsWrapper = styled.div`
   h2 {
     font-family: ${FONTS.font1};
     font-weight: 500;
-    padding-top: 30px;
+    padding-top: 20px;
   }
 `;
 
