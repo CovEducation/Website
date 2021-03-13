@@ -1,12 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { FONTS, COLORS } from "../../constants";
-import Section from '../../components/Section';
 import Accordion, { AccordionRow } from '../../components/Accordion';
 import Grid from '@material-ui/core/Grid';
 
 const Wrapper = styled.div`
-  text-align: left;
+  text-align: center;
   width: 100%;
   margin: 0 auto;
   display: flex;
@@ -37,19 +36,12 @@ const Wrapper = styled.div`
 const ResourcesPage = () => {
   return (
     <Wrapper>
-        <Section p="100px">
         <h2> Resources </h2>
         <Grid container direction="row" justify="center" spacing={2}>
-          <Grid item sm={10} xs={10}>
+          <Grid item sm={8} xs={10}>
           Welcome to our resources page! Here you will be able to find links to more online learning resources. Don't have a mentor yet, but need help in a particular subject? No problem! Check out our <a target="_blank" href="https://www.piazza.com/coveducation/other/coved1/home"> Piazza page</a>! To join the piazza forum, simply follow these <a href="http://tinyurl.com/menteeguideline" target="_blank">written instructions</a>, or follow the <a href="http://tinyurl.com/piazzavid" target="_blank">instructions in this video.</a>
-
-              <h4>College Prep CovEducation Handbooks</h4>
-              <ul>
-                <li><a href="https://drive.google.com/file/d/1-s5C0_57b0fp1ZEXyMLyAldIJ9UmpsFF/view?usp=sharing" target="_blank">College Application Basics</a></li>
-                <li><a href="https://drive.google.com/file/d/11KzeiD1-C1FemI0Tb7_ib4IfIvICyfZW/view?usp=sharing" target="_blank">First Generation College Application Resources (Part 1)</a></li>
-              </ul>
             </Grid>
-            <Grid item sm={8} xs={10}>
+            <Grid item sm={6} xs={10}>
               <Accordion>
                 <AccordionRow title="Math" id={1}>
                   <h3>All Schools</h3>
@@ -155,10 +147,17 @@ const ResourcesPage = () => {
                   <li><a href="https://www.codecademy.com/" target="_blank"> CodeAcademy </a></li>
                 </ul>
                 </AccordionRow>
+                <AccordionRow title="College Prep" id={5}>
+                <h3>College Prep Coveducation Handbooks</h3>
+                <ul>
+                  <li><a href="https://drive.google.com/file/d/1-s5C0_57b0fp1ZEXyMLyAldIJ9UmpsFF/view?usp=sharing" target="_blank">College Application Basics</a></li>
+                  <li><a href="https://drive.google.com/file/d/11KzeiD1-C1FemI0Tb7_ib4IfIvICyfZW/view?usp=sharing" target="_blank">First Generation College Application Resources (Part 1)</a></li>
+                </ul>
+
+                </AccordionRow>
             </Accordion>
           </Grid>
         </Grid>
-        </Section>
     </Wrapper>
   );
 };
