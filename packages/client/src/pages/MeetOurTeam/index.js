@@ -1,6 +1,7 @@
 import React from "react";
 import HTabs from "./Tabs";
 import styled from "styled-components";
+import { FONTS } from '../../constants';
 
 import { getTeamDataList } from "../../api";
 
@@ -11,6 +12,14 @@ const TabsContainer = styled.div`
   text-align: center;
   width: 70%;
   margin: 0 auto;
+  h2 {
+    font-family: ${FONTS.font1};
+    font-weight: 500;
+    padding-top: 20px;
+  }
+  p{
+    font-family: ${FONTS.font2};
+  }
 `;
 const MeetOurTeam = () => {
   const [teamData, setTeamData] = React.useState([]);
@@ -35,8 +44,8 @@ const MeetOurTeam = () => {
   };
   return (
     <div>
-      <h2 style={{ textAlign: "center" }}>Meet Our Team </h2>
       <TabsContainer>
+      <h2> Meet Our Team </h2>
         <HTabs
           texts={[
             getFilteredData(), // All
