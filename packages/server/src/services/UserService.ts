@@ -95,10 +95,10 @@ class UserService {
               ...update,
               objectID: String(_id) || _id.toHexString(),
             })
-            .then((resp) => {
+            .then(() => {
               return doc !== null;
             })
-            .catch((err) => {
+            .catch(() => {
               return false;
             });
         }
