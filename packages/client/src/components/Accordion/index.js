@@ -54,8 +54,8 @@ const AccordionRowContent = styled.div`
   max-width: 700px;
   width: 95%;
   text-align: left;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 20px;
 `;
 

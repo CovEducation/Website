@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FONTS, FAQS } from '../../constants';
 import Accordion, { AccordionRow } from '../../components/Accordion';
-import Section from '../../components/Section';
+import Grid from '@material-ui/core/Grid';
 
 const FAQsWrapper = styled.div`
   text-align: center;
@@ -27,7 +27,8 @@ const FAQsWrapper = styled.div`
 const FAQsPage = () => {
   return (
     <FAQsWrapper>
-      <Section p="100px">
+      <Grid container direction="row" justify="center" spacing={2}>
+      <Grid item sm={6} xs={10}>
         <h2> General </h2>
         <Accordion>
           {FAQS.filter((f) => f.category === "general").map((faq) => {
@@ -58,7 +59,8 @@ const FAQsPage = () => {
             )
           })}
         </Accordion>
-      </Section>
+        </Grid>
+        </Grid>
     </FAQsWrapper>
   )
 }
