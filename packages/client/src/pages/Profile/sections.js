@@ -83,6 +83,7 @@ const ProfileRow = ({
       return (
         <FormikRadio
           name={name}
+          value={value}
           label={label}
           values={values}
           formik={formik}
@@ -134,10 +135,7 @@ const submitSection = (onSubmit) => {
   // This validation should be moved somewhere else.
 
   return (values) => {
-    if (values.available) {
-      values.available = values.available === "YES";
-    }
-    onSubmit(values);
+    onSubmit({ ...values, available: values.available === "YES" });
   };
 };
 
@@ -247,8 +245,8 @@ export const UserDetails = ({ values, updateFields }) => {
 const mapJoin = (list, map) => list.map((e) => map[e]).join(", ");
 
 export const MentorDetails = ({ values, updateFields }) => {
-  console.log(values);
-  values.available = values.available ? "YES" : "NO";
+  values.available =
+    values.available === true || values.available === "YES" ? "YES" : "NO";
   // this is duplicated code, think about moving...
   const MentorSchema = Yup.object({
     college: Yup.string(),
@@ -256,7 +254,7 @@ export const MentorDetails = ({ values, updateFields }) => {
     introduction: Yup.string().required("Bio required"),
     major: Yup.string(),
     subjects: Yup.array().required("Subjects Required"),
-    available: Yup.string(),
+    available: Yup.string().default(values.available),
   });
 
   const onCancel = () => {
@@ -347,7 +345,7 @@ export const MentorDetails = ({ values, updateFields }) => {
         <ProfileRow
           name="available"
           label="Available to Mentor"
-          value={availabilitiesVM[available] || "No"}
+          value={availabilitiesVM[available]}
           edit={edit}
           type={Fields.RADIO}
           values={availabilities}
