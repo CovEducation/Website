@@ -346,7 +346,7 @@ export const MentorDetails = ({ values, updateFields }) => {
         <ProfileRow
           name="available"
           label="Available to Mentor"
-          value={availabilitiesVM[available]}
+          value={availabilitiesVM[available] || "No"}
           edit={edit}
           type={Fields.RADIO}
           values={availabilities}

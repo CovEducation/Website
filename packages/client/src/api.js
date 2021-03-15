@@ -1,7 +1,7 @@
 // Set of API endpoints available to all pages. This should make the get, post, update, and delete
 // requests necessary.
 // TODO: Handle profile pictures and set them as the avatar.
-import { post, get } from "./utilities.js";
+import { post, get, put } from "./utilities.js";
 import { Auth } from "./providers/FirebaseProvider/index.js";
 
 const Roles = {
@@ -118,10 +118,13 @@ export const saveProfileData = async (uid, data) => {
     throw Error("Unable to retrieve user data with uninitilized Auth user.");
   }
   // TODO: Not implemented yet.
-  var res = await post(host + `users/updateProfile/${uid}`, {
-    update: JSON.stringify(data),
-  });
-  return res;
+  if (data.role === Roles.MENTOR) {
+    return put(host + "users/mentor", { mentor: data });
+  } else if (data.role === Roles.PARENT) {
+    return put(host + "users/parent", { parent: data });
+  } else {
+    return Promise.reject(`Invalid user role ${data.role}`);
+  }
 };
 
 export const getRequests = async (requestState) => {
@@ -130,7 +133,10 @@ export const getRequests = async (requestState) => {
   }
   const token = await Auth.currentUser.getIdToken();
   return await get(host + "mentorships", { token }).then((mentorships) =>
-    mentorships.filter((mentorship) => requestState === undefined || mentorship.state === requestState)
+    mentorships.filter(
+      (mentorship) =>
+        requestState === undefined || mentorship.state === requestState
+    )
   );
 };
 /**
