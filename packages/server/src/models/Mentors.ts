@@ -36,6 +36,7 @@ export interface IMentor {
   appId: ALGOLIA_APP_ID,
   apiKey: ALGOLIA_API_KEY,
   indexName: "mentors",
+  debug: true,
 })
 export class Mentor implements IMentor {
   public _id: mongoose.Types.ObjectId;

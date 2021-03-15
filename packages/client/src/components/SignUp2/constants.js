@@ -33,6 +33,11 @@ const CommunicationPreferences = [
   { value: "SMS", label: "SMS" },
 ];
 
+const availabilities = [
+  { value: "YES", label: "Yes" },
+  { value: "NO", label: "No" },
+];
+
 const Pronouns = [
   { value: "he/him", label: "he/him" },
   { value: "she/her", label: "she/her" },
@@ -101,6 +106,7 @@ const GradeLevels = [
 ];
 
 const CommunicationPreferencesVM = transformValueMap(CommunicationPreferences);
+const availabilitiesVM = transformValueMap(availabilities);
 const PronounsVM = transformValueMap(Pronouns);
 const TimezonesVM = transformValueMap(Timezones);
 const SubjectsVM = transformValueMap(Subjects);
@@ -119,4 +125,6 @@ export {
   TimezonesVM,
   SubjectsVM,
   GradeLevelsVM,
+  availabilities,
+  availabilitiesVM,
 };

@@ -1,9 +1,23 @@
 import { mongoose } from "@typegoose/typegoose";
+import algoliasearch, { SearchIndex } from "algoliasearch";
 import ParentModel, { IParent } from "../models/Parents";
 import MentorModel, { IMentor } from "../models/Mentors";
 import StudentModel from "../models/Students";
 
+// For some reason, mongoose-algolia does not update with algolia properly
+
 class UserService {
+  private mentorIndex: SearchIndex;
+  constructor() {
+    const { ALGOLIA_API_KEY, ALGOLIA_APP_ID } = process.env;
+    if (ALGOLIA_API_KEY === undefined || ALGOLIA_APP_ID === undefined) {
+      throw new Error("Unable connect to algolia.");
+    }
+    this.mentorIndex = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY).initIndex(
+      "mentors"
+    );
+  }
+
   createMentor(mentor: IMentor): Promise<IMentor> {
     return this.userExists(mentor).then((exists) => {
       if (exists) {
@@ -39,9 +53,23 @@ class UserService {
   }
 
   deleteMentor(_id: mongoose.Types.ObjectId): Promise<boolean> {
-    return MentorModel.deleteOne({ _id }).then((res) => {
-      return res.deletedCount !== undefined && res.deletedCount === 1;
-    });
+    return MentorModel.findOne({ _id })
+      .then((doc) => {
+        if (doc !== null) {
+          try {
+            // Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
+            // The plugin doesn't support TS so we have to do this sketchy thing.
+            doc["RemoveFromAlgolia"]();
+          } catch {
+            console.log("Failed to remove document from algolia.");
+          }
+        }
+      })
+      .then(() => {
+        return MentorModel.deleteOne({ _id }).then((res) => {
+          return res.deletedCount !== undefined && res.deletedCount === 1;
+        });
+      });
   }
 
   updateMentor(
@@ -58,8 +86,23 @@ class UserService {
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
       };
-      return MentorModel.updateOne({ _id }, update).then((doc) => {
-        return doc !== null;
+      return MentorModel.updateOne({ _id }, update).then(async (doc) => {
+        if (doc !== null) {
+          // This save operation is *NOT* partial. You need to send all the data to Algolia or
+          // else the entry will be blank.
+          return this.mentorIndex
+            .saveObject({
+              ...update,
+              objectID: String(_id) || _id.toHexString(),
+            })
+            .then((resp) => {
+              return doc !== null;
+            })
+            .catch((err) => {
+              return false;
+            });
+        }
+        return false;
       });
     });
   }

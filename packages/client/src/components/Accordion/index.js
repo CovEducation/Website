@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { COLORS, FONTS } from '../../constants';
-import ArrowDown from '../Icons/ArrowDown';
+import React, { useState } from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import { COLORS, FONTS } from "../../constants";
+import ArrowDown from "../Icons/ArrowDown";
 
 /**
  * Example usage:
@@ -36,26 +36,26 @@ const AccordionRowHeader = styled.div`
   text-align: left;
   margin-left: auto;
   margin-right: auto;
-  color:  ${COLORS.blue};
+  color: ${COLORS.blue};
   font-weight: 600;
   border-bottom: 1px solid ${COLORS.lightgray};
 `;
 
 const AccordionRowIcon = styled(ArrowDown)`
-  transform: rotate(${props => props.open ? 180 : 0}deg);
+  transform: rotate(${(props) => (props.open ? 180 : 0)}deg);
   transition: 0.2s ease transform;
 `;
 
 const AccordionRowContent = styled.div`
   background-color: ${COLORS.white};
-  height: ${props => props.open ? 'auto' : 0};
+  height: ${(props) => (props.open ? "auto" : 0)};
   transition: 0.2s ease height;
   overflow: hidden;
   max-width: 700px;
   width: 95%;
   text-align: left;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 20px;
 `;
 
@@ -66,19 +66,19 @@ export const AccordionRow = ({ children, title }) => {
     <div>
       <AccordionRowHeader onClick={() => setOpen(!open)}>
         {title}
-        <AccordionRowIcon open={open}/>
+        <AccordionRowIcon open={open} />
       </AccordionRowHeader>
       <AccordionRowContent open={open}>
         {children}
-        <br/>
+        <br />
       </AccordionRowContent>
     </div>
-  )
-}
+  );
+};
 
 AccordionRow.propTypes = {
   title: PropTypes.string,
-}
+};
 
 const AccordionWrapper = styled.div`
   background-color: ${COLORS.white};
@@ -87,16 +87,12 @@ const AccordionWrapper = styled.div`
   font-family: ${FONTS.font2};
   color: black;
   min-width: 220px;
-  justify-content: 'center';
-  align: 'center;'
+  justify-content: "center";
+  align: "center;";
 `;
 
 const Accordion = ({ children }) => {
-  return (
-    <AccordionWrapper>
-      {children}
-    </AccordionWrapper>
-  )
-}
+  return <AccordionWrapper>{children}</AccordionWrapper>;
+};
 
 export default Accordion;
