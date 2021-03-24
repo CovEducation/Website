@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-  Container,
   Grid,
   ListItem,
   List,
@@ -15,10 +14,12 @@ import {
   Subjects,
   GradeLevels,
   CommunicationPreferences,
+  availabilities,
   TimezonesVM,
   SubjectsVM,
   GradeLevelsVM,
   CommunicationPreferencesVM,
+  availabilitiesVM,
   phoneRegex,
 } from "../../components/SignUp2/constants";
 
@@ -30,7 +31,6 @@ import {
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Alert from "@material-ui/lab/Alert";
 
 const SPACING = 1;
 
@@ -39,6 +39,7 @@ const Fields = {
   SELECT: "select",
   RADIO: "radio",
   FIELD: "field",
+  CHECKBOX: "checkbox",
 };
 
 const ProfileRow = ({
@@ -107,9 +108,9 @@ const ProfileRow = ({
 const EditButton = ({ onClick }) => {
   return (
     <h2>
-        <Button variant="outlined" onClick={onClick} disabled>
-          Edit
-        </Button>
+      <Button variant="outlined" onClick={onClick}>
+        Edit
+      </Button>
     </h2>
   );
 };
@@ -121,14 +122,21 @@ const SubmitButton = ({ onSubmit, onCancel }) => {
         <Button type="reset" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="sumbmit">Submit</Button>
+        <Button type="submit" onClick={onSubmit}>
+          Submit
+        </Button>
       </ButtonGroup>
     </Grid>
   );
 };
 
 const submitSection = (onSubmit) => {
+  // This validation should be moved somewhere else.
+
   return (values) => {
+    if (values.available) {
+      values.available = values.available === "YES";
+    }
     onSubmit(values);
   };
 };
@@ -172,7 +180,6 @@ export const UserDetails = ({ values, updateFields }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={SPACING}>
-        <Grid item sm={12}><Alert variant="outlined" severity="info">Editing Profile Temporarily Disabled.</Alert></Grid>
         <Grid item sm={6}>
           <h2>User Details</h2>
         </Grid>
@@ -240,13 +247,15 @@ export const UserDetails = ({ values, updateFields }) => {
 const mapJoin = (list, map) => list.map((e) => map[e]).join(", ");
 
 export const MentorDetails = ({ values, updateFields }) => {
+  values.available = values.available ? "YES" : "NO";
   // this is duplicated code, think about moving...
   const MentorSchema = Yup.object({
     college: Yup.string(),
     gradeLevels: Yup.array().required("Grade Levels Required"),
     introduction: Yup.string().required("Bio required"),
     major: Yup.string(),
-    subjets: Yup.array().required("Subjects Required"),
+    subjects: Yup.array().required("Subjects Required"),
+    available: Yup.string(),
   });
 
   const onCancel = () => {
@@ -267,11 +276,17 @@ export const MentorDetails = ({ values, updateFields }) => {
 
   const [edit, setEdit] = React.useState(false);
 
-  const { college, major, introduction, subjects, gradeLevels } = formik.values;
+  const {
+    college,
+    major,
+    introduction,
+    subjects,
+    gradeLevels,
+    available,
+  } = formik.values;
 
   const subjectsJoined = mapJoin(subjects, SubjectsVM);
   const gradeLevelsJoined = mapJoin(gradeLevels, GradeLevelsVM);
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={SPACING}>
@@ -326,6 +341,15 @@ export const MentorDetails = ({ values, updateFields }) => {
           type={Fields.SELECT}
           values={GradeLevels}
           isMulti
+          formik={formik}
+        />
+        <ProfileRow
+          name="available"
+          label="Available to Mentor"
+          value={availabilitiesVM[available] || "No"}
+          edit={edit}
+          type={Fields.RADIO}
+          values={availabilities}
           formik={formik}
         />
         {edit && <SubmitButton onCancel={onCancel} />}

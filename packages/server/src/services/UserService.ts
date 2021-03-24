@@ -39,9 +39,23 @@ class UserService {
   }
 
   deleteMentor(_id: mongoose.Types.ObjectId): Promise<boolean> {
-    return MentorModel.deleteOne({ _id }).then((res) => {
-      return res.deletedCount !== undefined && res.deletedCount === 1;
-    });
+    return MentorModel.findOne({ _id })
+      .then((doc) => {
+        if (doc !== null) {
+          try {
+            // Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
+            // The plugin doesn't support TS so we have to do this sketchy thing.
+            doc["RemoveFromAlgolia"]();
+          } catch {
+            console.log("Failed to remove document from algolia.");
+          }
+        }
+      })
+      .then(() => {
+        return MentorModel.deleteOne({ _id }).then((res) => {
+          return res.deletedCount !== undefined && res.deletedCount === 1;
+        });
+      });
   }
 
   updateMentor(
@@ -51,6 +65,14 @@ class UserService {
     return MentorModel.findOne({ _id }).then((doc) => {
       if (doc === null) {
         return Promise.reject(`Unknown _id ${_id}`);
+      }
+      // Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
+      if (doc !== null) {
+        try {
+          doc["SyncToAlgolia"]();
+        } catch {
+          console.log("Failed updating algolia");
+        }
       }
       const update = {
         ...updatedMentor,

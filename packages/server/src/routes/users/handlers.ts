@@ -115,6 +115,7 @@ export const putParentHandler = (
     res.status(403).send({ err: "User must be logged in." });
     return;
   }
+
   UserService.updateParent(userID, parent).then((ok) => {
     if (!ok) {
       res.status(500).send({ err: "Unable to update parent." });

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { MentorDetails, ParentStudentDetails, UserDetails } from "./sections";
 import { MENTOR, PARENT } from "../../constants";
 import { Container } from "@material-ui/core";
-
+import { saveProfileData } from "../../api";
 import useAuth from "../../providers/AuthProvider";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Toast from "../../components/Toast";
@@ -54,11 +54,8 @@ const ProfilePage = ({ user }) => {
   );
 
   const updateProfile = (values) => {
-    console.log(user);
-    console.log(values);
-
-    return Promise.resolve();
-  }
+    return saveProfileData(user.uid, values);
+  };
 
   const profileComponents =
     user.role === MENTOR ? MentorProfile : ParentProfile;
