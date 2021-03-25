@@ -265,7 +265,7 @@ describe("🙋‍ User Service", () => {
       expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
     });
 
-    it.only("can add students", async () => {
+    it("can add students", async () => {
       const parent: IParent = await UserService.createParent(testParent);
       expect(parent._id).to.exist;
       Object.keys(testMentor).forEach((key) => {
@@ -311,15 +311,27 @@ describe("🙋‍ User Service", () => {
         ...testParent,
         firebaseUID: uuid(),
         _id: mongoose.Types.ObjectId(),
-        students: [],
+        students: testParent.students.concat({
+          name: "Billy",
+          gradeLevel: "9th",
+          subjects: ["Math"],
+        }),
       };
       const ok = await UserService.updateParent(parent._id, updatedParent);
       expect(ok).to.be.true;
+      const secondUpdate: IParent = {
+        ...testParent,
+        firebaseUID: uuid(),
+        _id: mongoose.Types.ObjectId(),
+        students: testParent.students,
+      };
+      const valid = await UserService.updateParent(parent._id, secondUpdate);
+      expect(valid).to.be.true;
       const doc = await UserService.findParent(parent._id);
       expect(doc.name).to.be.equal(updatedParent.name);
       expect(doc._id?.equals(parent._id)).to.be.true;
       expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
-      expect(doc.students.length).to.be.equal(0);
+      expect(doc.students.length).to.be.equal(1);
     });
 
     it("can edit students", async () => {
