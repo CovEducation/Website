@@ -8,7 +8,6 @@ import useAuth from "../../providers/AuthProvider";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Toast from "../../components/Toast";
 
-import Jdenticon from "react-jdenticon";
 import ProfilePicture from "../../components/ProfilePicture";
 
 const ProfilePageWrapper = styled.div`
