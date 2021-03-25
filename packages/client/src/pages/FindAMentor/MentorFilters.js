@@ -48,35 +48,7 @@ const CustomRefinementList = ({ items, currentRefinement, refine, ...props }) =>
   );
 };
 
-const LangRefinementList = ({ items, currentRefinement, refine, ...props }) => {
-  const classes = useStyles();
-  const [extended, setExtended] = useState(false);
-  const limit = extended ? props.showMoreLimit : props.limit
-  console.log(items)
-  return (
-    <div>
-    {items.slice(0,limit).map((item) => {
-      return(
-        <div className={classes.root}>
-          <FormControl className={classes.formControl}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={item.isRefined}
-                  onChange={() => refine(item.value)}
-                  name={item.label}
-                />
-              }
-              label={item.label+" ("+item.count+")"}
-            />
-          </FormControl>
-        </div>)})}
-  </div>
-  );
-};
-
 const MentorRefinementList = connectRefinementList(CustomRefinementList);
-const LanguageRefinementList = connectRefinementList(LangRefinementList);
 
 const MentorFilters = () => {
   return (
