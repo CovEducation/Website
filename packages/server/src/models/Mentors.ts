@@ -29,6 +29,7 @@ export interface IMentor {
   gradeLevels: string[];
   subjects: string[];
   mentorships?: Ref<Mentorship>;
+  lastRequestTime?: number;
   available: boolean;
 }
 
@@ -71,6 +72,8 @@ export class Mentor implements IMentor {
   @prop({ required: true })
   public communicationPreference: CommunicationPreference;
 
+  @prop({ required: false})
+  public lastRequestTime?: number;
   @prop({
     required: true,
     validate: {
