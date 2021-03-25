@@ -19,7 +19,7 @@ const SearchBox = connectSearchBox(({ currentRefinement, refine }) => {
   return (
     <TextField
       id="search-bar"
-      label="Search for anything! (ex. Spanish basketball math)"
+      label="Search for anything! (ex. Spanish, Basketball, Math)"
       variant="filled"
       value={currentRefinement}
       onChange={(e) => refine(e.currentTarget.value)}
@@ -80,10 +80,10 @@ const MentorSearch = () => {
         <Grid container justify="center" spacing={0}>
           <Configure hitsPerPage={48} filters="available:true" />
           <SearchBox />
-          { displayFilter && (
-             <Grid item xs={3}>
+          {displayFilter && (
+            <Grid item xs={3}>
               <MentorFilters attribute="subjects" />
-              </Grid>
+            </Grid>
           )}
           <Grid item xs={9}>
             <MentorHits />
