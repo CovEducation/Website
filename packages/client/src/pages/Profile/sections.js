@@ -566,22 +566,30 @@ export const ParentStudentDetails = ({ values, updateFields }) => {
   const [addingStudent, setAddingStudent] = React.useState(false);
   const [students, setStudents] = React.useState(values.students);
 
+  const pushChanges = (values) => {
+    return updateFields(values)
+      .then(data => {
+        console.log(data);
+        setStudents([...data.students]);
+      });
+  }
+
   const addStudent = (student) => {
     values.students.push(student);
-    return updateFields(values).then(setStudents([...values.students]));
+    return pushChanges(values);
   };
 
   const updateStudent = (i) => {
     return (student) => {
       values.students[i] = student;
-      return updateFields(values).then(setStudents([...values.students]));
+      return pushChanges(values);
     };
   };
 
   const removeStudent = (i) => {
     return () => {
       values.students.splice(i, 1);
-      return updateFields(values).then(setStudents([...values.students]));
+      return pushChanges(values);
     };
   };
 

@@ -61,7 +61,11 @@ const ProfilePage = ({ user }) => {
 
   const updateProfile = (values) => {
     return saveProfileData(user.uid, values)
-      .then(() => setProfileToast({message: "Update Successful.", open: true}));
+      .then((data) => {
+        setProfileToast({message: "Update Successful.", open: true})
+        return data;
+      });
+
   };
 
   const profileComponents =

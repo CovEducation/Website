@@ -172,15 +172,14 @@ class UserService {
           }
           return StudentModel.updateOne({ _id: s._id }, s)
             .then(() => mongoose.Types.ObjectId(String(s._id)))
-            .catch((err) => {
+            .catch(() => {
               return StudentModel.create(s).then((d) => d._id);
             });
         })
       );
-      doc.students = students;
-      doc.markModified("students");
-      await doc.save();
-      return doc !== null;
+      return ParentModel.updateOne({ _id }, { students }).then((d) => {
+        return d !== null;
+      });
     });
   }
 
