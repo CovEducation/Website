@@ -19,7 +19,7 @@ const SearchBox = connectSearchBox(({ currentRefinement, refine }) => {
   return (
     <TextField
       id="search-bar"
-      label="Search"
+      label="Search for anything! (ex. Spanish, Basketball, Math)"
       variant="filled"
       value={currentRefinement}
       onChange={(e) => refine(e.currentTarget.value)}
@@ -73,17 +73,17 @@ const MentorSearch = () => {
     return <div>Loading...</div>;
   }
   const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
-  const displayFilter = false;
+  const displayFilter = true;
   return (
     <div className="ais-InstantSearch">
       <InstantSearch indexName={"mentors"} searchClient={searchClient}>
         <Grid container justify="center" spacing={0}>
-          <Configure hitsPerPage={12} filters="available:true" />
+          <Configure hitsPerPage={48} filters="available:true" />
           <SearchBox />
-          { displayFilter && (
-             <Grid item xs={3}>
-              <MentorFilters attribute="tags" />
-              </Grid>
+          {displayFilter && (
+            <Grid item xs={3}>
+              <MentorFilters attribute="subjects" />
+            </Grid>
           )}
           <Grid item xs={9}>
             <MentorHits />
