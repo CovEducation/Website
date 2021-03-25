@@ -59,7 +59,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@typegoose/typegoose": "^7.4.8",
+    "@typegoose/typegoose": "^7.6.0",
     "@types/express-session": "^1.17.3",
     "@types/jest": "^26.0.20",
     "algoliasearch": "^4.8.6",
