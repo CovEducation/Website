@@ -125,8 +125,9 @@ const MentorProfile = ({ mentor, onSubmit, disable }) => {
         <Jdenticon size="150" value={mentor.name} />
         <MentorDetailsBlock>
           <h3>{mentor.name}</h3>
-          <h4>{mentor.college}</h4>
-          <h4>{mentor.major}</h4>
+          <h4><b>College:</b> {mentor.college}</h4>
+          <h4><b>Major:</b> {mentor.major}</h4>
+          <h4><b>Pronouns:</b>  {mentor.pronouns}</h4>
         </MentorDetailsBlock>
         <div></div>
       </MentorProfileHeader>

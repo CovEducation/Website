@@ -10,6 +10,20 @@ import React from "react";
 import useAuth from "../../providers/AuthProvider";
 import Jdenticon from "react-jdenticon";
 import styled from "styled-components";
+import { COLORS, FONTS } from '../../constants';
+
+const Wrapper = styled.div`
+  p {
+    font-family:${FONTS.font2};
+  }
+  a {
+    color: ${COLORS.blue};
+    cursor: pointer;
+  }
+  a:visited {
+    color: ${COLORS.darkblue};
+  }
+`;
 
 const ButtonBlock = styled.div`
   text-align: right;
@@ -41,6 +55,12 @@ const trimIntro = (introduction) => {
   return short;
 };
 
+const trimIntroChar = (introduction) => {
+  const characterLimit = 250;
+  const slicedIntro = introduction.slice(0,characterLimit)+"...";
+  return slicedIntro;
+};
+
 const MentorCard = ({ mentor, onClick }) => {
   const { user } = useAuth();
   return (
@@ -59,8 +79,9 @@ const MentorCard = ({ mentor, onClick }) => {
           </TitleBlock>
 
           <Typography color="textSecondary">{mentor.region}</Typography>
-          <Typography variant="body2" component="p">
-            {trimIntro(mentor.introduction)}
+          <Wrapper>
+          <Typography variant="body2" component="p" align='justify'>
+            {trimIntroChar(mentor.introduction)}<a onClick={onClick}><b>(See More)</b></a>
             <br />
             <b>
               Subjects willing to mentor <br />
@@ -72,6 +93,7 @@ const MentorCard = ({ mentor, onClick }) => {
             </b>
             {mentor.gradeLevels && mentor.gradeLevels.join(", ")}
           </Typography>
+          </Wrapper>
         </CardContent>
         {user.role === "PARENT" && (
           <CardActions>
@@ -84,7 +106,7 @@ const MentorCard = ({ mentor, onClick }) => {
                 onClick={onClick}
                 disableElevation
               >
-                Request Mentorship
+                See More
               </Button>
             </ButtonBlock>
           </CardActions>
