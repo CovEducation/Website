@@ -159,6 +159,8 @@ class UserService {
         // These fields should never be changed.
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
+        // We need to be a bit more careful when modifying subdocuments.
+        students: doc.students,
       };
       await ParentModel.updateOne({ _id }, update);
       const students = await Promise.all(
@@ -168,9 +170,11 @@ class UserService {
               return d._id;
             });
           }
-          return StudentModel.updateOne({ _id: s._id }, s).then(() =>
-            mongoose.Types.ObjectId(String(s._id))
-          );
+          return StudentModel.updateOne({ _id: s._id }, s)
+            .then(() => mongoose.Types.ObjectId(String(s._id)))
+            .catch((err) => {
+              return StudentModel.create(s).then((d) => d._id);
+            });
         })
       );
       doc.students = students;

@@ -36,7 +36,7 @@ export interface PutParentRequest extends Request {
   body: { parent: IParent };
 }
 
-export interface PutParentResponse extends Response {}
+export interface PutParentResponse extends Response<IParent> {}
 
 export interface GetParentRequest extends Request {
   query: { _id: string };
