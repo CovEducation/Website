@@ -77,6 +77,31 @@ class MentorshipService {
           CommunicationTemplates.MENTORSHIP_REQUEST_MENTOR,
           request
         );
+        const time = new Date().valueOf();
+        // There seems to be an error destructuring documents in the mongoose version
+        // compatible with typegoose.
+        const update: IMentor = {
+          _id: mentor._id,
+          firebaseUID: mentor.firebaseUID,
+          name: mentor.name,
+          email: mentor.email,
+          region: mentor.region,
+          college: mentor.college,
+          phone: mentor.phone,
+          pronouns: mentor.pronouns,
+          avatar: mentor.avatar,
+          introduction: mentor.introduction,
+          major: mentor.major,
+          communicationPreference: mentor.communicationPreference,
+          gradeLevels: mentor.gradeLevels,
+          subjects: mentor.subjects,
+          mentorships: mentor.mentorships,
+          available: mentor.available,
+        };
+        await UserService.updateMentor(request.mentor._id, {
+          ...update,
+          lastRequestTime: time,
+        });
         const parent = await UserService.findParent(request.parent._id);
         await CommunicationService.sendMessage(
           parent,
