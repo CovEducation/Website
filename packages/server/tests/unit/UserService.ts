@@ -264,6 +264,91 @@ describe("🙋‍ User Service", () => {
       expect(doc._id?.equals(parent._id)).to.be.true;
       expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
     });
+
+    it.only("can add students", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const updatedParent: IParent = {
+        ...testParent,
+        firebaseUID: uuid(),
+        _id: mongoose.Types.ObjectId(),
+        students: testParent.students.concat({
+          name: "Billy",
+          gradeLevel: "9th",
+          subjects: ["Math"],
+        }),
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+      const doc = await UserService.findParent(parent._id);
+      expect(doc.name).to.be.equal(updatedParent.name);
+      expect(doc._id?.equals(parent._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
+      expect(doc.students.length).to.be.equal(testParent.students.length + 1);
+      expect(
+        doc.students.filter((s) => s._id !== undefined).length
+      ).to.be.equal(doc.students.length);
+    });
+
+    it("can remove students", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const updatedParent: IParent = {
+        ...testParent,
+        firebaseUID: uuid(),
+        _id: mongoose.Types.ObjectId(),
+        students: [],
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+      const doc = await UserService.findParent(parent._id);
+      expect(doc.name).to.be.equal(updatedParent.name);
+      expect(doc._id?.equals(parent._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
+      expect(doc.students.length).to.be.equal(0);
+    });
+
+    it("can edit students", async () => {
+      const parent: IParent = await UserService.createParent(testParent);
+      expect(parent._id).to.exist;
+      Object.keys(testMentor).forEach((key) => {
+        expect(parent[key]).to.be.deep.equal(testParent[key]);
+      });
+      if (parent._id === undefined) {
+        expect(parent._id).to.not.be.undefined;
+        return;
+      }
+      const student = parent.students[0];
+      student.subjects = ["Dancing"];
+      const updatedParent: IParent = {
+        ...testParent,
+        firebaseUID: uuid(),
+        _id: parent._id,
+        students: [student],
+      };
+      const ok = await UserService.updateParent(parent._id, updatedParent);
+      expect(ok).to.be.true;
+      const doc = await UserService.findParent(parent._id);
+      expect(doc.name).to.be.equal(updatedParent.name);
+      expect(doc._id?.equals(parent._id)).to.be.true;
+      expect(doc.firebaseUID).to.be.equal(parent.firebaseUID);
+      expect(doc.students.length).to.be.equal(1);
+      expect(doc.students[0].subjects.includes("Dancing")).to.be.true;
+    });
   });
 
   describe("::findParent()", () => {
