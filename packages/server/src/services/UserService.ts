@@ -88,8 +88,7 @@ class UserService {
       };
       return MentorModel.updateOne({ _id }, update).then(async (doc) => {
         if (doc !== null) {
-          // This save operation is *NOT* partial. You need to send all the data to Algolia or
-          // else the entry will be blank.
+          // This save operation is *NOT* partial. You need to send all the data to Algolia or else the entry will be blank.
           return this.mentorIndex
             .saveObject({
               ...update,
@@ -128,7 +127,21 @@ class UserService {
   }
 
   findParent(_id: mongoose.Types.ObjectId): Promise<IParent> {
-    return ParentModel.findOne({ _id }).then((resp) => {
+    return ParentModel.findOne({ _id }).then(async (resp) => {
+      if (resp === null) {
+        return Promise.reject(`Failed to find parent ${_id}`);
+      }
+      const students = await Promise.all(
+        resp.students.map((s) => {
+          return StudentModel.findOne({ _id: s._id }).then((d) => {
+            if (d === null) {
+              return Promise.reject("Invalid student id");
+            }
+            return d;
+          });
+        })
+      );
+      resp.students = students;
       return resp as IParent;
     });
   }
@@ -137,7 +150,7 @@ class UserService {
     _id: mongoose.Types.ObjectId,
     updatedParent: IParent
   ): Promise<boolean> {
-    return ParentModel.findOne({ _id }).then((doc) => {
+    return ParentModel.findOne({ _id }).then(async (doc) => {
       if (doc === null) {
         return Promise.reject(`Unknown _id ${_id}`);
       }
@@ -146,9 +159,26 @@ class UserService {
         // These fields should never be changed.
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
+        // We need to be a bit more careful when modifying subdocuments.
+        students: doc.students,
       };
-      return ParentModel.updateOne({ _id }, update).then((doc) => {
-        return doc !== null;
+      await ParentModel.updateOne({ _id }, update);
+      const students = await Promise.all(
+        updatedParent.students.map((s) => {
+          if (s._id === undefined) {
+            return StudentModel.create(s).then((d) => {
+              return d._id;
+            });
+          }
+          return StudentModel.updateOne({ _id: s._id }, s)
+            .then(() => mongoose.Types.ObjectId(String(s._id)))
+            .catch(() => {
+              return StudentModel.create(s).then((d) => d._id);
+            });
+        })
+      );
+      return ParentModel.updateOne({ _id }, { students }).then((d) => {
+        return d !== null;
       });
     });
   }
