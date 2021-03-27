@@ -45,12 +45,6 @@ const trimIntroChar = (introduction) => {
   return slicedIntro;
 };
 
-const trimIntroChar = (introduction) => {
-  const characterLimit = 250;
-  const slicedIntro = introduction.slice(0,characterLimit)+"...";
-  return slicedIntro;
-};
-
 const MentorCard = ({ mentor, onClick }) => {
   const { user } = useAuth();
   return (
