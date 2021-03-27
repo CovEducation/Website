@@ -1,9 +1,23 @@
 import { mongoose } from "@typegoose/typegoose";
+import algoliasearch, { SearchIndex } from "algoliasearch";
 import ParentModel, { IParent } from "../models/Parents";
 import MentorModel, { IMentor } from "../models/Mentors";
 import StudentModel from "../models/Students";
 
+// For some reason, mongoose-algolia does not update with algolia properly
+
 class UserService {
+  private mentorIndex: SearchIndex;
+  constructor() {
+    const { ALGOLIA_API_KEY, ALGOLIA_APP_ID } = process.env;
+    if (ALGOLIA_API_KEY === undefined || ALGOLIA_APP_ID === undefined) {
+      throw new Error("Unable connect to algolia.");
+    }
+    this.mentorIndex = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY).initIndex(
+      "mentors"
+    );
+  }
+
   createMentor(mentor: IMentor): Promise<IMentor> {
     return this.userExists(mentor).then((exists) => {
       if (exists) {
@@ -66,22 +80,28 @@ class UserService {
       if (doc === null) {
         return Promise.reject(`Unknown _id ${_id}`);
       }
-      // Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
-      if (doc !== null) {
-        try {
-          doc["SyncToAlgolia"]();
-        } catch {
-          console.log("Failed updating algolia");
-        }
-      }
       const update = {
         ...updatedMentor,
         // These fields should never be changed.
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
       };
-      return MentorModel.updateOne({ _id }, update).then((doc) => {
-        return doc !== null;
+      return MentorModel.updateOne({ _id }, update).then(async (doc) => {
+        if (doc !== null) {
+          // This save operation is *NOT* partial. You need to send all the data to Algolia or else the entry will be blank.
+          return this.mentorIndex
+            .saveObject({
+              ...update,
+              objectID: String(_id) || _id.toHexString(),
+            })
+            .then(() => {
+              return doc !== null;
+            })
+            .catch(() => {
+              return false;
+            });
+        }
+        return false;
       });
     });
   }
@@ -107,7 +127,21 @@ class UserService {
   }
 
   findParent(_id: mongoose.Types.ObjectId): Promise<IParent> {
-    return ParentModel.findOne({ _id }).then((resp) => {
+    return ParentModel.findOne({ _id }).then(async (resp) => {
+      if (resp === null) {
+        return Promise.reject(`Failed to find parent ${_id}`);
+      }
+      const students = await Promise.all(
+        resp.students.map((s) => {
+          return StudentModel.findOne({ _id: s._id }).then((d) => {
+            if (d === null) {
+              return Promise.reject("Invalid student id");
+            }
+            return d;
+          });
+        })
+      );
+      resp.students = students;
       return resp as IParent;
     });
   }
@@ -116,7 +150,7 @@ class UserService {
     _id: mongoose.Types.ObjectId,
     updatedParent: IParent
   ): Promise<boolean> {
-    return ParentModel.findOne({ _id }).then((doc) => {
+    return ParentModel.findOne({ _id }).then(async (doc) => {
       if (doc === null) {
         return Promise.reject(`Unknown _id ${_id}`);
       }
@@ -125,9 +159,26 @@ class UserService {
         // These fields should never be changed.
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
+        // We need to be a bit more careful when modifying subdocuments.
+        students: doc.students,
       };
-      return ParentModel.updateOne({ _id }, update).then((doc) => {
-        return doc !== null;
+      await ParentModel.updateOne({ _id }, update);
+      const students = await Promise.all(
+        updatedParent.students.map((s) => {
+          if (s._id === undefined) {
+            return StudentModel.create(s).then((d) => {
+              return d._id;
+            });
+          }
+          return StudentModel.updateOne({ _id: s._id }, s)
+            .then(() => mongoose.Types.ObjectId(String(s._id)))
+            .catch(() => {
+              return StudentModel.create(s).then((d) => d._id);
+            });
+        })
+      );
+      return ParentModel.updateOne({ _id }, { students }).then((d) => {
+        return d !== null;
       });
     });
   }

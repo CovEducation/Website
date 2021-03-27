@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 import ParentModel, { IParent } from "../../models/Parents";
 import MentorModel from "../../models/Mentors";
+import StudentModel, { IStudent } from "../../models/Students";
 
 const verify = (token: string) => {
   return firebase.auth().verifyIdToken(token);
@@ -11,12 +12,25 @@ const verify = (token: string) => {
 const getUser = (user: firebase.auth.DecodedIdToken) => {
   return MentorModel.findOne({ firebaseUID: user.uid }).then((doc) => {
     if (doc === null) {
-      return ParentModel.findOne({ firebaseUID: user.uid }).then((doc) => {
-        if (doc === null) {
-          return { user: null, type: null, userId: null };
+      return ParentModel.findOne({ firebaseUID: user.uid }).then(
+        async (doc) => {
+          if (doc === null) {
+            return { user: null, type: null, userId: null };
+          }
+          const students = await Promise.all(
+            doc.students.map((s) =>
+              StudentModel.findOne({ _id: s._id }).then((d) => {
+                if (d === null) {
+                  return Promise.reject("Failed to retrieve students.");
+                }
+                return d as IStudent;
+              })
+            )
+          );
+          doc.students = students;
+          return { user: doc as IParent, type: "PARENT", userId: doc?._id };
         }
-        return { user: doc as IParent, type: "PARENT", userId: doc?._id };
-      });
+      );
     }
 
     return { user: doc as any, type: "MENTOR", userId: doc._id };

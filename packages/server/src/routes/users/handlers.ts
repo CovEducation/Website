@@ -112,15 +112,16 @@ export const putParentHandler = (
   const parent: IParent = req.body.parent;
   const userID = req.session.userId;
   if (userID === undefined) {
-    res.status(403).send({ err: "User must be logged in." });
+    res.status(403);
     return;
   }
 
-  UserService.updateParent(userID, parent).then((ok) => {
+  UserService.updateParent(userID, parent).then(async (ok) => {
     if (!ok) {
-      res.status(500).send({ err: "Unable to update parent." });
+      res.status(500);
     } else {
-      res.status(200).send({});
+      const updatedParent = await UserService.findParent(userID);
+      res.status(200).send(updatedParent);
     }
   });
 };

@@ -34,10 +34,17 @@ const ProfilePage = ({ user }) => {
   const MentorProfile = [UserDetails, MentorDetails];
   const ParentProfile = [UserDetails, ParentStudentDetails];
 
-  const [verifiedSent, setVerifiedSent] = React.useState(false);
+  const [profileToast, setProfileToast] = React.useState({
+    message: "",
+    open: false,
+  });
 
   const sendEmailVerification = () => {
-    auth.sendEmailVerification().then(setVerifiedSent(true));
+    auth
+      .sendEmailVerification()
+      .then(
+        () => setProfileToast({ message: "Email Verification Sent.", open: true })
+      );
   };
 
   const verified = auth.emailVerified ? (
@@ -53,7 +60,12 @@ const ProfilePage = ({ user }) => {
   );
 
   const updateProfile = (values) => {
-    return saveProfileData(user.uid, values);
+    return saveProfileData(user.uid, values)
+      .then((data) => {
+        setProfileToast({message: "Update Successful.", open: true})
+        return data;
+      });
+
   };
 
   const profileComponents =
@@ -80,9 +92,9 @@ const ProfilePage = ({ user }) => {
         </Container>
       ))}
       <Toast
-        message={"Email Verification Sent."}
-        open={verifiedSent}
-        onClose={() => setVerifiedSent(false)}
+        message={profileToast.message}
+        open={profileToast.open}
+        onClose={() => setProfileToast({message: "", open: false})}
       />
     </ProfilePageWrapper>
   );

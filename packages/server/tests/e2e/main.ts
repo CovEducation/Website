@@ -289,6 +289,39 @@ describe("💾 Server", () => {
         expect(getParent.body.name).to.be.equal(parentUpdate.name);
       });
 
+      it("PUT - can add students ", async () => {
+        const res = await app
+          .post("/users/parent")
+          .send({ parent: testParent, token: { uid: testParent.firebaseUID } });
+        expect(res.status).to.be.equal(200);
+        expect(res.body._id).to.exist;
+        const parentUpdate = {
+          ...testParent,
+          name: "Jack Florey",
+          students: testParent.students.concat({
+            name: "Billy",
+            gradeLevel: "Middle School",
+            subjects: ["Math"],
+          }),
+        };
+        const update = await app.put("/users/parent").send({
+          parent: parentUpdate,
+          token: { uid: testParent.firebaseUID },
+        });
+        expect(update.status).to.be.equal(200);
+        expect(update.body.students.length).to.be.equal(
+          testParent.students.length + 1
+        );
+        expect(
+          update.body.students.filter((s) => s._id !== undefined).length
+        ).to.be.equal(testParent.students.length + 1);
+        const getParent = await app
+          .get("/users/parent")
+          .query({ _id: res.body._id });
+        expect(getParent.status).to.be.equal(200);
+        expect(getParent.body.name).to.be.equal(parentUpdate.name);
+      });
+
       it("PUT - rejects empty requests", async () => {
         const res = await app.put("/users/parent");
         expect(res.status).to.be.equal(401);
