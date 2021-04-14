@@ -194,11 +194,7 @@ export const FAQS = [
     question: "Is there any way for educators to get involved?",
     answer: (
       <div>
-        One of CovEd’s goals is to ensure that all students have access to
-        various resources to help stimulate educational growth during this time.
-        On our website’s home page, we have a form where resources can be
-        submitted. We are hoping to find the best resources for students and
-        hope you can help us!
+        We'd love to hear from you! We are always looking for advisors for our organizational team. Please contact us at coveducation@gmail.com if interested!
       </div>
     ),
   },
