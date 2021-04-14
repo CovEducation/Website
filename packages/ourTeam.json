@@ -16,12 +16,12 @@
     "photo": "propics/dheekshita.jpg"
   },
   {
-      "_id" : 2,
-      "name" : "Johan Cervantes",
-      "designation" : "CTO",
-      "position" : "MIT '21",
-      "team": "Management, Technology",
-      "photo": "propics/johanc.jpg"
+    "_id" : 2,
+    "name" : "Johan Cervantes",
+    "designation" : "CTO",
+    "position" : "MIT '21",
+    "team": "Management, Technology",
+    "photo": "propics/johanc.jpg"
   },
   {
     "_id" : 3,
@@ -50,7 +50,7 @@
   {
     "_id" : 6,
     "name" : "Pallas Chou",
-    "designation" : "Chief Engagement Officer; Coordinator Head",
+    "designation" : "Mentorship Coordinators Team - Co-Head",
     "position" : "Harvard '23",
     "team": "Management, Coordinators",
     "photo": "propics/pallas.jpg"
@@ -58,7 +58,7 @@
   {
     "_id" : 7,
     "name" : "Catherine Eng",
-    "designation" : "Lead Pedagogical Director",
+    "designation" : "Mentorship Coordinators Team - Lead Pedagogical Director",
     "position" : "UCSD '20",
     "team": "Management",
     "photo": "propics/catherineeng.jpg"
@@ -122,9 +122,9 @@
   {
     "_id" : 15,
     "name" : "Jin Wong",
-    "designation" : "Outreach Director - Great Lakes",
+    "designation" : "Direct Matching, Outreach Director - Great Lakes",
     "position" : "Southview HS '22",
-    "team": "Outreach",
+    "team": "Outreach, Coordinators",
     "photo": "propics/jin.jpg"
   },
   {
@@ -133,7 +133,7 @@
     "designation" : "Outreach Team Member - West Coast",
     "position" : "USC '22",
     "team": "Outreach",
-    "photo": "stock-profile.png"
+    "photo": "propics/joseph.jpg"
   },
   {
     "_id" : 17,
@@ -189,6 +189,222 @@
     "designation" : "Software Developer - Speaker Series",
     "position" : "SUNY @ Buffalo '22",
     "team": "Technology, Speaker Series",
+    "photo": "propics/dhathri.png"
+  },
+  {
+    "_id" : 24,
+    "name" : "Nathan Liang",
+    "designation" : "Mentorship Coordinators Team - Co-Head",
+    "position" : "MIT '21",
+    "team": "Coordinators",
+    "photo": "propics/nathanliang.jpg"
+  },
+  {
+    "_id" : 25,
+    "name" : "Aarushi Bajpai",
+    "designation" : "Mentee Handbooks Co-Lead",
+    "position" : "UCLA '23",
+    "team": "Coordinators",
+    "photo": "propics/aarushi.jpg"
+  },
+  {
+    "_id" : 26,
+    "name" : "Srikari Ayyagari",
+    "designation" : "Mentee Handbooks Co-Lead",
+    "position" : "Texas A&M '20",
+    "team": "Coordinators",
+    "photo": "propics/srikari.jpg"
+  },
+  {
+    "_id" : 27,
+    "name" : "Ruth Lu",
+    "designation" : "Direct Matching and Communications",
+    "position" : "American HS '22",
+    "team": "Coordinators",
+    "photo": "propics/ruth.jpg"
+  },
+  {
+    "_id" : 28,
+    "name" : "Janelle Jin",
+    "designation" : "Direct Matching",
+    "position" : "Amherst College '23",
+    "team": "Coordinators",
+    "photo": "propics/janelle.jpg"
+  },
+  {
+    "_id" : 29,
+    "name" : "Anna Kim",
+    "designation" : "Pedagogical Assistant Director",
+    "position" : "Brown '23",
+    "team": "Coordinators",
+    "photo": "propics/annakim.jpg"
+  },
+  {
+    "_id" : 30,
+    "name" : "Suraj Joshi",
+    "designation" : "Mentee Handbooks Creator and Mentor Trainer",
+    "position" : "CMU '20",
+    "team": "Coordinators",
+    "photo": "propics/suraj.jpg"
+  },
+  {
+    "_id" : 31,
+    "name" : "Yeji Lee",
+    "designation" : "Mentee Handbooks Creator",
+    "position" : "UC Berkeley '22",
+    "team": "Coordinators",
+    "photo": "propics/yeji.jpg"
+  },
+  {
+    "_id" : 32,
+    "name" : "Conor Kay",
+    "designation" : "Mentor Trainer",
+    "position" : "UMass Amherst '22",
+    "team": "Coordinators",
     "photo": "stock-profile.png"
+  },
+  {
+    "_id" : 31,
+    "name" : "Deepti Kumaran",
+    "designation" : "Mentee Handbooks Creator",
+    "position" : "American HS '22",
+    "team": "Coordinators",
+    "photo": "propics/deepti.jpg"
+  },
+  {
+    "_id" : 32,
+    "name" : "Maggie Chen",
+    "designation" : "Mentor Trainer",
+    "position" : "MIT '22",
+    "team": "Coordinators",
+    "photo": "propics/maggie.jpg"
+  },
+  {
+    "_id" : 33,
+    "name" : "Hashim Aslam",
+    "designation" : "Mentee Handbooks Creator",
+    "position" : "UMich '21",
+    "team": "Coordinators",
+    "photo": "propics/hashim.jpg"
+  },
+  {
+    "_id" : 34,
+    "name" : "Minaz Zad",
+    "designation" : "Mentor Trainer",
+    "position" : "Southern Methodist University '20",
+    "team": "Coordinators",
+    "photo": "propics/minaz.jpg"
+  },
+  {
+    "_id" : 35,
+    "name" : "Prottasha Khan",
+    "designation" : "Mentee Handbooks Creator",
+    "position" : "USC '21",
+    "team": "Coordinators",
+    "photo": "propics/prottasha.jpg"
+  },
+  {
+    "_id" : 36,
+    "name" : "Ryan Rahman",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "Texas A&M '22",
+    "team": "Coordinators",
+    "photo": "propics/ryanrahman.jpg"
+  },
+  {
+    "_id" : 37,
+    "name" : "Priyanka Suri",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "Texas A&M '21",
+    "team": "Coordinators",
+    "photo": "propics/priyanka.jpg"
+  },
+  {
+    "_id" : 38,
+    "name" : "Mariam Kish",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "Harvard '23",
+    "team": "Coordinators",
+    "photo": "propics/mariam.jpg"
+  },
+  {
+    "_id" : 39,
+    "name" : "Edward Bull",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "Bowdoin College '20",
+    "team": "Coordinators",
+    "photo": "propics/edwardbull.jpg"
+  },
+  {
+    "_id" : 40,
+    "name" : "Mahi Kovvuru",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "UT Austin '24",
+    "team": "Coordinators",
+    "photo": "propics/mahi.jpg"
+  },
+  {
+    "_id" : 41,
+    "name" : "Felipe Ramirez",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "Texas A&M '23",
+    "team": "Coordinators",
+    "photo": "propics/felipe.jpg"
+  },
+  {
+    "_id" : 42,
+    "name" : "Jenny Zhang",
+    "designation" : "Chicago Heights Peer Leader",
+    "position" : "UCLA '22",
+    "team": "Coordinators",
+    "photo": "propics/jennyzhang.jpg"
+  },
+  {
+    "_id" : 43,
+    "name" : "Esi Obeng",
+    "designation" : "Regional Team Member - Tri-State",
+    "position" : "Amherst College '22",
+    "team": "Outreach",
+    "photo": "propics/esi.jpg"
+  },
+  {
+    "_id" : 44,
+    "name" : "Sophia Le Goff Pollack",
+    "designation" : "Speaker Series Mentee Coordinator",
+    "position" : "Wellesley College '23 ",
+    "team": "Speaker Series",
+    "photo": "propics/sophiapollack.jpg"
+  },
+  {
+    "_id" : 45,
+    "name" : "Pragat Jay Muthu",
+    "designation" : "Speaker Series Mentee Coordinator",
+    "position" : "UT Austin '21 ",
+    "team": "Speaker Series",
+    "photo": "propics/pragat.jpg"
+  },
+  {
+    "_id" : 46,
+    "name" : "Meghna Iyer",
+    "designation" : "Co-Outreach Lead - New England",
+    "position" : "Northeastern '22 ",
+    "team": "Outreach",
+    "photo": "propics/meghna.jpg"
+  },
+  {
+    "_id" : 47,
+    "name" : "Serena Hirani",
+    "designation" : "Community Outreach Director - Great Plains",
+    "position" : "UT San Antonio '24 ",
+    "team": "Outreach",
+    "photo": "propics/serenahirani.jpg"
+  },
+  {
+    "_id" : 48,
+    "name" : "Saanvi Agarwal",
+    "designation" : "Youth Ambassador - West Coast",
+    "position" : "American HS '22 ",
+    "team": "Outreach",
+    "photo": "propics/saanvi.jpg"
   }
 ]

@@ -10,11 +10,11 @@ import React from "react";
 import useAuth from "../../providers/AuthProvider";
 import Jdenticon from "react-jdenticon";
 import styled from "styled-components";
-import { COLORS, FONTS } from "../../constants";
+import { COLORS, FONTS } from '../../constants';
 
 const Wrapper = styled.div`
   p {
-    font-family: ${FONTS.font2};
+    font-family:${FONTS.font2};
   }
   a {
     color: ${COLORS.blue};
