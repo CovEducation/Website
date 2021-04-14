@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FONTS, FAQS } from '../../constants';
 import Accordion, { AccordionRow } from '../../components/Accordion';
 import Grid from '@material-ui/core/Grid';
+import Footer from '../../components/Footer';
 
 const FAQsWrapper = styled.div`
   text-align: center;
@@ -26,6 +27,7 @@ const FAQsWrapper = styled.div`
 
 const FAQsPage = () => {
   return (
+    <>
     <FAQsWrapper>
       <Grid container direction="row" justify="center" spacing={2}>
       <Grid item sm={6} xs={10}>
@@ -62,6 +64,8 @@ const FAQsPage = () => {
         </Grid>
         </Grid>
     </FAQsWrapper>
+    <Footer />
+    </>
   )
 }
 

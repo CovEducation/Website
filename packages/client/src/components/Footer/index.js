@@ -28,8 +28,8 @@ const Footer = () => {
         <Section backgroundColor='darkblue' p="50px">
           <p>
           <Grid container direction="row" justify="center" spacing={2}>
-          <Grid item sm={4} xs={10}> <Link to="/terms">Terms and Conditions</Link></Grid>
-          <Grid item sm={4} xs={10}> <Link to="/privacy">Privacy Policy</Link></Grid>
+          <Grid item sm={4} xs={10}> <a target="_blank" href="https://coved.org/terms">Terms and Conditions</a></Grid>
+          <Grid item sm={4} xs={10}> <a target="_blank" href="https://coved.org/privacy">Privacy Policy</a></Grid>
           <Grid item sm={4} xs={10}> <Link to="/faqs">FAQs</Link></Grid>
           </Grid>
           </p>

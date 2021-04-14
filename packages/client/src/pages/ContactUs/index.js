@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Button from "../../components/Button";
 import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
+import Footer from '../../components/Footer';
 
 const Wrapper = styled.div`
   padding: 100px;
@@ -83,6 +84,7 @@ const ContactUsPageOld = () => {
 const ContactUs = () => {
   const { t } = useTranslation();
   return (
+    <>
     <Wrapper>
       <Alert icon={false} severity="warning">
         <Title>{t("Contact.Title")}</Title>
@@ -110,6 +112,8 @@ const ContactUs = () => {
         </p>
       </Alert>
     </Wrapper>
+    <Footer />
+    </>
   );
 };
 export default ContactUs;
