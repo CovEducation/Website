@@ -15,6 +15,7 @@ import SignInPage from './pages/SignIn';
 import RequestsPage from './pages/Requests';
 import PasswordReset from './pages/PasswordReset';
 import ResourcesPage from './pages/Resources';
+import Footer from './components/Footer';
 
 import { AuthProvider } from './providers/AuthProvider';
 import SpeakerSeriesPage from './pages/SpeakerSeries';
@@ -63,6 +64,7 @@ function App() {
                 <PasswordReset />
               </Route>
             </Switch>
+            <Footer />
           </Router>
         </AuthProvider>
     </Suspense>
