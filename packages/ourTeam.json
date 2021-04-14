@@ -16,12 +16,12 @@
     "photo": "propics/dheekshita.jpg"
   },
   {
-      "_id" : 2,
-      "name" : "Johan Cervantes",
-      "designation" : "CTO",
-      "position" : "MIT '21",
-      "team": "Management, Technology",
-      "photo": "propics/johanc.jpg"
+    "_id" : 2,
+    "name" : "Johan Cervantes",
+    "designation" : "CTO",
+    "position" : "MIT '21",
+    "team": "Management, Technology",
+    "photo": "propics/johanc.jpg"
   },
   {
     "_id" : 3,
@@ -50,7 +50,7 @@
   {
     "_id" : 6,
     "name" : "Pallas Chou",
-    "designation" : "Chief Engagement Officer; Coordinator Head",
+    "designation" : "Mentorship Coordinators Team - Co-Head",
     "position" : "Harvard '23",
     "team": "Management, Coordinators",
     "photo": "propics/pallas.jpg"
@@ -58,7 +58,7 @@
   {
     "_id" : 7,
     "name" : "Catherine Eng",
-    "designation" : "Lead Pedagogical Director",
+    "designation" : "Mentorship Coordinators Team - Lead Pedagogical Director",
     "position" : "UCSD '20",
     "team": "Management",
     "photo": "propics/catherineeng.jpg"
@@ -114,9 +114,9 @@
   {
     "_id" : 14,
     "name" : "Jin Wong",
-    "designation" : "Outreach Director - Great Lakes",
+    "designation" : "Direct Matching, Outreach Director - Great Lakes",
     "position" : "Southview HS '22",
-    "team": "Outreach",
+    "team": "Outreach, Coordinators",
     "photo": "propics/jin.jpg"
   },
   {
@@ -182,5 +182,45 @@
     "position" : "SUNY @ Buffalo '22",
     "team": "Technology, Speaker Series",
     "photo": "stock-profile.png"
+  },
+  {
+    "_id" : 23,
+    "name" : "Nathan Liang",
+    "designation" : "Mentorship Coordinators Team - Co-Head",
+    "position" : "MIT '21",
+    "team": "Coordinators",
+    "photo": "nathanliang.jpg"
+  },
+  {
+    "_id" : 24,
+    "name" : "Aarushi Bajpai",
+    "designation" : "Mentee Handbooks Co-Lead",
+    "position" : "UCLA '23",
+    "team": "Coordinators",
+    "photo": "aarushi.jpg"
+  },
+  {
+    "_id" : 25,
+    "name" : "Srikari Ayyagari",
+    "designation" : "Mentee Handbooks Co-Lead",
+    "position" : "Texas A&M '20",
+    "team": "Coordinators",
+    "photo": "srikari.jpg"
+  },
+  {
+    "_id" : 26,
+    "name" : "Ruth Lu",
+    "designation" : "Direct Matching and Communications",
+    "position" : "American HS '22",
+    "team": "Coordinators",
+    "photo": "ruth.jpg"
+  },
+  {
+    "_id" : 27,
+    "name" : "Janelle Jin",
+    "designation" : "Direct Matching",
+    "position" : "Amherst College '23",
+    "team": "Coordinators",
+    "photo": "janelle.jpg"
   }
 ]
