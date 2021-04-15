@@ -2,7 +2,7 @@ import React from "react";
 import HTabs from "./Tabs";
 import styled from "styled-components";
 import { FONTS } from '../../constants';
-
+import Footer from '../../components/Footer';
 import { getTeamDataList } from "../../api";
 
 const TabsContainer = styled.div`
@@ -68,6 +68,7 @@ const MeetOurTeam = () => {
           class="process"
         />
       </TabsContainer>
+      <Footer />
     </div>
   );
 };

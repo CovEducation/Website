@@ -9,6 +9,7 @@ import { COLORS, FONTS } from '../../constants';
 import Section from '../../components/Section';
 import ImText from '../../components/TextandImage';
 import Hidden from '@material-ui/core/Hidden';
+import Footer from '../../components/Footer';
 
 // Images
 import art from './img/art.svg';
@@ -307,6 +308,7 @@ const HomePage = () => {
           </p>
         </Section>
       </HomepageBody>
+      <Footer />
     </HomeWrapper>
   )
 }
