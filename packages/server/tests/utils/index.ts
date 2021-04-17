@@ -74,8 +74,10 @@ export const setupMocks = async () => {
       };
     },
   };
+  const algoliaMock = () => {};
   mockery.registerMock("nodemailer", nodemailerMock);
   mockery.registerMock("firebase-admin", firebaseMock);
+  mockery.registerMock("mongoose-algolia", algoliaMock);
 };
 
 export default {
