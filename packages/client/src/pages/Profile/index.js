@@ -42,8 +42,8 @@ const ProfilePage = ({ user }) => {
   const sendEmailVerification = () => {
     auth
       .sendEmailVerification()
-      .then(
-        () => setProfileToast({ message: "Email Verification Sent.", open: true })
+      .then(() =>
+        setProfileToast({ message: "Email Verification Sent.", open: true })
       );
   };
 
@@ -60,12 +60,10 @@ const ProfilePage = ({ user }) => {
   );
 
   const updateProfile = (values) => {
-    return saveProfileData(user.uid, values)
-      .then((data) => {
-        setProfileToast({message: "Update Successful.", open: true})
-        return data;
-      });
-
+    return saveProfileData(user.uid, values).then((data) => {
+      setProfileToast({ message: "Update Successful.", open: true });
+      return data;
+    });
   };
 
   const profileComponents =
@@ -94,7 +92,7 @@ const ProfilePage = ({ user }) => {
       <Toast
         message={profileToast.message}
         open={profileToast.open}
-        onClose={() => setProfileToast({message: "", open: false})}
+        onClose={() => setProfileToast({ message: "", open: false })}
       />
     </ProfilePageWrapper>
   );
