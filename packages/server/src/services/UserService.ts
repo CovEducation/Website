@@ -4,10 +4,11 @@ import ParentModel, { IParent } from "../models/Parents";
 import MentorModel, { IMentor } from "../models/Mentors";
 import StudentModel from "../models/Students";
 
-// For some reason, mongoose-algolia does not update with algolia properly
+// ! For some reason, mongoose-algolia does not update with algolia properly
 
 class UserService {
   private mentorIndex: SearchIndex;
+
   constructor() {
     const { ALGOLIA_API_KEY, ALGOLIA_APP_ID } = process.env;
     if (ALGOLIA_API_KEY === undefined || ALGOLIA_APP_ID === undefined) {
@@ -57,8 +58,8 @@ class UserService {
       .then((doc) => {
         if (doc !== null) {
           try {
-            // Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
-            // The plugin doesn't support TS so we have to do this sketchy thing.
+            // ! Sketchy but works: https://www.npmjs.com/package/mongoose-algolia
+            // ! The plugin doesn't support TS so we have to do this sketchy thing.
             doc["RemoveFromAlgolia"]();
           } catch {
             console.log("Failed to remove document from algolia.");
@@ -82,26 +83,31 @@ class UserService {
       }
       const update = {
         ...updatedMentor,
-        // These fields should never be changed.
+        // ! These fields should never be changed.
         _id: doc._id,
         firebaseUID: doc.firebaseUID,
       };
       return MentorModel.updateOne({ _id }, update).then(async (doc) => {
-        if (doc !== null) {
-          // This save operation is *NOT* partial. You need to send all the data to Algolia or else the entry will be blank.
-          return this.mentorIndex
-            .saveObject({
-              ...update,
-              objectID: String(_id) || _id.toHexString(),
-            })
-            .then(() => {
-              return doc !== null;
-            })
-            .catch(() => {
-              return false;
-            });
+        if (doc === null) {
+          return false;
         }
-        return false;
+        // ! This save operation is *NOT* partial. You need to send all the data to Algolia or else the entry will be blank.
+        return this.mentorIndex
+          .saveObject({
+            ...update,
+            objectID: String(_id) || _id.toHexString(),
+          })
+          .then(() => {
+            return doc !== null;
+          })
+          .catch((err) => {
+            if (process.env.NODE_ENV === "test") {
+              // ? Algolia credentials are not used during testing
+              // to avoid cluttering the database.
+              return err.status === 403;
+            }
+            return false;
+          });
       });
     });
   }

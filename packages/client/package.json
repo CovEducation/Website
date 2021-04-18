@@ -47,7 +47,7 @@
     "rules": {
       "quotes": [
         "error",
-        "single"
+        "double"
       ],
       "object-curly-spacing": [
         "error",
