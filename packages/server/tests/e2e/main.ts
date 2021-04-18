@@ -97,9 +97,10 @@ describe("💾 Server", () => {
       });
 
       it("PUT - updates user", async () => {
-        const res = await app
-          .post("/users/mentor")
-          .send({ mentor: testMentor, token: { uid: testMentor.firebaseUID } });
+        const res = await app.post("/users/mentor").send({
+          mentor: testMentor,
+          token: { uid: testMentor.firebaseUID },
+        });
         expect(res.status).to.be.equal(200);
         expect(res.body._id).to.exist;
         expect(res.body as IMentor).to.deep.contain(testMentor);

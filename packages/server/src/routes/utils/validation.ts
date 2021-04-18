@@ -25,7 +25,7 @@ export const mentorRequirementsBody = [
   body("mentor.subjects").exists().isArray({ min: 1 }),
   body("mentor.mentorships.*._id").optional().isMongoId(),
   body("mentor.phone").optional({ checkFalsy: true }).isMobilePhone("en-US"),
-  body("mentor.avatar").optional().exists().isURL(),
+  body("mentor.avatar").optional().isURL(),
   body("mentor.communicationPreference")
     .exists()
     .isIn([CommunicationPreference.EMAIL, CommunicationPreference.SMS]),

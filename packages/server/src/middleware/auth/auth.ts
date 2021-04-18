@@ -49,7 +49,7 @@ const getUserId = (user: firebase.auth.DecodedIdToken) => {
   });
 };
 
-// TODO(johancc) - For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
+// ? For some reason, you cannot log in by sending the token in the header (it gets encoded as [object Object])
 const login = (req: Request, res: Response) => {
   verify(req.headers.token || req.body.token || req.query.token)
     .then((user) => {
