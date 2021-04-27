@@ -17499,9 +17499,9 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
 twilio@^3.55.1:
-  version "3.56.0"
-  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.56.0.tgz#ea2c6f3b2f8823c506c92d5e2d4e35fd0427e93a"
-  integrity sha512-SXnYInB5P00UP2umFkOow0e++2UoWpabPkcltCzsKdsZQLI+AfLd0xyVP3dF8Z7An8i78GvnFTC/bSYXhrddzA==
+  version "3.61.0"
+  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.61.0.tgz#39e162144963acdf5ea257204f75929f1f13fbe8"
+  integrity sha512-hSnPvxogJLC6RrAkE1p2COqO6L0TMElImYDaI4eJJAn6EpJhwpHIwulpNH1R11TsJp0f9lqT7VvwYHhVXSvrvw==
   dependencies:
     axios "^0.21.1"
     dayjs "^1.8.29"
@@ -17512,7 +17512,7 @@ twilio@^3.55.1:
     qs "^6.9.4"
     rootpath "^0.1.2"
     scmp "^2.1.0"
-    url-parse "^1.4.7"
+    url-parse "^1.5.0"
     xmlbuilder "^13.0.2"
 
 type-check@~0.3.2:
@@ -17772,10 +17772,10 @@ url-parse-lax@^3.0.0:
   dependencies:
     prepend-http "^2.0.0"
 
-url-parse@^1.4.3, url-parse@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+url-parse@^1.4.3, url-parse@^1.5.0:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
+  integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
