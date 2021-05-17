@@ -6840,19 +6840,12 @@ debug@3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@4, debug@4.3.1, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.2.0:
+debug@4, debug@4.3.1, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.2.0, debug@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
   integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
   dependencies:
     ms "2.1.2"
-
-debug@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
-  dependencies:
-    ms "^2.1.1"
 
 debug@^3.1.0, debug@^3.1.1, debug@^3.2.5, debug@^3.2.6:
   version "3.2.7"
@@ -12818,18 +12811,18 @@ nodemailer-mandrill-transport@^1.2.0:
     extend "^3.0.0"
     mandrill-api "^1.0.45"
 
-nodemailer-mock@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/nodemailer-mock/-/nodemailer-mock-1.5.3.tgz#449d8b99d9a3d5f49448744685e4f96e2142deb1"
-  integrity sha512-Y0JYLFjx+HMNB1Y55uYj+6Vk7ZkJyMKH6GY85UgaSsaaWdH7BE7j0pH7Tp8H4qvQkWSycDh/76iWlHb4dEiWtg==
+nodemailer-mock@^1.5.9:
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/nodemailer-mock/-/nodemailer-mock-1.5.9.tgz#4d58d741e3d5d17c5d0365733a5e853d71d10d0f"
+  integrity sha512-BuD991fR5cgu334/yC3yWrjSYBI92+D6jkDvegLdNyOQNJI/djl676y7gtqvheNV1LD8e7NJOhFs+HaKJjOQgw==
   dependencies:
-    debug "4.1.1"
-    nodemailer "6.x"
+    debug "^4.3.1"
+    nodemailer "^6.x"
 
-nodemailer@6.x, nodemailer@^6.4.17:
-  version "6.4.18"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.18.tgz#2788c85792844fc17befda019031609017f4b9a1"
-  integrity sha512-ht9cXxQ+lTC+t00vkSIpKHIyM4aXIsQ1tcbQCn5IOnxYHi81W2XOaU66EQBFFpbtzLEBTC94gmkbD4mGZQzVpA==
+nodemailer@^6.4.17, nodemailer@^6.x:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.6.0.tgz#ed47bb572b48d9d0dca3913fdc156203f438f427"
+  integrity sha512-ikSMDU1nZqpo2WUPE0wTTw/NGGImTkwpJKDIFPZT+YvvR9Sj+ze5wzu95JHkBMglQLoG2ITxU21WukCC/XsFkg==
 
 nodemon@^2.0.7:
   version "2.0.7"
