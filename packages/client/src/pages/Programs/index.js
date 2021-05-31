@@ -73,7 +73,7 @@ const ProgramPage = () => {
             </p>
 
             <p>
-                If you are interested in signing your students up for these
+                If you are interested in signing your student up for these
                 clubs, go to <a href="https://bit.ly/coved-abc-student">bit.ly/coved-abc-student</a>.
             </p>
 
