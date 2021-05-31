@@ -292,7 +292,7 @@ const RequestsPage = () => {
           <p>
             {item.endDate && (
               <>
-                <b>End date: </b> {getDate(item.startDate)}
+                <b>End date: </b> {getDate(item.endDate)}
               </>
             )}
           </p>
