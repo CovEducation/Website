@@ -170,6 +170,10 @@ NavBar.defaultProps = {
       link: "/resources",
     },
     {
+      title: "Programs",
+      link: "/programs",
+    },
+    {
       title: "FAQs",
       link: "/faqs",
     },
