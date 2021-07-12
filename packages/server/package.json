@@ -73,7 +73,7 @@
     "firebase-admin": "^9.5.0",
     "google-auth-library": "^7.0.2",
     "handlebars": "^4.7.6",
-    "mongoose": "5.10.18",
+    "mongoose": "5.13.2",
     "mongoose-algolia": "^1.10.1",
     "mongoose-autopopulate": "^0.12.3",
     "morgan": "^1.10.0",
