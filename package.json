@@ -36,6 +36,7 @@
     "rimraf": "^3.0.1"
   },
   "devDependencies": {
+    "forever": "^4.0.1",
     "husky": "^5.0.6",
     "lerna": "^3.22.1",
     "mongodb-memory-server": "^6.9.3",

@@ -1,5 +1,5 @@
 {
-  "name": "@johanc/server",
+  "name": "@coved/server",
   "version": "1.0.0",
   "author": "Johan Cervantes <johanc@mit.edu>",
   "description": "Server template using Express + TypeScript + Typegoose + Mocha",
@@ -10,11 +10,13 @@
   "license": "MIT",
   "repository": "https://github.com/johancc/Apollo",
   "scripts": {
-    "start": "node build/index.js",
-    "build": "run-s clean build:tsc",
+    "start": "node build/index.js",    
+    "build": "run-s clean build:tsc copyStatic",
     "build:tsc": "tsc -b",
+    "copyStatic":"copyfiles --error --up 1 src/*.{pdf,json} build",
     "lint": "prettier --write 'src/**/*.ts'",
     "clean": "rimraf build coverage tsconfig.tsbuildinfo .nyc_output",
+    "serve": "forever -c 'nodemon --exitcrash --config nodemon.json' src/index.ts",
     "dev": "nodemon --config nodemon.json src/index.ts",
     "test": "echo 'Testing...' && cross-env NODE_ENV=test nyc mocha -r ts-node/register 'tests/**/*.ts' --colors --exit"
   },
@@ -47,6 +49,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "firebase-mock": "^2.3.2",
     "mocha": "^8.2.1",
