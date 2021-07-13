@@ -30,4 +30,4 @@ if ping www.coved.org; then
     echo "Total downtime:  $((($DIFF % 3600) / 60)) minutes $(($DIFF % 60)) seconds"
 else
     echo "Failed to start DigitalOcean droplet. Please ssh into the droplet to debug."
-
+fi
