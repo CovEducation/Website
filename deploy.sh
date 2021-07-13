@@ -21,7 +21,7 @@ git push
 
 echo "Connecting to Droplet & deploying..."
 start=$(date +"%s")
-ssh root@174.138.58.11 'git pull; forever stop 0; yarn; lerna run serve'
+ssh root@174.138.58.117 'cd ~/CovEducation; git pull; forever stop 0; yarn; lerna run serve &'
 end=$(date +"%s")
 DIFF=$(($end-$start))
 
