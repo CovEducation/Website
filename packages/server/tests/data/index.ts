@@ -8,7 +8,7 @@ export const testMentor: IMentor = {
   firebaseUID: uuid(),
   name: "Ben Bitdiddle",
   email: "jack@mit.edu",
-  phone: "15005550006",
+  phone: "3392015945",
   pronouns: "He/Him",
   avatar: "www.imgur.com/testImage.jpg",
   introduction: "Hello I'm a test user",
