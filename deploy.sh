@@ -34,7 +34,7 @@ ssh root@174.138.58.117 '
 end=$(date +"%s")
 DIFF=$(($end-$start))
 
-if ping www.coved.org; then 
+if ping -c 5 www.coved.org; then 
     echo "New version succesfully deployed! 🎉"
     echo "Total downtime:  $((($DIFF % 3600) / 60)) minutes $(($DIFF % 60)) seconds"
 else
