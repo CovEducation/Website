@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
 import Link from '@material-ui/core/Link';
-import Button from '../../components/Button';
 import LinesBackground from './LinesBackground';
 import { COLORS, FONTS } from '../../constants';
 import Section from '../../components/Section';

@@ -1,10 +1,7 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
 import { FONTS } from "../../constants";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import Button from "../../components/Button";
-import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 import Footer from '../../components/Footer';
 
@@ -31,55 +28,6 @@ const Subtitle = styled.p`
   font-family: ${FONTS.font2};
 `;
 
-const Headings = styled.p`
-  font-style: normal;
-  font-size: max(1vw, 16px);
-  font-weight: 300;
-  font-family: ${FONTS.font2};
-  text-align: left;
-`;
-
-const ContactUsPageOld = () => {
-  const { t } = useTranslation();
-  return (
-    <Wrapper>
-      <Title>{t("Contact.Title")}</Title>
-      <Subtitle>{t("Contact.Subtitle")}</Subtitle> <br />
-      <Container maxWidth="sm">
-        <form noValidate autoComplete="off" action="/msg" method="post">
-          <Headings>{t("Contact.Name")}</Headings>
-          <TextField
-            name="name"
-            id="outlined-basic"
-            variant="outlined"
-            fullWidth
-          />
-          <Headings>{t("Contact.Email")}</Headings>
-          <TextField
-            name="email"
-            id="outlined-basic"
-            variant="outlined"
-            fullWidth
-          />
-          <Headings>{t("Contact.Message")}</Headings>
-          <TextField
-            id="standard-multiline-static"
-            variant="outlined"
-            fullWidth
-            multiline
-            name="email"
-            rows={6}
-          />
-          <br />
-          <br />
-          <Button theme="accent" size="md" type="submit">
-            {t("Submit")}
-          </Button>
-        </form>
-      </Container>{" "}
-    </Wrapper>
-  );
-};
 
 const ContactUs = () => {
   const { t } = useTranslation();

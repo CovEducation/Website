@@ -10,7 +10,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
 import { FormHelperText, Grid } from "@material-ui/core";
 
 const FormikField = (props) => {

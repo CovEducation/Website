@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Section from '../../components/Section';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -28,8 +28,8 @@ const Footer = () => {
         <Section backgroundColor='darkblue' p="50px">
           <p>
           <Grid container direction="row" justify="center" spacing={2}>
-          <Grid item sm={4} xs={10}> <a target="_blank" href="https://coved.org/terms">Terms and Conditions</a></Grid>
-          <Grid item sm={4} xs={10}> <a target="_blank" href="https://coved.org/privacy">Privacy Policy</a></Grid>
+          <Grid item sm={4} xs={10}> <a target="_blank" rel="noopener noreferrer"  href="https://coved.org/terms">Terms and Conditions</a></Grid>
+          <Grid item sm={4} xs={10}> <a target="_blank" rel="noopener noreferrer"  href="https://coved.org/privacy">Privacy Policy</a></Grid>
           <Grid item sm={4} xs={10}> <Link to="/faqs">FAQs</Link></Grid>
           </Grid>
           </p>

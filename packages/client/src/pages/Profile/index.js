@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { MentorDetails, ParentStudentDetails, UserDetails } from "./sections";
-import { MENTOR, PARENT } from "../../constants";
+import { MENTOR } from "../../constants";
 import { Container } from "@material-ui/core";
 import { saveProfileData } from "../../api";
 import useAuth from "../../providers/AuthProvider";

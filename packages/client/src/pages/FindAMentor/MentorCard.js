@@ -23,6 +23,13 @@ const Wrapper = styled.div`
   a:visited {
     color: ${COLORS.darkblue};
   }
+  button {
+    color: ${COLORS.blue};
+    cursor: pointer;
+  }
+  button:visited {
+    color: ${COLORS.darkblue};
+  }
 `;
 
 const ButtonBlock = styled.div`
@@ -66,9 +73,9 @@ const MentorCard = ({ mentor, onClick }) => {
           <Wrapper>
             <Typography variant="body2" component="p" align="justify">
               {trimIntroChar(mentor.introduction)}
-              <a onClick={onClick}>
+              <button onClick={onClick}>
                 <b>(See More)</b>
-              </a>
+              </button>
               <br />
               <b>
                 Subjects willing to mentor <br />

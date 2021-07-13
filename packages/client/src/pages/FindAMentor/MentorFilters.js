@@ -1,16 +1,13 @@
 import { FormControl, FormControlLabel, makeStyles, Button} from "@material-ui/core";
 import React, {useState} from "react";
-import { connectRefinementList, RefinementList } from "react-instantsearch-dom";
+import { connectRefinementList } from "react-instantsearch-dom";
 import Accordion, { AccordionRow } from "../../components/Accordion";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     padding: "0 2em 0 2em",
-  },
-  formControl: {
-    // margin: theme.spacing(3),
   },
 }));
 
