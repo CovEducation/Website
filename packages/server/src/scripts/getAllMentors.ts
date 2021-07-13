@@ -1,14 +1,14 @@
 
 import find from "find-up";
 import dotenv from "dotenv";
-import fs from 'fs';
+import {createObjectCsvWriter} from 'csv-writer';
 import { mongoose } from "@typegoose/typegoose";
 import MentorModel from "../models/Mentors";
 
 
 const envPath = find.sync(".env");
 dotenv.config({ path: envPath });
-const fname = 'mentor_emails.json';
+const fname = 'mentor_emails.csv';
 let MONGO_URI = process.env.MONGO_URI;
 let DB_NAME = process.env.DB_NAME;
 
@@ -22,8 +22,11 @@ mongoose
       dbName: DB_NAME,
     })
 MentorModel.find({}).then((mentors) => {
-    return mentors.map((mentor) => mentor.email);
-}).then((emails) => {
-    fs.writeFileSync(fname, JSON.stringify(emails));
-    console.log("wrote to ", fname)
+    return mentors.map((mentor) => {
+        return {email:mentor.email}});
+}).then((emails: Array<String>) => {
+    let writer = createObjectCsvWriter({path: fname, header: [{id: 'email', title: 'Email'}]});
+    writer.writeRecords(emails).then(() => {
+        console.log("wrote to ", fname);
+    })
 })
