@@ -16,9 +16,12 @@ echo "Pushing changes to GitHub..."
 git add .
 date +"%D %T"
 currentDate=`date`
-git commit -m "Deployment: $currentDate"
-git push
-
+if  git commit -m "Deployment: $currentDate"; then 
+    git push
+else
+    echo "Nothing to commit. Exiting deployment..."
+    exit 1
+fi
 echo "Connecting to Droplet & deploying..."
 start=$(date +"%s")
 ssh root@174.138.58.117 '
