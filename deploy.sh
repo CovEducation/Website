@@ -20,10 +20,14 @@ git commit -m "Deployment: $currentDate"
 git push
 
 echo "Connecting to Droplet & deploying..."
-ssh root@174.138.58.11 'git pull; forever stop 0; npm ci; lerna run serve'
+start=$(date +"%s")
+ssh root@174.138.58.11 'git pull; forever stop 0; yarn; lerna run serve'
+end=$(date +"%s")
+DIFF=$(($end-$start))
 
 if ping www.coved.org; then 
     echo "New version succesfully deployed! 🎉"
+    echo "Total downtime:  $((($DIFF % 3600) / 60)) minutes $(($DIFF % 60)) seconds"
 else
-    echo "Failed to start DigitalOcean droplet. Please login to the console to debug."
+    echo "Failed to start DigitalOcean droplet. Please ssh into the droplet to debug."
 
