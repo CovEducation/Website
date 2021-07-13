@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 shopt -s inherit_errexit
+echo "Deployment tool v1"
+echo "Describe the changes in this deployment: "
+read changelog
 
 echo "Making sure that all tests pass before deploying..."
 echo "Backing up .env"
@@ -16,7 +19,7 @@ echo "Pushing changes to GitHub..."
 git add .
 date +"%D %T"
 currentDate=`date`
-if  git commit -m "Deployment: $currentDate"; then 
+if  git commit -m "deployment($currentDate): $changelog"; then 
     git push
 else
     echo "Nothing to commit. Exiting deployment..."
