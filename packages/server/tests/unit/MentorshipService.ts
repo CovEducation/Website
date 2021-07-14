@@ -616,7 +616,6 @@ describe("📚 Mentorship Service", () => {
         mentor,
       };
       const mentorship = await MentorshipService.sendRequest(request);
-      MentorshipService.rejectRequest(mentorship);
       await MentorshipService.acceptRequest(mentorship);
       await expect(MentorshipService.rejectRequest(mentorship)).to.eventually.be
         .rejected;
