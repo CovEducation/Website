@@ -28,11 +28,15 @@ if (
   speakerSeriesPath === undefined ||
   ourTeamPath === undefined ||
   termsPath === undefined ||
-  privacyPath === undefined || 
-  SESSION_SECRET === undefined
+  privacyPath === undefined
 ) {
   throw new Error("Initialization error: Missing static data.");
 }
+
+if (SESSION_SECRET === undefined) {
+  throw new Error("Missing environment key: SESSION_SECRET");
+}
+
 const validateEnv = () => {
   if (process.env.MONGO_URI === undefined) {
     throw new Error("Missing environment key: MONGO_URI");
@@ -105,7 +109,7 @@ const createHttpServer = async (): Promise<http.Server> => {
     DB_NAME = "",
     FIREBASE_CREDENTIALS = "",
   } = process.env;
-  
+
   // Tests should not connect to firebase. 
   if (process.env.NODE_ENV !== "test") {
     const firebaseCertPath = findUp.sync(FIREBASE_CREDENTIALS);
