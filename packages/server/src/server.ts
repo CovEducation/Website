@@ -8,6 +8,8 @@ import fs from "fs";
 import path from "path";
 import express from "express";
 import session from "express-session";
+import csrf from 'csurf';
+import RateLimit from 'express-rate-limit';
 import firebase from "firebase-admin";
 import { mongoose } from "@typegoose/typegoose";
 import MainRouter from "./routes/MainRouter";
@@ -18,17 +20,23 @@ dotenv.config({ path: envPath });
 
 const speakerSeriesPath = find.sync("speakerSeries.json");
 const ourTeamPath = find.sync("ourTeam.json");
-const TermsPath = find.sync("terms.pdf");
-const PrivacyPath = find.sync("privacy.pdf");
+const termsPath = find.sync("terms.pdf");
+const privacyPath = find.sync("privacy.pdf");
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 if (
   speakerSeriesPath === undefined ||
   ourTeamPath === undefined ||
-  TermsPath === undefined ||
-  PrivacyPath === undefined
+  termsPath === undefined ||
+  privacyPath === undefined
 ) {
   throw new Error("Initialization error: Missing static data.");
 }
+
+if (SESSION_SECRET === undefined) {
+  throw new Error("Missing environment key: SESSION_SECRET");
+}
+
 const validateEnv = () => {
   if (process.env.MONGO_URI === undefined) {
     throw new Error("Missing environment key: MONGO_URI");
@@ -62,14 +70,16 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.use(express.json({}));
   app.use(express.urlencoded({ extended: true }));
   app.use(cors({ origin: true }));
+  app.use(new RateLimit({windowMs: 1 * 60 * 1000, max: 500})); // 500 API calls per day.
   app.use(compression());
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || "default",
+      secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
     })
   );
+
   app.get("/speakerSeries", (_, res) => {
     res.send(speakerSeries);
   });
@@ -77,11 +87,12 @@ const createHttpServer = async (): Promise<http.Server> => {
     res.send(ourTeam);
   });
   app.get("/terms", (_, res) => {
-    res.sendFile(TermsPath);
+    res.sendFile(termsPath);
   });
   app.get("/privacy", (_, res) => {
-    res.sendFile(PrivacyPath);
+    res.sendFile(privacyPath);
   });
+
   app.use("/", MainRouter);
 
   app.use(express.static(appBundleDirectory));
@@ -89,11 +100,17 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.use("*", (_, res) => {
     res.sendFile(path.resolve(appBundleDirectory, "index.html"));
   });
+
+  // This must be the last middleware: https://stackoverflow.com/questions/23997572/error-misconfigured-csrf-express-js-4
+  app.use(csrf({  sessionKey: SESSION_SECRET }));
+
   const {
     MONGO_URI = "",
     DB_NAME = "",
     FIREBASE_CREDENTIALS = "",
   } = process.env;
+
+  // Tests should not connect to firebase. 
   if (process.env.NODE_ENV !== "test") {
     const firebaseCertPath = findUp.sync(FIREBASE_CREDENTIALS);
     if (firebaseCertPath === undefined) {
