@@ -1,10 +1,10 @@
 {
-  "name": "@johanc/coved",
+  "name": "@coved/website",
   "version": "1.0.0",
   "author": "Johan Cervantes <johanc@mit.edu>",
   "license": "MIT",
   "private": true,
-  "repository": "https://github.com/johancc/Apollo",
+  "repository": "https://github.com/CovEducation/Website",
   "workspaces": {
     "packages": [
       "packages/*"

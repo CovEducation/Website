@@ -2,13 +2,13 @@
   "name": "@coved/server",
   "version": "1.0.0",
   "author": "Johan Cervantes <johanc@mit.edu>",
-  "description": "Server template using Express + TypeScript + Typegoose + Mocha",
+  "description": "Website for CovEducation: A nonprofits focusing on helping K-12 students during the Covid-19 pandemic.",
   "main": "build/index.js",
   "files": [
     "build"
   ],
   "license": "MIT",
-  "repository": "https://github.com/johancc/Apollo",
+  "repository": "https://github.com/CovEducation/Website",
   "scripts": {
     "start": "node build/index.js",    
     "build": "run-s clean build:tsc",
