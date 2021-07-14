@@ -74,7 +74,7 @@ const createHttpServer = async (): Promise<http.Server> => {
   app.use(compression());
   app.use(
     session({
-      secret: SESSION_SECRET,
+      secret: process.env.test ? "test": SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
     })
