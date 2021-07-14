@@ -22,7 +22,7 @@ const speakerSeriesPath = find.sync("speakerSeries.json");
 const ourTeamPath = find.sync("ourTeam.json");
 const termsPath = find.sync("terms.pdf");
 const privacyPath = find.sync("privacy.pdf");
-const SESSION_SECRET = process.env.SESSION_SECRET;
+const SESSION_SECRET = process.env.NODE_ENV === 'test' ? 'test': process.env.SESSION_SECRET;
 
 if (
   speakerSeriesPath === undefined ||
