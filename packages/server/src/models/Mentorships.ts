@@ -2,7 +2,7 @@ import { Mentor } from "./Mentors";
 import { Parent } from "./Parents";
 import { Student } from "./Students";
 import { ISession } from "./Sessions";
-import { getModelForClass, mongoose, prop, Ref } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, mongoose, prop, Ref, Severity } from "@typegoose/typegoose";
 
 /**
  * PENDING - A request has been sent to the mentor, but the mentor has not yet accepted.
@@ -36,6 +36,7 @@ export interface IMentorship {
   sessions: ISession[];
 }
 
+@modelOptions({options: {allowMixed: Severity.ALLOW}})
 export class Mentorship implements IMentorship {
   public _id?: mongoose.Types.ObjectId;
 

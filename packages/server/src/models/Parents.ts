@@ -1,4 +1,4 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import CommunicationPreference from "./CommunicationPreference";
 import { IStudent, Student } from "./Students";
@@ -15,7 +15,7 @@ export interface IParent {
   communicationPreference: CommunicationPreference;
   students: IStudent[];
 }
-
+@modelOptions({options: {allowMixed: Severity.ALLOW}})
 export class Parent implements IParent {
   public _id: mongoose.Types.ObjectId;
 
