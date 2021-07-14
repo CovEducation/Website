@@ -607,7 +607,7 @@ describe("📚 Mentorship Service", () => {
       expect(pendingMentorships.length).to.equal(1);
     });
 
-    it("cannot reject accepted requests", async () => {
+    it.only("cannot reject accepted requests", async () => {
       const [parent, mentor, student] = await createUsers();
       const request: MentorshipRequest = {
         message: "Hi! Would you be able to tutor my son?",
@@ -616,7 +616,6 @@ describe("📚 Mentorship Service", () => {
         mentor,
       };
       const mentorship = await MentorshipService.sendRequest(request);
-      MentorshipService.rejectRequest(mentorship);
       await MentorshipService.acceptRequest(mentorship);
       await expect(MentorshipService.rejectRequest(mentorship)).to.eventually.be
         .rejected;
