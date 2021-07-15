@@ -1,6 +1,11 @@
 import { mongoose } from "@typegoose/typegoose";
-
+import find from 'find-up';
+import dotenv from 'dotenv';
 import { MongoMemoryServer } from "mongodb-memory-server";
+
+const envPath = find.sync(".env");
+dotenv.config({ path: envPath });
+
 // Mocking
 
 import mockery from "mockery";
@@ -76,9 +81,20 @@ export const setupMocks = async () => {
     },
   };
   const algoliaMock = () => {};
+  const twilioMock = () => {
+    return {
+      messages: {
+        create: () => {},
+      }
+    }
+  };
   mockery.registerMock("nodemailer", nodemailerMock);
   mockery.registerMock("firebase-admin", firebaseMock);
   mockery.registerMock("mongoose-algolia", algoliaMock);
+  if (process.env.TWILIO_SID === undefined) {
+    console.log("Warning: Mocking twilio since TWILIO_SID is undefined.");
+    mockery.registerMock("twilio", twilioMock);    
+  }
 };
 
 export default {
