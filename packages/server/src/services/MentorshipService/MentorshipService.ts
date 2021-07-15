@@ -186,7 +186,15 @@ class MentorshipService {
       .populate("mentor")
       .populate("parent")
       .populate("student");
-    return docs;
+    // Note: A user might have been deleted, making the mentorship invalid.
+    const mentorships = docs.filter(async (doc) => {
+      if (doc.parent === null || doc.mentor === null || doc.student === null) {
+        await MentorshipModel.deleteOne({_id: doc._id});
+        return false;
+      }
+      return true;
+    });
+    return mentorships;
   }
   /**
    * Assumes that the mentorship is being accepted by request of the mentor. A mentorship can only be accepted if it is in the PENDING state. A mentorship cannot be accepted more than once - a new mentorship request should be archived before being renewed.
