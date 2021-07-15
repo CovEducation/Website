@@ -6,7 +6,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import { COLORS } from "../../constants";
-import useAuth, { AUTH_STATES } from "../../providers/AuthProvider";
+import useAuth from "../../providers/AuthProvider";
 
 const MobileMenuIconWrapper = styled.div`
   position: absolute;

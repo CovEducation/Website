@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Container } from "@material-ui/core";
-import { Trans, useTranslation } from "react-i18next";
 
 
 const Banner = styled.img`

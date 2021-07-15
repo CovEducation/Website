@@ -5,8 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 import mockery from "mockery";
 import nodemailerMock from "nodemailer-mock";
-const mongod = new MongoMemoryServer();
-
+let mongod: MongoMemoryServer;
 /**
  * Connect to the in-memory database.
  */
@@ -18,7 +17,8 @@ export const connect = async () => {
 
   await mongoose.disconnect();
 
-  const uri = await mongod.getUri();
+  mongod = await MongoMemoryServer.create();
+  const uri = mongod.getUri();
 
   const mongooseOpts = {
     useNewUrlParser: true,
@@ -38,6 +38,7 @@ export const closeDatabase = async () => {
   if (mongoose.connection.readyState !== 0) {
     await mongoose.connection.dropDatabase();
     await mongoose.disconnect();
+    if (mongod) {}
     await mongod.stop();
   }
 };

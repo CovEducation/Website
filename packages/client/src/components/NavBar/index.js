@@ -3,13 +3,10 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import { Link, useHistory } from "react-router-dom";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import PropTypes from "prop-types";
 import Modal from "../Modal";
 import Button from "../Button";
 import styled from "styled-components";
-import Signin from "../SignIn/index";
 import { FONTS, COLORS } from "../../constants";
 import SignUp from "../SignUp2";
 import MobileNav from "./MobileNav";
@@ -58,26 +55,15 @@ const UserLinkWrapper = styled.div`
 
 export default function NavBar(props) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [menuDropdownAnchor, setMenuDropdownAnchor] = useState(null);
   const { authState, signout } = useAuth();
-
   const history = useHistory();
-
-  const handleMenuDropdownClick = (event) => {
-    setMenuDropdownAnchor(event.currentTarget);
-    event.stopPropagation();
-  };
-  const handleMenuDropdownClose = () => {
-    setMenuDropdownAnchor(null);
-  };
 
   const loggedOutUserLinks = (
     <>
-
-          <Button theme="primary" size="sm" onClick={() => history.push("/signin")}>
-            {" "}
-            Login{" "}
-          </Button>
+      <Button theme="primary" size="sm" onClick={() => history.push("/signin")}>
+        {" "}
+        Login{" "}
+      </Button>
       <Modal
         title="Sign Up"
         trigger={

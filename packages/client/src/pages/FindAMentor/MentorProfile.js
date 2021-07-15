@@ -37,11 +37,6 @@ const MentorProfileInformation = styled.div`
   grid-template-columns: repeat(2, 1fr);
 `;
 
-const MentorProfilePicture = styled.img`
-  width: 20%;
-  margin-right: 1rem;
-  border-radius: 100%;
-`;
 
 const MentorDetailsBlock = styled.div`
   h3 {

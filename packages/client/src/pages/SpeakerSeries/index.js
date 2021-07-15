@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
-import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import SpeakerCard from "./SpeakerCard";
 import SpeakerDetailFrame from "./SpeakerDetailFrame.js";
@@ -43,18 +42,6 @@ const SpeakerSeriesWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 50px;
-`;
-const RequestDetailsBlock = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 50px;
-  p {
-    font-size: 24px;
-  }
-  span {
-    color: ${COLORS.blue};
-    border-bottom: 2px solid;
-  }
 `;
 
 const SpeakerSeriesContainer = styled.div`

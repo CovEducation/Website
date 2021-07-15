@@ -12,28 +12,11 @@ const SpeakerProfileHeader = styled.div`
     flex-direction: row;
 `;
 
-const SpeakerProfileInformation = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-`;
 
 const SpeakerProfilePicture = styled.img`
     width: 30%;
     margin-right: 1rem;
 `
-
-const MentorProfileText = styled.p`
-    margin-right: 0.5rem;
-`
-
-
-const ButtonBlock = styled.div`
-    text-align: right;
-    button {
-        margin-right: 0px;
-    }
-`
-
 
 // Displays the details of a speaker.
 const SpeakerProfile = ({ speaker }) => {
