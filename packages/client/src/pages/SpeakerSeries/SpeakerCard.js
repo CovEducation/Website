@@ -24,7 +24,7 @@ const SpeakerCardDescription = styled.p`
 const SpeakerCard = ({ speaker }) => {
     return (
         <SpeakerCardContainer>
-            <img src={`https://via.placeholder.com/300x200?text=${speaker.name}`} alt='profile pic' style={{marginBottom:15}}/>
+            <img src={`https://via.placeholder.com/300x200?text=${speaker.name}`} alt='profile pic' style={{ marginBottom:15 }}/>
             <SpeakerCardText>{moment(speaker.date).format('LL')}</SpeakerCardText>
             <SpeakerCardText>{speaker.name}</SpeakerCardText>
             <SpeakerCardDescription>{speaker.description}</SpeakerCardDescription>
