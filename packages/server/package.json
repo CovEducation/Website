@@ -17,7 +17,7 @@
     "clean": "rimraf build coverage tsconfig.tsbuildinfo .nyc_output",
     "serve": "forever -c 'nodemon --exitcrash --config nodemon.json' src/index.ts",
     "dev": "nodemon --config nodemon.json src/index.ts",
-    "test": "echo 'Testing...' && cross-env NODE_ENV=test nyc mocha -r ts-node/register 'tests/**/*.ts' --colors --exit"
+    "test": "echo 'Testing...' && cross-env NODE_ENV=test nyc --reporter=lcov mocha -r ts-node/register 'tests/**/*.ts' --colors --exit && codecov"
   },
   "lint-staged": {
     "*.{ts}": [
@@ -48,6 +48,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
+    "codecov": "^3.8.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "firebase-mock": "^2.3.2",
