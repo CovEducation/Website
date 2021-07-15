@@ -78,7 +78,7 @@ const DashboardContent = styled.div`
 const UserFetchErr = () => {
   return (
     <Container maxWidth="md">
-      <Alert severity="warning" style={{margin: "10px"}}>
+      <Alert severity="warning" style={{ margin: "10px" }}>
       <AlertTitle>Unable to Fetch User Information</AlertTitle>
       <p>
         Mentors who were marked unavailable have not been transferred to the new website.

@@ -32,7 +32,7 @@ const main = async () => {
         message: 'Email of the parent requesting the mentorship',
         validate: async (parentEmail) => {
             const doc =  await ParentModel.findOne({email: parentEmail });
-            if (doc === null) {    
+            if (doc === null) {
                 return `${parentEmail} does not belong to any registered parent. Typo?`;
             }
             return true;
@@ -40,7 +40,7 @@ const main = async () => {
     });
     const parent = await retrieveParentData(parentEmail);
     const students = parent.students;
-    // Find the correct student_id 
+    // Find the correct student_id
     const { selectedStudent } = await prompts({
         type: 'select',
         name: 'selectedStudent',
@@ -52,25 +52,25 @@ const main = async () => {
             };
         }),
     });
-    // Find mentor 
+    // Find mentor
     const { mentorEmail } = await prompts({
         type: 'text',
         name: 'mentorEmail',
         message: 'Mentor\'s email',
         validate: async (mentorEmail) => {
             const doc =  await MentorModel.findOne({email: mentorEmail });
-            if (doc === null) {    
+            if (doc === null) {
                 return `${mentorEmail} does not belong to any registered mentor. Typo?`;
             }
             return true;
         }
     });
     const mentor = await retrieveMentorData(mentorEmail);
-    // Ask for the message 
+    // Ask for the message
     const { message } = await prompts({
         type: 'text',
         name: 'message',
-        message: 'Message for the mentor about this request: ', 
+        message: 'Message for the mentor about this request: ',
         validate: msg => msg.length > 0,
     });
     const request: MentorshipRequest = {

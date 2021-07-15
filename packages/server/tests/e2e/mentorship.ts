@@ -34,12 +34,12 @@ before(async function () {
 /**
  * Clear all test data after every test.
  */
-afterEach(async () => await clearDatabase());
+afterEach(async () => clearDatabase());
 
 /**
  * Remove and close the db and server.
  */
-after(async () => await closeDatabase());
+after(async () => closeDatabase());
 
 const createUsers = async (): Promise<[IParent, IMentor, IStudent]> => {
   const mentor = await UserService.createMentor(testMentor);

@@ -1,5 +1,5 @@
-import { FormControl, FormControlLabel, makeStyles, Button} from "@material-ui/core";
-import React, {useState} from "react";
+import { FormControl, FormControlLabel, makeStyles, Button } from "@material-ui/core";
+import React, { useState } from "react";
 import { connectRefinementList } from "react-instantsearch-dom";
 import Accordion, { AccordionRow } from "../../components/Accordion";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -39,7 +39,7 @@ const CustomRefinementList = ({ items, currentRefinement, refine, ...props }) =>
     size="sm"
     theme="accent"
     onClick={() => setExtended(!extended)}>
-    {extended ? 'Show less' : 'Show more'}
+    {extended ? "Show less" : "Show more"}
   </Button>
   </div>
   );

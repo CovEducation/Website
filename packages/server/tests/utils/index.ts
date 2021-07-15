@@ -93,7 +93,7 @@ export const setupMocks = async () => {
   mockery.registerMock("mongoose-algolia", algoliaMock);
   if (process.env.TWILIO_SID === undefined) {
     console.log("Warning: Mocking twilio since TWILIO_SID is undefined.");
-    mockery.registerMock("twilio", twilioMock);    
+    mockery.registerMock("twilio", twilioMock);
   }
 };
 

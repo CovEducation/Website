@@ -39,7 +39,7 @@ afterEach(async () => {
 /**
  * Remove and close the db and server.
  */
-after(async () => await closeDatabase());
+after(async () => closeDatabase());
 
 describe("🔒 Auth", () => {
   describe("/login", () => {
