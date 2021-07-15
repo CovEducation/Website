@@ -1,4 +1,4 @@
-import { plugin, getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { plugin, getModelForClass, prop, Ref, modelOptions, Severity } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import { Mentorship } from "./Mentorships";
 import CommunicationPreference from "./CommunicationPreference";
@@ -39,6 +39,7 @@ export interface IMentor {
   indexName: "mentors",
   debug: true,
 })
+@modelOptions({options: {allowMixed: Severity.ALLOW}})
 export class Mentor implements IMentor {
   public _id: mongoose.Types.ObjectId;
 

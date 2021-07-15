@@ -4,6 +4,7 @@ import chaiSubset from "chai-subset";
 import { mongoose } from "@typegoose/typegoose";
 import { v4 as uuid } from "uuid";
 import { connect, clearDatabase, closeDatabase, setupMocks } from "../utils";
+// Mocks must be set before the following imports.
 (async () => {
   await setupMocks();
 })();
@@ -22,11 +23,12 @@ before(async function () {
   this.timeout(120000); // 2 mins to download a local MongoDB installation.
   await connect();
 });
-
 /**
  * Clear all test data after every test.
  */
-afterEach(async () => await clearDatabase());
+afterEach(async () =>{ 
+  await clearDatabase(); 
+});
 
 /**
  * Remove and close the db and server.

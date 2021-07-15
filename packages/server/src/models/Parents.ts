@@ -1,7 +1,8 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity, Ref, plugin} from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import CommunicationPreference from "./CommunicationPreference";
 import { IStudent, Student } from "./Students";
+import autopopulate from 'mongoose-autopopulate';
 
 export interface IParent {
   _id?: mongoose.Types.ObjectId;
@@ -16,6 +17,8 @@ export interface IParent {
   students: IStudent[];
 }
 
+@plugin(autopopulate as any)
+@modelOptions({options: {allowMixed: Severity.ALLOW}})
 export class Parent implements IParent {
   public _id: mongoose.Types.ObjectId;
 
@@ -44,13 +47,10 @@ export class Parent implements IParent {
   public avatar?: string;
 
   @prop({
-    required: true,
-    validate: {
-      validator: (v) => v.length >= 1,
-      message: "Parent must specific at least one student.",
-    },
+    autopopulate: true,
+    ref: Student
   })
-  public students: Student[];
+  public students: Ref<Student>[];
 }
 
 const ParentModel = getModelForClass(Parent);
