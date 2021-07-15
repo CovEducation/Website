@@ -134,11 +134,14 @@ const RequestsPage = () => {
 
   const pendingRequestsList = mentorships
     .filter((item) => {
+      console.log(`Student: ${item.student}, Parent: ${item.parent}`);
       return (
-        item.student != null &&
+        item.student !== null &&
         item.student !== undefined &&
         item.student.name !== undefined &&
-        item.state === "PENDING"
+        item.state === "PENDING" &&
+        item.parent !== null && 
+        item.parent.name !== undefined
       );
     })
     .map((item) => (
@@ -234,7 +237,7 @@ const RequestsPage = () => {
   const mentorshipList = mentorships
     .filter((item) => item.student !== null)
     .map((item) => (
-      <RequestsWrapper>
+      <RequestsWrapper key={item._id}>
         {item.state === "ACTIVE" && (
           <FlexClass1>
             <Jdenticon size="150" value={item.student.name} />
