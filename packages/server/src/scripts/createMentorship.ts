@@ -33,7 +33,7 @@ const main = async () => {
         validate: async (parentEmail) => {
             const doc =  await ParentModel.findOne({email: parentEmail });
             if (doc === null) {    
-                return `${parentEmail} does not exist. Typo?`;
+                return `${parentEmail} does not belong to any registered parent. Typo?`;
             }
             return true;
         }
@@ -60,7 +60,7 @@ const main = async () => {
         validate: async (mentorEmail) => {
             const doc =  await MentorModel.findOne({email: mentorEmail });
             if (doc === null) {    
-                return `${mentorEmail} does not exist. Typo?`;
+                return `${mentorEmail} does not belong to any registered mentor. Typo?`;
             }
             return true;
         }
@@ -96,7 +96,6 @@ const main = async () => {
         console.log("Succesfully sent request ~");
     })
     exit(0, new Error())
-
 }
 
 const generateConfirmationMsg = (request: MentorshipRequest) => {

@@ -2,8 +2,8 @@ import { Mentor } from "./Mentors";
 import { Parent } from "./Parents";
 import { Student } from "./Students";
 import { ISession } from "./Sessions";
-import { getModelForClass, modelOptions, mongoose, prop, Ref, Severity } from "@typegoose/typegoose";
-
+import { getModelForClass, modelOptions, mongoose, plugin, prop, Ref, Severity } from "@typegoose/typegoose";
+import autopopulate from 'mongoose-autopopulate';
 /**
  * PENDING - A request has been sent to the mentor, but the mentor has not yet accepted.
  * ACTIVE - Mentorship is still ongoing.
@@ -36,6 +36,7 @@ export interface IMentorship {
   sessions: ISession[];
 }
 
+@plugin(autopopulate as any)
 @modelOptions({options: {allowMixed: Severity.ALLOW}})
 export class Mentorship implements IMentorship {
   public _id?: mongoose.Types.ObjectId;
@@ -56,13 +57,13 @@ export class Mentorship implements IMentorship {
   @prop({ required: false })
   public endDate?: Date;
 
-  @prop({ ref: "Mentor", autopulate: true, required: true })
+  @prop({ ref: "Mentor", autopopulate: true, required: true })
   public mentor: Ref<Mentor>;
 
-  @prop({ ref: "Parent", autopulate: true, required: true })
+  @prop({ ref: "Parent", autopopulate: true, required: true })
   public parent: Ref<Parent>;
 
-  @prop({ ref: "Student", required: true })
+  @prop({ ref: "Student", autopopulate: true, required: true })
   public student: Ref<Student>;
 
   @prop({ default: [] })
