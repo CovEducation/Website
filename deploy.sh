@@ -32,6 +32,7 @@ ssh root@174.138.58.117 '
     git pull; 
     forever stop 0; 
     yarn;
+    lerna run build --stream;
     cd packages/server;
     forever start -c "nodemon --exitcrash --config nodemon.json" src/index.ts'
 end=$(date +"%s")

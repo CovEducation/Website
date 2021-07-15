@@ -1,6 +1,6 @@
 import { mongoose } from "@typegoose/typegoose";
 import algoliasearch, { SearchIndex } from "algoliasearch";
-import ParentModel, { IParent } from "../models/Parents";
+import ParentModel, { IParent, Parent } from "../models/Parents";
 import MentorModel, { IMentor } from "../models/Mentors";
 import StudentModel from "../models/Students";
 
@@ -31,6 +31,8 @@ class UserService {
   }
 
   private userExists(user: IMentor | IParent) {
+    // We use email since this function should be called before
+    // making a document.
     return MentorModel.find({ email: user.email })
       .then((docs) => {
         const mentorExists = docs.length > 0;
@@ -113,6 +115,8 @@ class UserService {
   }
 
   createParent(parent: IParent): Promise<IParent> {
+    // References must be created before the document:
+    // https://typegoose.github.io/typegoose/docs/guides/advanced/common-plugins
     return this.userExists(parent)
       .then((exists) => {
         if (exists) {
@@ -120,15 +124,11 @@ class UserService {
             `Parent ${parent.name} with email ${parent.email} already exists.`
           );
         }
-        return ParentModel.create(parent);
+        return Promise.resolve();
       })
-      .then(async (parent) => {
-        const students = await Promise.all(
-          parent.students.map((s) => StudentModel.create(s))
-        );
-        parent.students = students;
-        await parent.save();
-        return parent as IParent;
+      .then(() => Promise.all(parent.students.map((s) => StudentModel.create(s))))
+      .then((students) => {
+        return ParentModel.create({...parent, students: students} as Parent);
       });
   }
 

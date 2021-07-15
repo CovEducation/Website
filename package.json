@@ -1,10 +1,10 @@
 {
-  "name": "@johanc/coved",
+  "name": "@coved/website",
   "version": "1.0.0",
   "author": "Johan Cervantes <johanc@mit.edu>",
   "license": "MIT",
   "private": true,
-  "repository": "https://github.com/johancc/Apollo",
+  "repository": "https://github.com/CovEducation/Website",
   "workspaces": {
     "packages": [
       "packages/*"
@@ -42,6 +42,7 @@
     "mongodb-memory-server": "^6.9.3",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
+    "prompts": "^2.4.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   }
