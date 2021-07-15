@@ -39,7 +39,7 @@ const CustomRefinementList = ({ items, currentRefinement, refine, ...props }) =>
     size="sm"
     theme="accent"
     onClick={() => setExtended(!extended)}>
-    {extended ? 'Show less' : 'Show more'}
+    {extended ? "Show less" : "Show more"}
   </Button>
   </div>
   );
