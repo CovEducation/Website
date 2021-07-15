@@ -110,7 +110,7 @@ const createHttpServer = async (): Promise<http.Server> => {
     FIREBASE_CREDENTIALS = "",
   } = process.env;
 
-  // Tests should not connect to firebase. 
+  // Tests should not connect to firebase.
   if (process.env.NODE_ENV !== "test") {
     const firebaseCertPath = findUp.sync(FIREBASE_CREDENTIALS);
     if (firebaseCertPath === undefined) {

@@ -12,12 +12,12 @@ const ResetPasswordSchema = Yup.object({
 });
 
 const ResetPassword = () => {
-    const [ formMessage, setFormMesssage ] = React.useState({open: false, msg: ""});
+    const [ formMessage, setFormMesssage ] = React.useState({ open: false, msg: "" });
 
     const handleSubmit = (values) => {
         Auth.sendPasswordResetEmail(values.email)
-            .then(() => setFormMesssage({open: true, msg: "Password Reset Sent", severity: "success"}))
-            .catch((err) => setFormMesssage({open: true, msg: err.message, severity: "error"}));
+            .then(() => setFormMesssage({ open: true, msg: "Password Reset Sent", severity: "success" }))
+            .catch((err) => setFormMesssage({ open: true, msg: err.message, severity: "error" }));
     };
 
     const formik = useFormik({
@@ -37,7 +37,7 @@ const ResetPassword = () => {
             <Toast
                 message={formMessage.msg}
                 open={formMessage.open}
-                onClose={() => setFormMesssage({open: false, msg: ""})}
+                onClose={() => setFormMesssage({ open: false, msg: "" })}
                 status={formMessage.severity}
             />
         </Container>

@@ -26,14 +26,14 @@ before(async function () {
 /**
  * Clear all test data after every test.
  */
-afterEach(async () =>{ 
-  await clearDatabase(); 
+afterEach(async () =>{
+  await clearDatabase();
 });
 
 /**
  * Remove and close the db and server.
  */
-after(async () => await closeDatabase());
+after(async () => closeDatabase());
 
 describe("🙋‍ User Service", () => {
   describe("::createMentor()", () => {
