@@ -32,7 +32,7 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI}}
           DB_NAME: ${{ secrets.DB_NAME}}
           MANDRILL_APIKEY: ${{ secrets.MANDRILL_APIKEY}}
-          TWILIO_SID: ${{ secrets.TWILIO_SID}}
+          TWILIO_SID: TEST
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN}}
           TWILIO_NUM: ${{ secrets.TWILIO_NUM}}
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
