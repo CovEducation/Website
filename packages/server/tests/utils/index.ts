@@ -91,7 +91,9 @@ export const setupMocks = async () => {
   mockery.registerMock("nodemailer", nodemailerMock);
   mockery.registerMock("firebase-admin", firebaseMock);
   mockery.registerMock("mongoose-algolia", algoliaMock);
-  if (process.env.TWILIO_SID === undefined) {
+  if (process.env.TWILIO_SID !== undefined) {
+    console.log("Note: Not mocking twilio SID ", process.env.TWILIO_SID);
+  } else {
     console.log("Warning: Mocking twilio since TWILIO_SID is undefined.");
     mockery.registerMock("twilio", twilioMock);
   }
