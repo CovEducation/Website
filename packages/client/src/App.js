@@ -1,24 +1,25 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router, Switch, Route
-} from 'react-router-dom';
-import './App.css';
-import DashboardPage from './pages/Dashboard';
-import HomePage from './pages/Home';
-import FAQsPage from './pages/FAQs';
-import ProfilePage from './pages/Profile';
-import SignUpPage from './components/SignUp2';
-import MeetOurTeam from './pages/MeetOurTeam';
-import NavBar from './components/NavBar';
-import ContactUsPage from './pages/ContactUs';
-import SignInPage from './pages/SignIn';
-import RequestsPage from './pages/Requests';
-import PasswordReset from './pages/PasswordReset';
-import ResourcesPage from './pages/Resources';
+} from "react-router-dom";
+import "./App.css";
+import DashboardPage from "./pages/Dashboard";
+import HomePage from "./pages/Home";
+import FAQsPage from "./pages/FAQs";
+import ProfilePage from "./pages/Profile";
+import SignUpPage from "./components/SignUp2";
+import MeetOurTeam from "./pages/MeetOurTeam";
+import NavBar from "./components/NavBar";
+import ContactUsPage from "./pages/ContactUs";
+import SignInPage from "./pages/SignIn";
+import RequestsPage from "./pages/Requests";
+import PasswordReset from "./pages/PasswordReset";
+import ResourcesPage from "./pages/Resources";
 import ProgramPage from "./pages/Programs";
 
-import { AuthProvider } from './providers/AuthProvider';
-import SpeakerSeriesPage from './pages/SpeakerSeries';
+import { AuthProvider } from "./providers/AuthProvider";
+import SpeakerSeriesPage from "./pages/SpeakerSeries";
+import PressRelease from "./pages/PressRelease";
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
             <Switch>
               <Route path="/" exact>
                 <HomePage />
+              </Route>
+              <Route path="/press-release">
+                <PressRelease/>
               </Route>
               <Route path="/profile">
                 <ProfilePage />
