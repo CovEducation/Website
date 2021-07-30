@@ -406,5 +406,13 @@
     "position" : "American HS '22 ",
     "team": "Outreach",
     "photo": "propics/saanvi.jpg"
+  },
+  {
+    "_id": 49,
+    "name": "Christin Le",
+    "designation": "Regional Director - West Coast",
+    "position": "Johns Hopkins University '23",
+    "team": "Coordinators",
+    "photo": "propics/christin.png"
   }
 ]
