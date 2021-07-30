@@ -36,7 +36,7 @@ const PressRelease = () => {
             <br/>
         </>
     );
-    const prompt = "Starting on August 20th, 2021, CovEd will be transition to a partnership based model to better serve the needs of our communities. Self-pairing will no longer be available. Click to learn more."
+    const prompt = "Starting on August 20th, 2021, CovEd will transition to a partnership based model to better serve the needs of our communities. Self-pairing will no longer be available. Click to learn more."
     return (<>
     <div>
         <PopUp content={content} title="CovEducation Transition to Partnerships for Mentor Matching" prompt={prompt}/> 
