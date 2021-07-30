@@ -25,6 +25,7 @@ MentorModel.find({}).then((mentors) => {
     return mentors.map((mentor) => {
         return {email:mentor.email}});
 }).then((emails: Array<String>) => {
+	console.log(emails.length);
     let writer = createObjectCsvWriter({path: fname, header: [{id: 'email', title: 'Email'}]});
     writer.writeRecords(emails).then(() => {
         console.log("wrote to ", fname);
