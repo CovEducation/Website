@@ -16,16 +16,17 @@ import RequestsPage from "./pages/Requests";
 import PasswordReset from "./pages/PasswordReset";
 import ResourcesPage from "./pages/Resources";
 import ProgramPage from "./pages/Programs";
+import PressRelease from "./pages/PressRelease";
 
 import { AuthProvider } from "./providers/AuthProvider";
 import SpeakerSeriesPage from "./pages/SpeakerSeries";
-import PressRelease from "./pages/PressRelease";
 
 function App() {
   return (
     <Suspense fallback={<></>}>
       <AuthProvider fallback="loading">
           <Router>
+          <PressRelease/>
           <NavBar />
             <Switch>
               <Route path="/" exact>
