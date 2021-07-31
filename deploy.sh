@@ -31,7 +31,7 @@ ssh root@174.138.58.117 '
     cd ~/CovEducation; 
     git pull; 
     forever stop 0; 
-    yarn --prod;
+    yarn;
     lerna run build --stream;
     cd packages/server;
     forever start -c "nodemon --exitcrash --config nodemon.json" src/index.ts'

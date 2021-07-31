@@ -10,7 +10,7 @@ const PressRelease = () => {
             <br/>
             Instead of pairing mentors and mentees directly through the CovEd website, <a href="www.coved.org">www.coved.org</a>, and thus placing the onus on families to search through the mentor database and initiate the mentor-mentee connection, CovEd will pair mentors with mentees from nonprofit, community, and school-based partnerships. 
             <br/>
-            CovEd has recently piloted two versions of this model.  In this Spring 2021 pilot program, CovEd mentors were paired with and met with mentees 1-2 times per week during their student advisory periods, providing academic support in English and Math.
+            CovEd has recently piloted two versions of this model with Chicago Heights Middle School and the Academy for Global Citizenship, serving 275 students in the Chicago Public Schools Area, about 99% of whose student body identify as low-income, and 29.2% who are English Language Learners (ELL). Through the Spring 2021 program, CovEd mentors were paired with and met with mentees 1-2 times per week during their student advisory periods, providing academic support in English and Math.
             <br/>
             This transition will not affect currently paired mentors and mentees. However, the website search portal will be closed and all future matches to mentors will be made internally. To ensure that CovEd is effectively maximizing the resources available to support as many students as possible,  there will be options for facilitated 1:1 mentor matching for prospective mentees who are not part of our partner organizations or school districts.
             <br/>
